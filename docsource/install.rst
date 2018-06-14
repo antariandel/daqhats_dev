@@ -1,0 +1,55 @@
+********************************
+Installing and Using the Library
+********************************
+
+The project is hosted at https://github.com/nwright98/daqhats.
+
+Installation
+************
+
+1. Power off the Raspberry Pi then attach one or more HAT boards, using unique address settings for each. When using a single board, leave it at address 0 (all address jumpers removed.) One board must always be at address 0 so the OS reads a HAT EEPROM and initializes the hardware correctly.
+2. Power on the Pi and log in.  Open a terminal window if using the graphical interface.
+3. If git is not already installed, update installation packages and install it::
+
+    sudo apt-get update
+    sudo apt-get install git
+    
+4. Download this package to your user folder with git::
+
+    cd ~
+    git clone https://github.com/nwright98/daqhats
+    
+5. Build and install the shared library and optional Python support.  The installer will ask if you want to install Python 2 and Python 3 support.  It will also detect the HAT board EEPROMs and save the contents if needed::
+
+    cd ~/daqhats
+    sudo ./install.sh
+
+6. [Optional] To update the firmware on your MCC 118 board(s) use the firmware update tool.  The "0" in the example below is the board address.  The line with the "-b" option updates the bootloader.  Repead the two commands for each MCC 118 address in your board stack::
+
+    mcc118_firmware_update -b 0 ~/daqhats/tools/MCC_118.hex
+    mcc118_firmware_update 0 ~/daqhats/tools/MCC_118.hex
+    
+You can now run the example programs under ~/daqhats/examples and create your own programs.
+
+To uninstall the package use::
+
+    cd ~/daqhats
+    sudo ./uninstall.sh
+    
+If you change your board stackup and have more than one HAT board attached you must update the saved EEPROM images for the library to have the correct board information::
+
+    sudo daqhats_read_eeproms
+    
+
+Creating a C program
+********************
+
+- The daqhats headers are installed in /usr/local/include/daqhats.  Add the compiler option :code:`-I/usr/local/include` in order to find the header files when compiling, and the include line :code:`#include <daqhats/daqhats.h>` to your source code.
+- The shared library, libdaqhats.so, is installed in /usr/local/lib.  Add the linker option :code:`-ldaqhats` to include this library.
+- Study the example programs, example makefile, and library documentation for more information.
+
+Creating a Python program
+*************************
+
+- The Python package is named *daqhats*.  Use it in your code with :code:`import daqhats`.
+- Study the example programs and library documentation for more information.

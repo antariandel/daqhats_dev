@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1516805926 source:/home/pi/Documents/Code Blocks/MCC118/Mcc118/main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<daqhats/daqhats.h>
+
