@@ -86,8 +86,9 @@ The following is a basic Python example demonstrating how to read and display an
         sys.exit()
 
     # Read and display every channel from the first board
-    board = hats.mcc118(list[0]['address'])
-    print("Board {}:".format(entry['address']))
+    address = list[0]['address']
+    board = hats.mcc118(address)
+    print("Board {}:".format(address))
     for channel in range(board.a_in_num_channels()):
         value = board.a_in_read(channel)
         print("  Ch {0}: {1:.3f}".format(channel, value))
