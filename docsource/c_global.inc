@@ -36,6 +36,7 @@ HatInfo structure
 Analog Input / Scan Options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. doxygendefine:: OPTS_DEFAULT
 .. doxygendefine:: OPTS_NOSCALEDATA
 .. doxygendefine:: OPTS_NOCALIBRATEDATA
 .. doxygendefine:: OPTS_EXTCLOCK

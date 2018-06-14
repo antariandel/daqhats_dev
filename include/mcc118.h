@@ -13,10 +13,10 @@
 /// Scan trigger input modes.
 enum TriggerMode
 {
-    TRIG_RISING_EDGE    = 0,    ///< Trigger on a rising edge.
-    TRIG_FALLING_EDGE   = 1,    ///< Trigger on a falling edge.
-    TRIG_ACTIVE_HIGH    = 2,    ///< Trigger any time the signal is high.
-    TRIG_ACTIVE_LOW     = 3     ///< Trigger any time the signal is low.
+    TRIG_RISING_EDGE    = 0,    ///< Start the scan on a rising edge of TRIG.
+    TRIG_FALLING_EDGE   = 1,    ///< Start the scan on a falling edge of TRIG.
+    TRIG_ACTIVE_HIGH    = 2,    ///< Start the scan any time TRIG is high.
+    TRIG_ACTIVE_LOW     = 3     ///< Start the scan any time TRIG is low.
 };
 
 // Scan status bits
@@ -56,6 +56,9 @@ int mcc118_close(uint8_t address);
 
 /**
 *   @brief Blink the LED on the MCC 118.
+*
+*   Passing 0 for count will result in the LED blinking continuously until the board is reset
+*   or mcc118_blink_led() is called again with a non-zero value for count.
 *
 *   @param address  The board address (0 - 7).
 *   @param count    The number of times to blink (0 - 255).
@@ -140,12 +143,22 @@ int mcc118_a_in_num_channels(void);
 /**
 *   @brief Perform a single reading of an analog input channel and return the value.
 *
-*   Will return [RESULT_BUSY](@ref RESULT_BUSY) if called while a scan is running.
+*   The valid options are:
+*       - [OPTS_NOSCALEDATA](@ref OPTS_NOSCALEDATA): Return ADC code (a value between 0 and 4095) rather than voltage.
+*       - [OPTS_NOCALIBRATEDATA](@ref OPTS_NOCALIBRATEDATA): Return data without the calibration factors applied.
+*
+*   The options parameter is set to 0 or [OPTS_DEFAULT](@ref OPTS_DEFAULT) for default operation, which is scaled and
+*   calibrated data.
+*
+*   Multiple options may be specified by ORing the flags. For instance, specifying 
+*   [OPTS_NOSCALEDATA](@ref OPTS_NOSCALEDATA) | [OPTS_NOCALIBRATEDATA](@ref OPTS_NOCALIBRATEDATA) will return the 
+*   value read from the ADC without calibration or converting to voltage.
+*
+*   The function will return [RESULT_BUSY](@ref RESULT_BUSY) if called while a scan is running.
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
 *   @param channel  The analog input channel number, 0 - 7.
-*   @param options  Options bitmask (only [OPTS_NOSCALEDATA](@ref OPTS_NOSCALEDATA) and
-*       [OPTS_NOCALIBRATEDATA](@ref OPTS_NOCALIBRATEDATA) are supported)
+*   @param options  Options bitmask.
 *   @param value    Receives the analog input value.
 *   @return [Result code](@ref ResultCode), [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
 */
@@ -164,13 +177,13 @@ int mcc118_trigger_mode(uint8_t address, uint8_t mode);
 *   @brief Read the actual sample rate per channel for a requested sample rate.
 *
 *   The internal scan clock is generated from a 16 MHz clock source so only discrete frequency steps
-*   can be achieved.  This function will return the actual rate for a requested channel count, rate and burst mode setting.
+*   can be achieved.  This function will return the actual rate for a requested channel count and rate.
 *   This function does not perform any actions with a board, it simply calculates the rate.
 *
 *   @param channel_count    The number of channels in the scan.
 *   @param sample_rate_per_channel   The desired sampling rate in samples per second per channel, max 100,000.
-*   @param actual_sample_rate_per_channel   The actual sample rate that would occur when requesting this rate on an MCC 118, 
-*       or 0 if there is an error.
+*   @param actual_sample_rate_per_channel   The actual sample rate that would occur when requesting this rate 
+*       on an MCC 118, or 0 if there is an error.
 *   @return [Result code](@ref ResultCode), [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful,
 *       [RESULT_BAD_PARAMETER](@ref RESULT_BAD_PARAMETER) if the scan parameters are not achievable on an MCC 118.
 */
@@ -187,6 +200,26 @@ int mcc118_a_in_scan_actual_rate(uint8_t channel_count, double sample_rate_per_c
 *   [mcc118_a_in_scan_cleanup()](@ref mcc118_a_in_scan_cleanup) after the scan has finished
 *   and all desired data has been read; this frees all resources from the scan and allows
 *   additional scans to be performed.
+*
+*   The valid options are:
+*       - [OPTS_NOSCALEDATA](@ref OPTS_NOSCALEDATA): Returns ADC code (a value between 0 and 4095) rather than voltage.
+*       - [OPTS_NOCALIBRATEDATA](@ref OPTS_NOCALIBRATEDATA): Return data without the calibration factors applied.
+*       - [OPTS_EXTCLOCK](@ref OPTS_EXTCLOCK): Use an external 3.3V or 5V logic signal at the CLK input as the scan clock.
+*           Multiple devices can be synchronized by connecting the CLK pins together and running all but one with 
+*           this option set so they will be clocked by the single device using its internal clock.  sample_rate_per_channel 
+*           is only used for buffer sizing.
+*       - [OPTS_EXTTRIGGER](@ref OPTS_EXTTRIGGER): Hold off the scan (after calling mcc118_a_in_scan_start()) until the trigger
+*           condition is met.  The trigger is a 3.3V or 5V logic signal applied to the TRIG pin.
+*       - [OPTS_CONTINUOUS](@ref OPTS_CONTINUOUS): Scans continuously until stopped by the user by calling mcc118_a_in_scan_stop()
+*           and writes data to a circular buffer. The data must be read before being overwritten to avoid
+*           a buffer overrun error. samples_per_channel is only used for buffer sizing.
+*
+*   The options parameter is set to 0 or [OPTS_DEFAULT](@ref OPTS_DEFAULT) for default operation, which is scaled and
+*   calibrated data, internal scan clock, no trigger, and finite operation.
+*
+*   Multiple options may be specified by ORing the flags. For instance, specifying 
+*   [OPTS_NOSCALEDATA](@ref OPTS_NOSCALEDATA) | [OPTS_NOCALIBRATEDATA](@ref OPTS_NOCALIBRATEDATA) will return the 
+*   values read from the ADC without calibration or converting to voltage.
 *
 *   The buffer size will be allocated as follows:
 *
@@ -219,12 +252,7 @@ int mcc118_a_in_scan_actual_rate(uint8_t channel_count, double sample_rate_per_c
 *   @param samples_per_channel  The number of samples to acquire for each channel in the scan.
 *   @param sample_rate_per_channel   The sampling rate in samples per second per channel, max 100,000.
 *       When using an external sample clock set this value to the maximum expected rate of the clock.
-*   @param options  The options for the scan. This is a bitmask and may be an ORed combination of:
-*       - [OPTS_NOSCALEDATA](@ref OPTS_NOSCALEDATA): Return ADC codes instead of voltage.
-*       - [OPTS_NOCALIBRATEDATA](@ref OPTS_NOCALIBRATEDATA): Return uncalibrated values.
-*       - [OPTS_EXTCLOCK](@ref OPTS_EXTCLOCK): Use an external sample clock on the CLK input.
-*       - [OPTS_EXTTRIGGER](@ref OPTS_EXTTRIGGER): Use an external trigger source on the TRIG input.
-*       - [OPTS_CONTINUOUS](@ref OPTS_CONTINUOUS): Scan until stopped (samples_per_channel is only used for buffer allocation.)
+*   @param options  The options bitmask.
 *   @return [Result code](@ref ResultCode), [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful,
 *       [RESULT_BUSY](@ref RESULT_BUSY) if a scan is already running.
 */
@@ -271,7 +299,7 @@ int mcc118_a_in_scan_buffer_size(uint8_t address, uint32_t* buffer_size_samples)
 *   @param samples_read_per_channel Returns the actual number of samples read from each channel.
 *       May be \b NULL if samples_per_channel is \b 0.
 *   @return [Result code](@ref ResultCode), [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful,
-*       [RESULT_RESOURCE_UNAVAIL](@ref RESULT_RESOURCE_UNAVAIL) if a scan is not currently running
+*       [RESULT_RESOURCE_UNAVAIL](@ref RESULT_RESOURCE_UNAVAIL) if a scan has not been started
 *       under this instance of the device.
 */
 int mcc118_a_in_scan_read(uint8_t address, uint16_t* status, int32_t samples_per_channel, double timeout, double* buffer,
@@ -299,6 +327,8 @@ int mcc118_a_in_scan_cleanup(uint8_t address);
 
 /**
 *   @brief Return the number of channels in the current analog input scan.
+*
+*   This function returns 0 if no scan is running or active.
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
 *   @return The number of channels, 0 - 8.

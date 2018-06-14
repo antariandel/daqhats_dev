@@ -97,7 +97,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#functional-block-diagram">Functional block diagram</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#functional-details">Functional details</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#clock-mode">Clock mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scan-clock">Scan clock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trigger">Trigger</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#specifications">Specifications</a></li>
@@ -178,8 +179,8 @@
 <p>The MCC HATs are Raspberry Pi add-on boards (Hardware Attached on Top). They adhere
 to the Raspberry Pi HAT specification, but also extend it to allow stacking up to
 8 MCC boards on a single Raspberry Pi.</p>
-<p>We provide Python and C libraries, documentation, and examples to allow you to develop
-your own applications using our boards.</p>
+<p>C and Python libraries, documentation, and examples are provided to allow you to
+develop your own applications.</p>
 <div class="section" id="mcc-118">
 <h2>MCC 118<a class="headerlink" href="#mcc-118" title="Permalink to this headline">¶</a></h2>
 <p>The MCC 118 is an 8-channel analog voltage input board with the following features:</p>
@@ -187,7 +188,7 @@ your own applications using our boards.</p>
 <li>12-bit, 100 kS/s A/D converter</li>
 <li>± 10 V single-ended analog inputs</li>
 <li>Factory calibration with ± 20.8 mV input accuracy</li>
-<li>Hardware sample I/O clock</li>
+<li>Bidirectional scan clock</li>
 <li>Onboard sample buffers</li>
 <li>Digital trigger input</li>
 </ul>
@@ -198,8 +199,8 @@ your own applications using our boards.</p>
 <h4>Screw terminals<a class="headerlink" href="#screw-terminals" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
 <li><strong>CH 0 In</strong> to <strong>CH 7 In</strong>: Single-ended analog input terminals.</li>
-<li><strong>Clock</strong>: Bidirectional terminal for pacer I/O. Set the direction with software. Set for input to pace operations
-with an external clock signal, or output to pace operations with the internal sample clock.</li>
+<li><strong>Clock</strong>: Bidirectional terminal for scan clock input / output. Set the direction with software.
+Set for input to clock the scans with an external clock signal, or output to use the internal scan clock.</li>
 <li><strong>Trigger</strong>: External digital trigger input terminal. The trigger mode is software configurable for edge or level sensitive,
 rising or falling edge, high or low level.</li>
 <li><strong>AGND</strong>: Common ground for the analog input terminals.</li>
@@ -209,20 +210,17 @@ rising or falling edge, high or low level.</li>
 <div class="section" id="address-jumpers">
 <h4>Address jumpers<a class="headerlink" href="#address-jumpers" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
-<li><strong>A0</strong> to <strong>A2</strong>: Used to identify each HAT when multiple boards are connected. The first HAT connected to the
-Raspberry Pi must be at address 0 (no jumper). Install a jumper on each additional connected board.
-Refer to the <a class="reference internal" href="hardware.html#multiple"><span class="std std-ref">Installing multiple boards</span></a> discussion for more information about the recommended addressing method.</li>
+<li><strong>A0</strong> to <strong>A2</strong>: Used to identify each HAT when multiple boards are connected. The first HAT connected to the Raspberry Pi must be at address 0 (no jumper). Install jumpers on each additional connected board to set the desired address. Refer to the <a class="reference internal" href="hardware.html#multiple"><span class="std std-ref">Installing multiple boards</span></a> topic for more information about the recommended addressing method.</li>
 </ul>
 </div>
 <div class="section" id="status-led">
 <h4>Status LED<a class="headerlink" href="#status-led" title="Permalink to this headline">¶</a></h4>
-<p>The LED turns on when the board is connected to a Raspberry Pi with external power applied. You can flash the LED with
-software.</p>
+<p>The LED turns on when the board is connected to a Raspberry Pi with external power applied and flashes when communicating
+with the board. The LED may be blinked by the user.</p>
 </div>
 <div class="section" id="header-connector">
 <h4>Header connector<a class="headerlink" href="#header-connector" title="Permalink to this headline">¶</a></h4>
-<p>The board header is used to connect with the Raspberry Pi. Refer to <a class="reference internal" href="hardware.html#install"><span class="std std-ref">Installing the HAT board</span></a> for more information about the
-header connector.</p>
+<p>The board header is used to connect with the Raspberry Pi. Refer to <a class="reference internal" href="hardware.html#install"><span class="std std-ref">Installing the HAT board</span></a> for more information about the header connector.</p>
 </div>
 </div>
 <div class="section" id="functional-block-diagram">
@@ -231,10 +229,14 @@ header connector.</p>
 </div>
 <div class="section" id="functional-details">
 <h3>Functional details<a class="headerlink" href="#functional-details" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="clock-mode">
-<h4>Clock mode<a class="headerlink" href="#clock-mode" title="Permalink to this headline">¶</a></h4>
-<p>The clock input / output on the MCC 118 is used to output the internal sample clock or apply an external sample clock to the device.  Each pulse on the clock initiates a series of conversions of the selected channels in the scan.  For example, when scanning channels 0, 1, and 2 the conversion activity will be:</p>
+<div class="section" id="scan-clock">
+<h4>Scan clock<a class="headerlink" href="#scan-clock" title="Permalink to this headline">¶</a></h4>
+<p>The clock input / output (terminal CLK) is used to output the internal scan clock or apply an external scan clock to the device. The clock input signal may be a 3.3V or 5V TTL or CMOS logic signal, and the output will be 3.3V LVCMOS. A scan occurs for each rising edge of the clock, acquiring one sample from each of the selected channels in the scan. For example, when scanning channels 0, 1, and 2 the conversion activity will be:</p>
 <a class="reference internal image-reference" href="_images/mcc118_clock.png"><img alt="MCC 118 clock mode" class="align-center" src="_images/mcc118_clock.png" style="width: 570.4px; height: 295.6px;" /></a>
+</div>
+<div class="section" id="trigger">
+<h4>Trigger<a class="headerlink" href="#trigger" title="Permalink to this headline">¶</a></h4>
+<p>The trigger input (terminal TRIG) is used to hold off the beginning of an analog input scan until the desired condition is met at the trigger input.  The trigger input signal may be a 3.3V or 5V TTL or CMOS logic signal.  The input condition may be rising edge, falling edge, high level, or low level.</p>
 </div>
 </div>
 <div class="section" id="specifications">

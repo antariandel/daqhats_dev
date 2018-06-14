@@ -14,15 +14,7 @@ This is the development repository for Measurement Computing HAT boards. The **d
 - *other requirements?*
 
 ## Raspberry Pi Configuration
-1. Download the latest image of Raspbian (larger, contains graphical interface and programs) or Raspbian lite (smaller, terminal only.)
-2. Write the image to a micro SD card using an image writer tool such as Win32 Disk Imager
-3. After the image has been written, a new drive letter should be available with the contents of one partition on the SD card.
-   If you are going to use the Pi over ssh, create an empty text file in this drive named "ssh". This will enable the ssh server after the Pi boots.
-4. Install the SD card in your Pi, connect it to the network (if using Ethernet), and then power on the Pi.
-5. Log into the Pi (locally with keyboard / monitor, or remotely using ssh) using the default user *pi* and password *raspberry*. The default hostname is *raspberrypi*, so if no other Pis with this name are on your network, and your PC has Bonjour support, you can ssh to the Pi using the destination *raspberrypi.local*.
-6. Change the hostname to a unique value by running `sudo raspi-config`, select "Hostname", and enter the new hostname. This allows you to access your Pi on the network by hostname, and makes the default hostname available to other users installing new Pi boards.   
-   Select "Finish", then allow the Pi to reboot.
-7. Log in to your Pi with the new hostname, for example *hostname.local*.
+Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Raspberry Pi.
 
 ## Build Instructions
 1. Power off the Raspberry Pi and attach one or more HAT boards, using unique address settings for each. Refer to [Installing the HAT board](https://nwright98.github.io/daqhats/hardware.html) for detailed information. (*update link to mccdaq repo when available*)   

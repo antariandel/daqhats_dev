@@ -36,11 +36,12 @@ enum ResultCode
 #define MAX_NUMBER_HATS         8   ///< The maximum number of MCC HATs that may be connected.
 
 // Scan / read flags
+#define OPTS_DEFAULT            (0x0000)    ///< Use default behavior
 #define OPTS_NOSCALEDATA        (0x0001)    ///< Return ADC code instead of scaled data (voltage, temperature, etc.)
-#define OPTS_NOCALIBRATEDATA    (0x0002)    ///< Return uncalibrated data.
-#define OPTS_EXTCLOCK           (0x0004)    ///< Use an external sample clock.
-#define OPTS_EXTTRIGGER         (0x0008)    ///< Use an external trigger.
-#define OPTS_CONTINUOUS         (0x0010)    ///< Scan until stopped.
+#define OPTS_NOCALIBRATEDATA    (0x0002)    ///< Return data without the calibration factors applied.
+#define OPTS_EXTCLOCK           (0x0004)    ///< Use an external clock to initiate data conversion.
+#define OPTS_EXTTRIGGER         (0x0008)    ///< Use an external trigger to start the operation.
+#define OPTS_CONTINUOUS         (0x0010)    ///< Convert data until stopped by the user.
 
 //! Contains information about a specific board.
 struct HatInfo
