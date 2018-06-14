@@ -16,6 +16,7 @@ class HatIDs:
     """Known MCC HAT IDs."""
     ANY     = 0         #: Match any MCC ID in :py:func:`hat_list`
     MCC_118 = 0x0142    #: MCC 118 ID
+    MCC_134 = 0x0143    #: MCC 134 ID
 
 class TriggerModes:
     """Scan trigger input modes."""

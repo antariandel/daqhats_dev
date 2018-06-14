@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python Library Reference &mdash; MCC HAT Library 0.2.0 documentation</title>
+  <title>Python Library Reference &mdash; MCC HAT Library 0.3.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.2
+                0.3
               </div>
             
           
@@ -102,6 +102,14 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#mcc-118-class">MCC 118 class</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id1">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mcc-134-class">MCC 134 class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#thermocouple-types">Thermocouple types</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -243,6 +251,12 @@ Each dictionary will contain the following keys<div class="line-block">
 <dt id="daqhats.HatIDs.MCC_118">
 <code class="descname">MCC_118</code><em class="property"> = 322</em><a class="headerlink" href="#daqhats.HatIDs.MCC_118" title="Permalink to this definition">¶</a></dt>
 <dd><p>MCC 118 ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="daqhats.HatIDs.MCC_134">
+<code class="descname">MCC_134</code><em class="property"> = 323</em><a class="headerlink" href="#daqhats.HatIDs.MCC_134" title="Permalink to this definition">¶</a></dt>
+<dd><p>MCC 134 ID</p>
 </dd></dl>
 
 </dd></dl>
@@ -867,6 +881,425 @@ start another scan with <a class="reference internal" href="#daqhats.mcc118.a_in
 
 </div>
 </div>
+<div class="section" id="mcc-134-class">
+<h2>MCC 134 class<a class="headerlink" href="#mcc-134-class" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>Methods<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="daqhats.mcc134">
+<em class="property">class </em><code class="descclassname">daqhats.</code><code class="descname">mcc134</code><span class="sig-paren">(</span><em>address=0</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134" title="Permalink to this definition">¶</a></dt>
+<dd><p>The class for an MCC 134 board.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>address</strong> (<em>int</em>) – board address, must be 0-7.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board did not respond or was of an incorrect type</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="51%" />
+<col width="49%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Method</td>
+<td>Description</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc134.address" title="daqhats.mcc134.address"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.address()</span></code></a></td>
+<td>Read the board’s address.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc134.serial" title="daqhats.mcc134.serial"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.serial()</span></code></a></td>
+<td>Read the serial number.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc134.calibration_date" title="daqhats.mcc134.calibration_date"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.calibration_date()</span></code></a></td>
+<td>Read the calibration date.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc134.calibration_coefficient_read" title="daqhats.mcc134.calibration_coefficient_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.calibration_coefficient_read()</span></code></a></td>
+<td>Read the calibration coefficients for a channel.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc134.calibration_coefficient_write" title="daqhats.mcc134.calibration_coefficient_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.calibration_coefficient_write()</span></code></a></td>
+<td>Write the calibration coefficients for a channel.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc134.a_in_num_channels" title="daqhats.mcc134.a_in_num_channels"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.a_in_num_channels()</span></code></a></td>
+<td>Get the number of analog input channels.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc134.self_offset_correction" title="daqhats.mcc134.self_offset_correction"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.self_offset_correction()</span></code></a></td>
+<td>Clear any internal ADC offset error.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc134.a_in_read" title="daqhats.mcc134.a_in_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.a_in_read()</span></code></a></td>
+<td>Read an analog input channel.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc134.tc_type_read" title="daqhats.mcc134.tc_type_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.tc_type_read()</span></code></a></td>
+<td>Read the thermocouple type for a channel.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc134.tc_type_write" title="daqhats.mcc134.tc_type_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.tc_type_write()</span></code></a></td>
+<td>Write the thermocouple type for a channel.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc134.t_in_read" title="daqhats.mcc134.t_in_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.t_in_read()</span></code></a></td>
+<td>Read a temperature input channel.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc134.cjc_read" title="daqhats.mcc134.cjc_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc134.cjc_read()</span></code></a></td>
+<td>Read a CJC temperature</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="daqhats.mcc134.OPEN_TC_VALUE">
+<code class="descname">OPEN_TC_VALUE</code><em class="property"> = -9999.0</em><a class="headerlink" href="#daqhats.mcc134.OPEN_TC_VALUE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return value for an open thermocouple.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="daqhats.mcc134.OVERRANGE_TC_VALUE">
+<code class="descname">OVERRANGE_TC_VALUE</code><em class="property"> = -8888.0</em><a class="headerlink" href="#daqhats.mcc134.OVERRANGE_TC_VALUE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return value for thermocouple voltage outside the valid range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="daqhats.mcc134.serial">
+<code class="descname">serial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.serial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the serial number.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The serial number.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or responds incorrectly.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="daqhats.mcc134.calibration_date">
+<code class="descname">calibration_date</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.calibration_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the calibration date.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The calibration date in the format “YYYY-MM-DD”.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or responds incorrectly.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="daqhats.mcc134.calibration_coefficient_read">
+<code class="descname">calibration_coefficient_read</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.calibration_coefficient_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the calibration coefficients for a single channel.</p>
+<p>The coefficients are applied in the library as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calibrated_ADC_code</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw_ADC_code</span> <span class="o">*</span> <span class="n">slope</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">coefficients containing the following keys<div class="line-block">
+<div class="line"><strong>slope</strong> (float): The slope.</div>
+<div class="line"><strong>offset</strong> (float): The offset.</div>
+</div>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dictionary</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or responds incorrectly.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="daqhats.mcc134.calibration_coefficient_write">
+<code class="descname">calibration_coefficient_write</code><span class="sig-paren">(</span><em>channel</em>, <em>slope</em>, <em>offset</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.calibration_coefficient_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Temporarily write the calibration coefficients for a single channel.</p>
+<p>The user can apply their own calibration coefficients by writing to these values.
+The values will reset to the factory values from the EEPROM whenever the class is
+initialized.</p>
+<p>The coefficients are applied in the library as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calibrated_ADC_code</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw_ADC_code</span> <span class="o">*</span> <span class="n">slope</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>slope</strong> (<em>float</em>) – The new slope value.</li>
+<li><strong>offset</strong> (<em>float</em>) – The new offset value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or responds incorrectly.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="daqhats.mcc134.a_in_num_channels">
+<em class="property">static </em><code class="descname">a_in_num_channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.a_in_num_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of analog input channels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of channels.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="daqhats.mcc134.self_offset_correction">
+<code class="descname">self_offset_correction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.self_offset_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear any internal ADC offset error.</p>
+<p>Performs an ADC self offset correction. This is automatically called when the board is opened.
+For absolute accuracy this should be performed whenever the board temperature changes by more
+than 5 degrees C from the last time the offset error was cleared.  The board temperature can be
+monitored with the <a class="reference internal" href="#daqhats.mcc134.cjc_read" title="daqhats.mcc134.cjc_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">cjc_read()</span></code></a> method. The calibration takes approximately 800ms to complete.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or responds incorrectly.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="daqhats.mcc134.a_in_read">
+<code class="descname">a_in_read</code><span class="sig-paren">(</span><em>channel</em>, <em>scaled=True</em>, <em>calibrated=True</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.a_in_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read an analog input channel and return the value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>channel</strong> (<em>int</em>) – The analog input channel number, 0-3.</li>
+<li><strong>scaled</strong> (<em>bool</em>) – True to return voltage, False to return ADC code.</li>
+<li><strong>calibrated</strong> (<em>bool</em>) – True to apply calibration to the value, False to return uncalibrated value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the read value</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">float</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or responds incorrectly.</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – the channel number is invalid.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="daqhats.mcc134.tc_type_read">
+<code class="descname">tc_type_read</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.tc_type_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the thermocouple type for a channel.</p>
+<p>Reads the current thermocouple type for the specified channel. The type is one of
+<a class="reference internal" href="#daqhats.tcTypes" title="daqhats.tcTypes"><code class="xref py py-class docutils literal notranslate"><span class="pre">tcTypes</span></code></a> and the board will default to all channels set to
+<a class="reference internal" href="#daqhats.tcTypes.TYPE_J" title="daqhats.tcTypes.TYPE_J"><code class="xref py py-const docutils literal notranslate"><span class="pre">tcTypes.TYPE_J</span></code></a> when it is first opened.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>channel</strong> (<em>int</em>) – The analog input channel number, 0-3.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Returns</dt>
+<dd>int: The thermocouple type.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or responds incorrectly.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="daqhats.mcc134.tc_type_write">
+<code class="descname">tc_type_write</code><span class="sig-paren">(</span><em>channel</em>, <em>type</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.tc_type_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the thermocouple type for a channel.</p>
+<p>Tells the MCC 134 library what thermocouple type is connected to the specified channel. This is needed
+for correct temperature calculations. The type is one of <a class="reference internal" href="#daqhats.tcTypes" title="daqhats.tcTypes"><code class="xref py py-class docutils literal notranslate"><span class="pre">tcTypes</span></code></a> and the board will
+default to all channels set to <a class="reference internal" href="#daqhats.tcTypes.TYPE_J" title="daqhats.tcTypes.TYPE_J"><code class="xref py py-const docutils literal notranslate"><span class="pre">tcTypes.TYPE_J</span></code></a> when it is first opened.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>channel</strong> (<em>int</em>) – The analog input channel number, 0-3.</li>
+<li><strong>type</strong> (<a class="reference internal" href="#daqhats.tcTypes" title="daqhats.tcTypes"><code class="xref py py-class docutils literal notranslate"><span class="pre">tcTypes</span></code></a>) – The thermocouple type.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or responds incorrectly.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="daqhats.mcc134.address">
+<code class="descname">address</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.address" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the device address.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="daqhats.mcc134.t_in_read">
+<code class="descname">t_in_read</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.t_in_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a thermocouple input channel.</p>
+<dl class="docutils">
+<dt>Returns the value as degrees Celsius. The temperature value can have two special values:</dt>
+<dd><ul class="first last simple">
+<li><a class="reference internal" href="#daqhats.mcc134.OPEN_TC_VALUE" title="daqhats.mcc134.OPEN_TC_VALUE"><code class="xref py py-const docutils literal notranslate"><span class="pre">mcc134.OPEN_TC_VALUE</span></code></a> if an open thermocouple is detected</li>
+<li><a class="reference internal" href="#daqhats.mcc134.OVERRANGE_TC_VALUE" title="daqhats.mcc134.OVERRANGE_TC_VALUE"><code class="xref py py-const docutils literal notranslate"><span class="pre">mcc134.OVERRANGE_TC_VALUE</span></code></a> if a value outside valid thermocouple voltage is detected</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>channel</strong> (<em>int</em>) – The analog input channel number, 0-3.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The thermocouple temperature.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">float</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or responds incorrectly.</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – the channel number is invalid.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="daqhats.mcc134.cjc_read">
+<code class="descname">cjc_read</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc134.cjc_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a cold junction compensation temperature.</p>
+<p>Returns the temperature of the specified terminal in degrees Celsius.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>channel</strong> (<em>int</em>) – The analog input channel number, 0-3.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The CJC temperature.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">float</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or responds incorrectly.</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – the channel number is invalid.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="id3">
+<h3>Data<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="thermocouple-types">
+<h4>Thermocouple types<a class="headerlink" href="#thermocouple-types" title="Permalink to this headline">¶</a></h4>
+<dl class="class">
+<dt id="daqhats.tcTypes">
+<em class="property">class </em><code class="descclassname">daqhats.</code><code class="descname">tcTypes</code><a class="headerlink" href="#daqhats.tcTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thermocouple types.</p>
+<dl class="attribute">
+<dt id="daqhats.tcTypes.TYPE_J">
+<code class="descname">TYPE_J</code><em class="property"> = 0</em><a class="headerlink" href="#daqhats.tcTypes.TYPE_J" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type J</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="daqhats.tcTypes.TYPE_K">
+<code class="descname">TYPE_K</code><em class="property"> = 1</em><a class="headerlink" href="#daqhats.tcTypes.TYPE_K" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type K</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="daqhats.tcTypes.TYPE_T">
+<code class="descname">TYPE_T</code><em class="property"> = 2</em><a class="headerlink" href="#daqhats.tcTypes.TYPE_T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type T</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="daqhats.tcTypes.TYPE_E">
+<code class="descname">TYPE_E</code><em class="property"> = 3</em><a class="headerlink" href="#daqhats.tcTypes.TYPE_E" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type E</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="daqhats.tcTypes.TYPE_R">
+<code class="descname">TYPE_R</code><em class="property"> = 4</em><a class="headerlink" href="#daqhats.tcTypes.TYPE_R" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type R</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="daqhats.tcTypes.TYPE_S">
+<code class="descname">TYPE_S</code><em class="property"> = 5</em><a class="headerlink" href="#daqhats.tcTypes.TYPE_S" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type S</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="daqhats.tcTypes.TYPE_B">
+<code class="descname">TYPE_B</code><em class="property"> = 6</em><a class="headerlink" href="#daqhats.tcTypes.TYPE_B" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type B</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="daqhats.tcTypes.TYPE_N">
+<code class="descname">TYPE_N</code><em class="property"> = 7</em><a class="headerlink" href="#daqhats.tcTypes.TYPE_N" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type N</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
 </div>
 
 
@@ -909,7 +1342,7 @@ start another scan with <a class="reference internal" href="#daqhats.mcc118.a_in
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0',
+            VERSION:'0.3.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

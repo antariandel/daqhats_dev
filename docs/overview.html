@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Hardware Overview &mdash; MCC HAT Library 0.2.0 documentation</title>
+  <title>Hardware Overview &mdash; MCC HAT Library 0.3.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.2
+                0.3
               </div>
             
           
@@ -101,6 +101,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#specifications">Specifications</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mcc-134">MCC 134</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Board components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Screw terminals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Status LED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Header connector</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -242,6 +251,36 @@ header connector.</p>
 <p><a class="reference external" href="_static/esmcc118.pdf">MCC 118 Electrical Specifications</a></p>
 </div>
 </div>
+<div class="section" id="mcc-134">
+<span id="mcc134"></span><h2>MCC 134<a class="headerlink" href="#mcc-134" title="Permalink to this headline">¶</a></h2>
+<p>4-channel thermocouple input board</p>
+<ul class="simple">
+<li>24-bit A/D converter</li>
+<li>Onboard 16-bit temperature sensor for cold junction compensation</li>
+<li>Linearization for J, K, R, S, T, N, E, B type thermocouples</li>
+<li>Open thermocouple detection</li>
+<li>Thermocouple inputs are electrically isolated from the Raspberry Pi for use in harsh environments</li>
+</ul>
+<img alt="MCC 118 circuit board" class="align-center" src="_images/mcc_134.jpg" />
+<div class="section" id="id1">
+<h3>Board components<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h4>Screw terminals<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><strong>CH 0 In</strong> to <strong>CH 3 In</strong>: Differential thermocouple input terminals.</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h4>Status LED<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>The LED turns on when the board is connected to a Raspberry Pi with external power applied.</p>
+</div>
+<div class="section" id="id4">
+<h4>Header connector<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>The board header is used to connect with the Raspberry Pi. Refer to <a class="reference internal" href="hardware.html#install"><span class="std std-ref">Installing the HAT board</span></a> for more information about the
+header connector.</p>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -286,7 +325,7 @@ header connector.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0',
+            VERSION:'0.3.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

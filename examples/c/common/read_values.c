@@ -72,6 +72,10 @@ int main(int argc, char* argv[])
         {
             mcc118_open(address);
         }
+        else if (info_list[index].id == HAT_ID_MCC_134)
+        {
+            mcc134_open(address);
+        }
     }
     
     keep_running = 1;
@@ -96,6 +100,26 @@ int main(int argc, char* argv[])
                     snprintfcat(disp_buffer, 2048,  "%d: %6.2f ", channel, value);
                 }
             }
+            else if (info_list[index].id == HAT_ID_MCC_134)
+            {
+                snprintfcat(disp_buffer, 2048,  "%d-MCC 134  ", address);
+                for (channel = 0; channel < mcc134_a_in_num_channels(); channel++)
+                {
+                    mcc134_t_in_read(address, channel, &value);
+                    if (value == OPEN_TC_VALUE)
+                    {
+                        snprintfcat(disp_buffer, 2048, "%d:   %sOpen%s ", channel, KRED, KNRM);
+                    }
+                    else if (value == OVERRANGE_TC_VALUE)
+                    {
+                        snprintfcat(disp_buffer, 2048, "%d:   %sOver%s ", channel, KYEL, KNRM);
+                    }
+                    else
+                    {
+                        snprintfcat(disp_buffer, 2048, "%d: %6.2f ", channel, value);
+                    }
+                }
+            }
             
             snprintfcat(disp_buffer, 2048, "\n");
         }
@@ -113,6 +137,10 @@ int main(int argc, char* argv[])
         if (info_list[index].id == HAT_ID_MCC_118)
         {
             mcc118_close(address);
+        }
+        else if (info_list[index].id == HAT_ID_MCC_134)
+        {
+            mcc134_close(address);
         }
     }
 

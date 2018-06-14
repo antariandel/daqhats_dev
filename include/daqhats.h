@@ -10,6 +10,7 @@
 
 // include files for HAT boards
 #include "mcc118.h"
+#include "mcc134.h"
 
 /// Known MCC HAT IDs.
 enum HatIDs
@@ -17,6 +18,7 @@ enum HatIDs
     HAT_ID_ANY = 0,             ///< Match any MCC ID in [hat_list()](@ref hat_list)
     HAT_ID_MCC_118 = 0x0142,    ///< MCC 118 ID
     HAT_ID_MCC_118_BOOTLOADER = 0x8142, ///< MCC 118 in firmware update mode ID
+    HAT_ID_MCC_134 = 0x0143     ///< MCC 134 ID
 };
 
 /// Return values from the library functions.

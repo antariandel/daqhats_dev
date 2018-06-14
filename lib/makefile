@@ -1,5 +1,5 @@
 MAJOR = 0
-MINOR = 2
+MINOR = 3
 SUB   = 0
 NAME = daqhats
 VERSION = $(MAJOR).$(MINOR).$(SUB)
@@ -12,7 +12,7 @@ LDFLAGS = -shared -pthread -lm -Wl,-soname,lib$(NAME).so.$(MAJOR)
 RM = rm -f  
 TARGET_LIB = lib$(NAME).so.$(VERSION)
 
-SRCS = util.c mcc118.c gpio.c cJSON.c
+SRCS = util.c mcc118.c mcc134.c mcc134_adc.c mcc134_cjc.c gpio.c cJSON.c nist.c
 OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
 DEPS = $(OBJS:%.o=%.d)
 
