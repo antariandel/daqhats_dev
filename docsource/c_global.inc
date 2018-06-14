@@ -4,13 +4,17 @@ Global functions and data
 Functions
 ---------
 
-======================  =======================================================
-Function                Description
-----------------------  -------------------------------------------------------
-:c:func:`hat_list`      Return a list of detected MCC HAT boards.
-======================  =======================================================
+================================  =======================================================
+Function                          Description
+--------------------------------  -------------------------------------------------------
+:c:func:`hat_list`                Return a list of detected MCC HAT boards.
+:c:func:`hat_wait_for_interrupt`  Wait for an interrupt to occur.
+:c:func:`hat_interrupt_active`    Read the current interrupt status.
+================================  =======================================================
 
 .. doxygenfunction:: hat_list
+.. doxygenfunction:: hat_wait_for_interrupt
+.. doxygenfunction:: hat_interrupt_active
 
 Data types and definitions
 --------------------------

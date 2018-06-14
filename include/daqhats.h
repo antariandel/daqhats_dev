@@ -11,6 +11,7 @@
 // include files for HAT boards
 #include "mcc118.h"
 #include "mcc134.h"
+#include "mcc152.h"
 
 /// Known MCC HAT IDs.
 enum HatIDs
@@ -18,7 +19,8 @@ enum HatIDs
     HAT_ID_ANY = 0,             ///< Match any MCC ID in [hat_list()](@ref hat_list)
     HAT_ID_MCC_118 = 0x0142,    ///< MCC 118 ID
     HAT_ID_MCC_118_BOOTLOADER = 0x8142, ///< MCC 118 in firmware update mode ID
-    HAT_ID_MCC_134 = 0x0143     ///< MCC 134 ID
+    HAT_ID_MCC_134 = 0x0143,    ///< MCC 134 ID
+    HAT_ID_MCC_152 = 0x0144     ///< MCC 152 ID
 };
 
 /// Return values from the library functions.
@@ -37,9 +39,9 @@ enum ResultCode
 // Other definitions
 #define MAX_NUMBER_HATS         8   ///< The maximum number of MCC HATs that may be connected.
 
-// Scan / read flags
-#define OPTS_NOSCALEDATA        (0x0001)    ///< Return ADC code instead of scaled data (voltage, temperature, etc.)
-#define OPTS_NOCALIBRATEDATA    (0x0002)    ///< Return uncalibrated data.
+// Scan / read / write flags
+#define OPTS_NOSCALEDATA        (0x0001)    ///< Read or write ADC/DAC code instead of scaled data (voltage, temperature, etc.)
+#define OPTS_NOCALIBRATEDATA    (0x0002)    ///< Read or write uncalibrated data.
 #define OPTS_EXTCLOCK           (0x0004)    ///< Use an external sample clock.
 #define OPTS_EXTTRIGGER         (0x0008)    ///< Use an external trigger.
 #define OPTS_CONTINUOUS         (0x0010)    ///< Scan until stopped.
@@ -92,6 +94,27 @@ extern "C" {
 *   @return The number of boards found.
 */
 int hat_list(uint16_t filter_id, struct HatInfo* list);
+
+/**
+*   Read the current interrupt status.
+*
+*   It returns the status of the interrupt signal.  This signal can be shared by multiple 
+*   boards so the status of each board that may generate must be read and the interrupt
+*   source(s) cleared before the interrupt will become inactive.
+*
+*   @return 1 if interrupt is active, 0 if inactive.
+*/
+int hat_interrupt_active(void);
+
+/**
+*   Wait for an interrupt to occur.
+*
+*   It waits for the interrupt signal to become active, with a timeout parameter.
+*
+*   @param timeout  Wait timeout in milliseconds. -1 to wait forever, 0 to return immediately.
+*   @return RESULT_TIMEOUT, RESULT_SUCCESS, or RESULT_UNDEFINED.
+*/
+int hat_wait_for_interrupt(int timeout);
 
 #ifdef __cplusplus
 }

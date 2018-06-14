@@ -55,6 +55,8 @@
 #define ADDR1_GPIO              13
 #define ADDR2_GPIO              26
 
+#define IRQ_GPIO                21
+
 // EEPROM header structure
 struct _Header
 {
@@ -760,4 +762,30 @@ int _hat_info(uint8_t address, struct HatInfo* entry, char* pData, uint16_t* pSi
     }
 
     return RESULT_SUCCESS;
+}
+
+int hat_interrupt_active(void)
+{
+    if (gpio_status(IRQ_GPIO) == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int hat_wait_for_interrupt(int timeout)
+{
+    // wait for IRQ_GPIO to go low, with timeout
+    switch (gpio_wait_for_low(IRQ_GPIO, timeout))
+    {
+    case -1:    // error
+        return RESULT_UNDEFINED;
+    case 0:     // timeout
+        return RESULT_TIMEOUT;
+    default:    // success
+        return RESULT_SUCCESS;
+    }
 }

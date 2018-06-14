@@ -15,6 +15,16 @@ echo "Removing tools"
 echo
 make -C tools uninstall
 
+# Restore changes to SPI/I2C
+if [ -e "/etc/mcc/hats/enabled_spi" ]; then
+   echo "Disabling SPI"
+   raspi-config nonint do_spi 1
+fi
+if [ -e "/etc/mcc/hats/enabled_i2c" ]; then
+   echo "Disabling I2C"
+   raspi-config nonint do_i2c 1
+fi
+
 # Remove EEPROM images
 echo "Removing EEPROM images"
 rm -rf /etc/mcc/hats

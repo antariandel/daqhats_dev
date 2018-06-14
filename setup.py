@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='daqhats',
-    version='0.3',
+    version='0.4',
     description='MCC HAT Python Library',
     author='Measurement Computing Corp.',
     #author_email='',

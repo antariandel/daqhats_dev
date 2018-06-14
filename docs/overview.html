@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Hardware Overview &mdash; MCC HAT Library 0.3.0 documentation</title>
+  <title>Hardware Overview &mdash; MCC HAT Library 0.4.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.3
+                0.4
               </div>
             
           
@@ -108,6 +108,15 @@
 <li class="toctree-l4"><a class="reference internal" href="#id2">Screw terminals</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id3">Status LED</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id4">Header connector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mcc-152">MCC 152</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Board components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Screw terminals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7">Status LED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">Header connector</a></li>
 </ul>
 </li>
 </ul>
@@ -281,6 +290,38 @@ header connector.</p>
 </div>
 </div>
 </div>
+<div class="section" id="mcc-152">
+<span id="mcc152"></span><h2>MCC 152<a class="headerlink" href="#mcc-152" title="Permalink to this headline">¶</a></h2>
+<p>2-channel analog output / 8 digital I/O board</p>
+<ul class="simple">
+<li>12-bit D/A converter</li>
+<li>0 - 5V output</li>
+<li>5V / 3.3V selectable digital I/O</li>
+<li>Programmable pull-up/pull-down resistors</li>
+<li>25mA sink per output</li>
+<li>Interrupt on input change</li>
+</ul>
+<img alt="MCC 152 circuit board" class="align-center" src="_images/mcc_152.png" />
+<div class="section" id="id5">
+<h3>Board components<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h4>Screw terminals<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><strong>AO0</strong> to <strong>AO1</strong>: Analog output terminals.</li>
+<li><strong>DIO0</strong> to <strong>DIO7</strong>: Digital input/output terminals</li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h4>Status LED<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
+<p>The LED turns on when the board is connected to a Raspberry Pi with external power applied.</p>
+</div>
+<div class="section" id="id8">
+<h4>Header connector<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
+<p>The board header is used to connect with the Raspberry Pi. Refer to <a class="reference internal" href="hardware.html#install"><span class="std std-ref">Installing the HAT board</span></a> for more information about the
+header connector.</p>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -325,7 +366,7 @@ header connector.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.3.0',
+            VERSION:'0.4.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
