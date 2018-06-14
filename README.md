@@ -5,7 +5,7 @@
 </table>
 
 ## About
-This is the development repository for Measurement Computing DAQ HAT boards. The **daqhats** package was created and is supported by Measurement Computing Corporation (MCC).
+This is the development repository for Measurement Computing DAQ HAT boards. The **daqhats** library was created and is supported by Measurement Computing Corporation (MCC).
 
 ## Prerequisites
 - Raspbian or Raspbian Lite image (may work with other Raspberry Pi operating systems)
@@ -26,7 +26,7 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
    sudo apt-get update
    sudo apt-get install git
    ```
-4. Download the daqhats package to the root of your home folder:
+4. Download the daqhats library to the root of your home folder:
 
    ```
    cd ~
@@ -46,7 +46,7 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
    ```
 You can now run the example programs under ~/daqhats/examples and create your own programs. Refer to the [Examples](#examples) section below for more information.
 
-#### Uninstall the daqhats Package
+#### Uninstall the daqhats library
 
 ```
 cd ~/daqhats
@@ -60,7 +60,7 @@ sudo daqhats_read_eeproms
 ```
 
 ## Examples
-The daqhats package provides example programs in C and Python for each HAT board under ~/daqhats/examples. Some examples are ready-to-run and others will need to be built. The example programs are available in the following formats:
+The daqhats library provides example programs in C and Python for each HAT board under ~/daqhats/examples. Some examples are ready-to-run and others will need to be built. The example programs are available in the following formats:
 
 - console/terminal
 - GUI
@@ -94,7 +94,7 @@ The following is a basic Python example demonstrating how to read and display an
 ```
 	
 ## Support/Feedback
-The **daqhats** package is supported by MCC. Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx). 
+The **daqhats** library is supported by MCC. Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx). 
 
 ## Documentation 
-Documentation for the daqhats package is available at https://nwright98.github.io/daqhats/ (*replace with mccdaq/daqhats link when available*). 
+Documentation for the daqhats library is available at https://nwright98.github.io/daqhats/ (*replace with mccdaq/daqhats link when available*). 
