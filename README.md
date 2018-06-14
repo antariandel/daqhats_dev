@@ -87,26 +87,22 @@ The following is a basic Python example demonstrating how to read and display an
     import time
     import daqhats as hats
 
-    # use an MCC 118 at address 0
-    board = hats.mcc118(0)
+    # get hat list of MCC HAT boards
+    list = hats.hat_list(filter_by_id = hats.HatIDs.MCC_118)
+    if not list:
+        print("No boards found")
+        sys.exit()
 
-    read_count = 10000
-
-    print("Reading {} samples...".format(read_count))
-
-    # Read channel 0 as fast as possible 10000 times and calculate the read rate
-    start_time = time.time()
-
-    for count in range(read_count):
-        value = board.a_in_read(0)
-
-    elapsed_time = time.time() - start_time
-    rate = read_count / elapsed_time
-    print("Rate: {}".format(rate))
+    # Read and display every channel from the first board
+    board = hats.mcc118(list[0]['address'])
+    print("Board {}:".format(entry['address']))
+    for channel in range(board.a_in_num_channels()):
+        value = board.a_in_read(channel)
+        print("  Ch {0}: {1:.3f}".format(channel, value))
 ```
 	
 ## Support/Feedback
 The **daqhats** package is supported by MCC. Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx). 
 
 ## Documentation 
-Documentation for the daqhats package is available at https://nwright98.github.io/daqhats (*replace with mccdaq/daqhats link when available*). 
+Documentation for the daqhats package is available at https://nwright98.github.io/daqhats/ (*replace with mccdaq/daqhats link when available*). 
