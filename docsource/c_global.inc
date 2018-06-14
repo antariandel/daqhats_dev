@@ -7,7 +7,7 @@ Functions
 ======================  =======================================================
 Function                Description
 ----------------------  -------------------------------------------------------
-:c:func:`hat_list`      Return a list of detected MCC HAT boards.
+:c:func:`hat_list`      Return a list of detected DAQ HAT boards.
 ======================  =======================================================
 
 .. doxygenfunction:: hat_list

@@ -2,7 +2,7 @@
 Hardware Overview
 *****************
 
-The MCC HATs are Raspberry Pi add-on boards (Hardware Attached on Top). They adhere
+The MCC DAQ HATs are Raspberry Pi add-on boards (Hardware Attached on Top). They adhere
 to the Raspberry Pi HAT specification, but also extend it to allow stacking up to 
 8 MCC boards on a single Raspberry Pi.
 

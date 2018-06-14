@@ -1,11 +1,11 @@
-# MCC HAT Documentation
-This is the documentation source for the HAT library.
+# MCC DAQ HAT Documentation
+This is the documentation source for the DAQ HAT library.
 The output of this documentation is stored in the \docs directory and at:
 
 https://nwright98.github.io/daqhats.
 
-Generating Documentation
-========================
+Generating Documentation (not normally needed)
+==============================================
 Follow these steps to generate the documentation for the MCC HAT library:
 
 1. Install breathe, pip, doxygen, sphinx, and sphinx_rtd_theme.

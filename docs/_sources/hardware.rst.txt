@@ -1,8 +1,8 @@
 .. _install:
 
-************************
-Installing the HAT board
-************************
+****************************
+Installing the DAQ HAT board
+****************************
 
 Installing a single board
 *************************

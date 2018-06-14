@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python Library Reference &mdash; MCC HAT Library 0.2.0 documentation</title>
+  <title>Python Library Reference &mdash; MCC DAQ HAT Library 0.2.0 documentation</title>
   
 
   
@@ -50,7 +50,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> MCC HAT Library
+            <a href="index.html" class="icon icon-home"> MCC DAQ HAT Library
           
 
           
@@ -86,7 +86,7 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Hardware Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the HAT board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the DAQ HAT board</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing and Using the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c.html">C Library Reference</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Python Library Reference</a><ul>
@@ -120,7 +120,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">MCC HAT Library</a>
+          <a href="index.html">MCC DAQ HAT Library</a>
         
       </nav>
 
@@ -172,7 +172,7 @@
             
   <div class="section" id="python-library-reference">
 <h1>Python Library Reference<a class="headerlink" href="#python-library-reference" title="Permalink to this headline">¶</a></h1>
-<p>The Python library is organized as a global method for listing the HAT boards attached
+<p>The Python library is organized as a global method for listing the DAQ HAT boards attached
 to your system, and board-specific classes to provide full functionality for each type
 of board.  The Python package is named <em>daqhats</em>.</p>
 <div class="section" id="global-methods-and-data">
@@ -189,30 +189,30 @@ of board.  The Python package is named <em>daqhats</em>.</p>
 <td>Description</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#daqhats.hat_list" title="daqhats.hat_list"><code class="xref py py-func docutils literal notranslate"><span class="pre">hat_list()</span></code></a></td>
-<td>Return a list of detected MCC HAT boards.</td>
+<td>Return a list of detected DAQ HAT boards.</td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
 <dt id="daqhats.hat_list">
 <code class="descclassname">daqhats.</code><code class="descname">hat_list</code><span class="sig-paren">(</span><em>filter_by_id=0</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.hat_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of detected MCC HAT boards.</p>
+<dd><p>Return a list of detected DAQ HAT boards.</p>
 <p>Scans certain locations for information from the HAT EEPROMs.  Verifies the contents are
 valid HAT EEPROM contents and returns a list of dictionaries containing information on the
-HAT.  Info will only be returned for MCC HATs.  The EEPROM contents are stored in
+HAT.  Info will only be returned for DAQ HATs.  The EEPROM contents are stored in
 /etc/mcc/hats when using the daqhats_read_eeproms tool, or in /proc/device-tree in the case of
 a single HAT at address 0.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filter_by_id</strong> (<em>int</em>) – If this is <a class="reference internal" href="#daqhats.HatIDs.ANY" title="daqhats.HatIDs.ANY"><code class="xref py py-const docutils literal notranslate"><span class="pre">HatIDs.ANY</span></code></a> return all MCC HATs found.  Otherwise, return
-only HATs with ID matching this value.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filter_by_id</strong> (<em>int</em>) – If this is <a class="reference internal" href="#daqhats.HatIDs.ANY" title="daqhats.HatIDs.ANY"><code class="xref py py-const docutils literal notranslate"><span class="pre">HatIDs.ANY</span></code></a> return all DAQ HATs found.  Otherwise, return
+only DAQ HATs with ID matching this value.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of dictionaries, the number of elements match the number of HATs found.
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of dictionaries, the number of elements match the number of DAQ HATs found.
 Each dictionary will contain the following keys<div class="line-block">
 <div class="line"><strong>address</strong> (int): device address</div>
-<div class="line"><strong>id</strong> (int): device product ID, identifies the type of MCC HAT</div>
+<div class="line"><strong>id</strong> (int): device product ID, identifies the type of DAQ HAT</div>
 <div class="line"><strong>version</strong> (int): device hardware version</div>
 <div class="line"><strong>product_name</strong> (str): device product name</div>
 </div>
@@ -257,25 +257,25 @@ Each dictionary will contain the following keys<div class="line-block">
 <dl class="attribute">
 <dt id="daqhats.TriggerModes.RISING_EDGE">
 <code class="descname">RISING_EDGE</code><em class="property"> = 0</em><a class="headerlink" href="#daqhats.TriggerModes.RISING_EDGE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Trigger on a rising edge.</p>
+<dd><p>Start the scan on a rising edge of TRIG.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="daqhats.TriggerModes.FALLING_EDGE">
 <code class="descname">FALLING_EDGE</code><em class="property"> = 1</em><a class="headerlink" href="#daqhats.TriggerModes.FALLING_EDGE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Trigger on a falling edge.</p>
+<dd><p>Start the scan on a falling edge of TRIG.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="daqhats.TriggerModes.ACTIVE_HIGH">
 <code class="descname">ACTIVE_HIGH</code><em class="property"> = 2</em><a class="headerlink" href="#daqhats.TriggerModes.ACTIVE_HIGH" title="Permalink to this definition">¶</a></dt>
-<dd><p>Trigger any time the signal is high</p>
+<dd><p>Start the scan any time TRIG is high.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="daqhats.TriggerModes.ACTIVE_LOW">
 <code class="descname">ACTIVE_LOW</code><em class="property"> = 3</em><a class="headerlink" href="#daqhats.TriggerModes.ACTIVE_LOW" title="Permalink to this definition">¶</a></dt>
-<dd><p>Trigger any time the signal is low.</p>
+<dd><p>Start the scan any time TRIG is low.</p>
 </dd></dl>
 
 </dd></dl>
@@ -432,6 +432,8 @@ Each dictionary will contain the following keys<div class="line-block">
 <dt id="daqhats.mcc118.blink_led">
 <code class="descname">blink_led</code><span class="sig-paren">(</span><em>count</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc118.blink_led" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blink the MCC 118 LED.</p>
+<p>Setting count to 0 will cause the LED to blink continuously until blink_led() is called
+again with a non-zero count.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -523,10 +525,10 @@ running when it is called.</p>
 <dd><p>Set the external trigger input mode.</p>
 <p>The available modes are:</p>
 <ul class="simple">
-<li><a class="reference internal" href="#daqhats.TriggerModes.RISING_EDGE" title="daqhats.TriggerModes.RISING_EDGE"><code class="xref py py-const docutils literal notranslate"><span class="pre">TriggerModes.RISING_EDGE</span></code></a>: Trigger when the TRIG input transitions from low to high.</li>
-<li><a class="reference internal" href="#daqhats.TriggerModes.RISING_EDGE" title="daqhats.TriggerModes.RISING_EDGE"><code class="xref py py-const docutils literal notranslate"><span class="pre">TriggerModes.RISING_EDGE</span></code></a>: Trigger when the TRIG input transitions from high to low.</li>
-<li><a class="reference internal" href="#daqhats.TriggerModes.ACTIVE_HIGH" title="daqhats.TriggerModes.ACTIVE_HIGH"><code class="xref py py-const docutils literal notranslate"><span class="pre">TriggerModes.ACTIVE_HIGH</span></code></a>: Trigger when the TRIG input is high.</li>
-<li><a class="reference internal" href="#daqhats.TriggerModes.ACTIVE_LOW" title="daqhats.TriggerModes.ACTIVE_LOW"><code class="xref py py-const docutils literal notranslate"><span class="pre">TriggerModes.ACTIVE_LOW</span></code></a>: Trigger when the TRIG input is low.</li>
+<li><a class="reference internal" href="#daqhats.TriggerModes.RISING_EDGE" title="daqhats.TriggerModes.RISING_EDGE"><code class="xref py py-const docutils literal notranslate"><span class="pre">TriggerModes.RISING_EDGE</span></code></a>: Start the scan when the TRIG input transitions from low to high.</li>
+<li><a class="reference internal" href="#daqhats.TriggerModes.RISING_EDGE" title="daqhats.TriggerModes.RISING_EDGE"><code class="xref py py-const docutils literal notranslate"><span class="pre">TriggerModes.RISING_EDGE</span></code></a>: Start the scan when the TRIG input transitions from high to low.</li>
+<li><a class="reference internal" href="#daqhats.TriggerModes.ACTIVE_HIGH" title="daqhats.TriggerModes.ACTIVE_HIGH"><code class="xref py py-const docutils literal notranslate"><span class="pre">TriggerModes.ACTIVE_HIGH</span></code></a>: Start the scan when the TRIG input is high.</li>
+<li><a class="reference internal" href="#daqhats.TriggerModes.ACTIVE_LOW" title="daqhats.TriggerModes.ACTIVE_LOW"><code class="xref py py-const docutils literal notranslate"><span class="pre">TriggerModes.ACTIVE_LOW</span></code></a>: Start the scan when the TRIG input is low.</li>
 </ul>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -560,6 +562,9 @@ running when it is called.</p>
 <dt id="daqhats.mcc118.a_in_read">
 <code class="descname">a_in_read</code><span class="sig-paren">(</span><em>channel</em>, <em>scaled=True</em>, <em>calibrated=True</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc118.a_in_read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a single reading of an analog input channel and return the value.</p>
+<p>When <strong>scaled</strong> is False the returned data will be an ADC code (a value between 0 and 4095);
+when true, the returned data will be a voltage.  When <strong>calibrated</strong> is false, the calibration
+factors will not be applied to the returned data; when true, calibration factors will be applied.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -668,14 +673,15 @@ desired amount of data. If a scan is already running this function will raise a 
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>channel_mask</strong> (<em>int</em>) – A bit mask of the desired channels (0x01 - 0xFF).</li>
 <li><strong>samples_per_channel</strong> (<em>int</em>) – The number of samples to acquire per channel.</li>
-<li><strong>sample_rate_per_channel</strong> (<em>float</em>) – The per-channel rate of the internal sampling clock, or the expected maximum
-rate of an external sampling clock, max 100,000.0.</li>
-<li><strong>continuous</strong> (<em>bool</em>) – False for a finite scan, True for a scan that runs until stopped by the user.</li>
-<li><strong>external_clock</strong> (<em>bool</em>) – False to use the internal sampling clock, True to use an external clock on the CLK pin.</li>
+<li><strong>sample_rate_per_channel</strong> (<em>float</em>) – The per-channel rate of the internal scan clock, or the expected maximum
+rate of an external scan clock, max 100,000.0.</li>
+<li><strong>continuous</strong> (<em>bool</em>) – False for a finite scan, True for a scan that runs until stopped by the user with
+<a class="reference internal" href="#daqhats.mcc118.a_in_scan_stop" title="daqhats.mcc118.a_in_scan_stop"><code class="xref py py-func docutils literal notranslate"><span class="pre">a_in_scan_stop()</span></code></a>.</li>
+<li><strong>external_clock</strong> (<em>bool</em>) – False to use the internal scan clock, True to use an external scan clock on the CLK pin.</li>
 <li><strong>external_trigger</strong> (<em>bool</em>) – False to start the scan immediately, True to start the scan when the external trigger
 conditions (set with <a class="reference internal" href="#daqhats.mcc118.trigger_mode" title="daqhats.mcc118.trigger_mode"><code class="xref py py-func docutils literal notranslate"><span class="pre">trigger_mode()</span></code></a>) are met on the TRIG pin.</li>
-<li><strong>scaled</strong> (<em>bool</em>) – True to return voltage, False to return A/D code.</li>
-<li><strong>calibrated</strong> (<em>bool</em>) – True to apply calibration to the value, False to return uncalibrated value.</li>
+<li><strong>scaled</strong> (<em>bool</em>) – True to return voltages, False to return A/D codes (a value between 0 and 4095.)</li>
+<li><strong>calibrated</strong> (<em>bool</em>) – True to apply calibration factors to the values, False to return uncalibrated value.</li>
 </ul>
 </td>
 </tr>
@@ -688,14 +694,6 @@ does not respond, or responds incorrectly.</li>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a_in_scan_start</span><span class="p">(</span><span class="n">channel_mask</span> <span class="o">=</span> <span class="mh">0x05</span><span class="p">,</span> <span class="n">samples_per_channel</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">sample_rate_per_channel</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>This will include channels 0 and 2 in the scan.  1000 samples will be acquired per
-channel, resulting in 2000 samples being read (samples_per_channel * number of channels).
-The sample rate per channel is 10,000 Hz, so the ADC will convert at a frequency of
-20,000 Hz (sample_rate_per_channel * number of channels).  The scan will start immediately.</p>
 </dd></dl>
 
 <dl class="method">

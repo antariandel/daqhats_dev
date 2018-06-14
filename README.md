@@ -1,15 +1,15 @@
-# MCC HAT Development
+# MCC DAQ HAT Library
 <table>
-	<tr><td>Info<td>Contains C and Python Libraries for interacting with Measurement Computing HAT boards.
+	<tr><td>Info<td>Contains C and Python Libraries for interacting with Measurement Computing DAQ HAT boards.
 	<tr><td>Author<td>Measurement Computing
 </table>
 
 ## About
-This is the development repository for Measurement Computing HAT boards. The **daqhats** package was created and is supported by Measurement Computing Corporation (MCC).
+This is the development repository for Measurement Computing DAQ HAT boards. The **daqhats** package was created and is supported by Measurement Computing Corporation (MCC).
 
 ## Prerequisites
-- Rasbian or Rasbian Lite image
-- Raspberry Pi A+, B+, 2, and 3
+- Raspbian or Raspbian Lite image (may work with other Raspberry Pi operating systems)
+- Raspberry Pi A+, B+, 2, or 3
 - C, C++, Python 2.7 or Python 3.4
 - *other requirements?*
 
@@ -17,7 +17,7 @@ This is the development repository for Measurement Computing HAT boards. The **d
 Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Raspberry Pi.
 
 ## Build Instructions
-1. Power off the Raspberry Pi and attach one or more HAT boards, using unique address settings for each. Refer to [Installing the HAT board](https://nwright98.github.io/daqhats/hardware.html) for detailed information. (*update link to mccdaq repo when available*)   
+1. Power off the Raspberry Pi and attach one or more DAQ HAT boards, using unique address settings for each. Refer to [Installing the HAT board](https://nwright98.github.io/daqhats/hardware.html) for detailed information. (*update link to mccdaq repo when available*)   
    When using a single board, leave it at address 0 (all address jumpers removed.) One board must always be at address 0 to ensure that the OS reads a HAT EEPROM and initializes the hardware correctly.
 2. Power on the Pi, log in, and open a terminal window (if using the graphical interface.)
 3. Update your installation packages and install git (if not installed):
@@ -52,7 +52,7 @@ You can now run the example programs under ~/daqhats/examples and create your ow
 cd ~/daqhats
 sudo ./uninstall.sh
 ```
-#### Update the EEPROM
+#### Update the EEPROM images
 If you change your board stack, you must update the saved EEPROM images so that the library has the correct board information:
 
 ```

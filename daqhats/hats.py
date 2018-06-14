@@ -19,10 +19,10 @@ class HatIDs:
 
 class TriggerModes:
     """Scan trigger input modes."""
-    RISING_EDGE     = 0     #: Trigger on a rising edge.
-    FALLING_EDGE    = 1     #: Trigger on a falling edge.
-    ACTIVE_HIGH     = 2     #: Trigger any time the signal is high
-    ACTIVE_LOW      = 3     #: Trigger any time the signal is low.
+    RISING_EDGE     = 0     #: Start the scan on a rising edge of TRIG.
+    FALLING_EDGE    = 1     #: Start the scan on a falling edge of TRIG.
+    ACTIVE_HIGH     = 2     #: Start the scan any time TRIG is high.
+    ACTIVE_LOW      = 3     #: Start the scan any time TRIG is low.
 
 # exception classes
 class HatError(Exception):
@@ -47,24 +47,24 @@ class _Info(Structure):
 
 def hat_list(filter_by_id = 0):
     """
-    Return a list of detected MCC HAT boards.
+    Return a list of detected DAQ HAT boards.
 
     Scans certain locations for information from the HAT EEPROMs.  Verifies the contents are
     valid HAT EEPROM contents and returns a list of dictionaries containing information on the
-    HAT.  Info will only be returned for MCC HATs.  The EEPROM contents are stored in
+    HAT.  Info will only be returned for DAQ HATs.  The EEPROM contents are stored in
     /etc/mcc/hats when using the daqhats_read_eeproms tool, or in /proc/device-tree in the case of
     a single HAT at address 0.
 
     Args:
-        filter_by_id (int): If this is :py:const:`HatIDs.ANY` return all MCC HATs found.  Otherwise, return
-            only HATs with ID matching this value.
+        filter_by_id (int): If this is :py:const:`HatIDs.ANY` return all DAQ HATs found.  Otherwise, return
+            only DAQ HATs with ID matching this value.
 
     Returns:
-        list: A list of dictionaries, the number of elements match the number of HATs found.
+        list: A list of dictionaries, the number of elements match the number of DAQ HATs found.
         Each dictionary will contain the following keys
 
         | **address** (int): device address
-        | **id** (int): device product ID, identifies the type of MCC HAT
+        | **id** (int): device product ID, identifies the type of DAQ HAT
         | **version** (int): device hardware version
         | **product_name** (str): device product name
     """
@@ -101,7 +101,7 @@ def hat_list(filter_by_id = 0):
 
 class Hat(object):
     """
-    HAT base class.
+    DAQ HAT base class.
 
     Args:
         address (int): board address, must be 0-7.

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>C Library Reference &mdash; MCC HAT Library 0.2.0 documentation</title>
+  <title>C Library Reference &mdash; MCC DAQ HAT Library 0.2.0 documentation</title>
   
 
   
@@ -51,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> MCC HAT Library
+            <a href="index.html" class="icon icon-home"> MCC DAQ HAT Library
           
 
           
@@ -87,7 +87,7 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Hardware Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the HAT board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the DAQ HAT board</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing and Using the Library</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">C Library Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#global-functions-and-data">Global functions and data</a><ul>
@@ -127,7 +127,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">MCC HAT Library</a>
+          <a href="index.html">MCC DAQ HAT Library</a>
         
       </nav>
 
@@ -179,7 +179,7 @@
             
   <div class="section" id="c-library-reference">
 <h1>C Library Reference<a class="headerlink" href="#c-library-reference" title="Permalink to this headline">¶</a></h1>
-<p>The C library is organized as a global function for listing the HAT boards attached
+<p>The C library is organized as a global function for listing the DAQ HAT boards attached
 to your system, and board-specific functions to provide full functionality for each
 type of board.  The library may be used with C and C++.</p>
 <div class="section" id="global-functions-and-data">
@@ -196,15 +196,15 @@ type of board.  The library may be used with C and C++.</p>
 <td>Description</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#c.hat_list" title="hat_list"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_list()</span></code></a></td>
-<td>Return a list of detected MCC HAT boards.</td>
+<td>Return a list of detected DAQ HAT boards.</td>
 </tr>
 </tbody>
 </table>
 <dl class="function">
 <dt id="c.hat_list">
 <span class="target" id="daqhats_8h_1ab23b9501c36d525c9a9a642c7885bd06"></span>int <code class="descname">hat_list</code><span class="sig-paren">(</span>uint16_t<em>&nbsp;filter_id</em>, struct  <a class="reference internal" href="#c.HatInfo" title="HatInfo">HatInfo</a>  *<em>&nbsp;list</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hat_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of detected MCC HAT boards.</p>
-<p>It creates the list from the HAT EEPROM files that are currently on the system. In the case of a single HAT at address 0 this information is automatically provided by Raspbian. However, when you have a stack of multiple boards you must extract the EEPROM images using the daqhats_read_eeproms tool.</p>
+<dd><p>Return a list of detected DAQ HAT boards.</p>
+<p>It creates the list from the DAQ HAT EEPROM files that are currently on the system. In the case of a single DAQ HAT at address 0 this information is automatically provided by Raspbian. However, when you have a stack of multiple boards you must extract the EEPROM images using the daqhats_read_eeproms tool.</p>
 <p>Example usage: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">hat_list</span><span class="p">(</span><span class="n">HAT_ID_ANY</span><span class="p">,</span> <span class="n">NULL</span><span class="p">);</span>
 
 <span class="k">if</span> <span class="p">(</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
@@ -238,7 +238,7 @@ type of board.  The library may be used with C and C++.</p>
 <dl class="define">
 <dt id="c.MAX_NUMBER_HATS">
 <span class="target" id="daqhats_8h_1af19d06df1dc47bdbc0206b8fc7ad7c4d"></span><code class="descname">MAX_NUMBER_HATS</code> 8<a class="headerlink" href="#c.MAX_NUMBER_HATS" title="Permalink to this definition">¶</a></dt>
-<dd><p>The maximum number of MCC HATs that may be connected. </p>
+<dd><p>The maximum number of DAQ HATs that may be connected. </p>
 </dd></dl>
 
 <div class="section" id="hat-ids">
@@ -246,7 +246,7 @@ type of board.  The library may be used with C and C++.</p>
 <dl class="enum">
 <dt id="c.HatIDs">
 <span class="target" id="daqhats_8h_1a30cd29e26738a6f6d11746f3ccfa06e8"></span><em class="property">enum </em><code class="descname">HatIDs</code><a class="headerlink" href="#c.HatIDs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Known MCC HAT IDs. </p>
+<dd><p>Known DAQ HAT IDs. </p>
 <p><em>Values:</em></p>
 <dl class="enumvalue">
 <dt id="c.HAT_ID_ANY">
