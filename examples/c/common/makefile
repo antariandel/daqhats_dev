@@ -17,4 +17,4 @@ read_values: read_values.o
 .PHONY: clean
 
 clean:
-	rm -f *.o *~ $(TARGETS)
+	@rm -f *.o *~ $(TARGETS)

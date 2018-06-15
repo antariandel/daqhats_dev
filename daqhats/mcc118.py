@@ -169,6 +169,9 @@ class mcc118(Hat):
         """
         Blink the MCC 118 LED.
 
+        Setting count to 0 will cause the LED to blink continuously until blink_led() is called
+        again with a non-zero count.
+        
         Args:
             count (int): The number of times to blink (max 255).
 
@@ -256,10 +259,10 @@ class mcc118(Hat):
 
         The available modes are:
 
-        * :py:const:`TriggerModes.RISING_EDGE`: Trigger when the TRIG input transitions from low to high.
-        * :py:const:`TriggerModes.RISING_EDGE`: Trigger when the TRIG input transitions from high to low.
-        * :py:const:`TriggerModes.ACTIVE_HIGH`: Trigger when the TRIG input is high.
-        * :py:const:`TriggerModes.ACTIVE_LOW`: Trigger when the TRIG input is low.
+        * :py:const:`TriggerModes.RISING_EDGE`: Start the scan when the TRIG input transitions from low to high.
+        * :py:const:`TriggerModes.RISING_EDGE`: Start the scan when the TRIG input transitions from high to low.
+        * :py:const:`TriggerModes.ACTIVE_HIGH`: Start the scan when the TRIG input is high.
+        * :py:const:`TriggerModes.ACTIVE_LOW`: Start the scan when the TRIG input is low.
 
         Args:
             mode (:py:class:`TriggerModes`): The trigger mode.
@@ -286,6 +289,10 @@ class mcc118(Hat):
     def a_in_read(self, channel, scaled=True, calibrated=True):
         """
         Perform a single reading of an analog input channel and return the value.
+        
+        When **scaled** is False the returned data will be an ADC code (a value between 0 and 4095);
+        when true, the returned data will be a voltage.  When **calibrated** is false, the calibration
+        factors will not be applied to the returned data; when true, calibration factors will be applied.
 
         Args:
             channel (int): The analog input channel number, 0-7.
@@ -381,34 +388,27 @@ class mcc118(Hat):
         Args:
             channel_mask (int): A bit mask of the desired channels (0x01 - 0xFF).
             samples_per_channel (int): The number of samples to acquire per channel.
-            sample_rate_per_channel (float): The per-channel rate of the internal sampling clock, or the expected maximum
-                rate of an external sampling clock, max 100,000.0.
-            continuous (bool): False for a finite scan, True for a scan that runs until stopped by the user.
-            external_clock (bool): False to use the internal sampling clock, True to use an external clock on the CLK pin.
+            sample_rate_per_channel (float): The per-channel rate of the internal scan clock, or the expected maximum
+                rate of an external scan clock, max 100,000.0.
+            continuous (bool): False for a finite scan, True for a scan that runs until stopped by the user with 
+                :py:func:`a_in_scan_stop`.
+            external_clock (bool): False to use the internal scan clock, True to use an external scan clock on the CLK pin.
             external_trigger (bool): False to start the scan immediately, True to start the scan when the external trigger
                 conditions (set with :py:func:`trigger_mode`) are met on the TRIG pin.
-            scaled (bool): True to return voltage, False to return A/D code.
-            calibrated (bool): True to apply calibration to the value, False to return uncalibrated value.
+            scaled (bool): True to return voltages, False to return A/D codes (a value between 0 and 4095.)
+            calibrated (bool): True to apply calibration factors to the values, False to return uncalibrated value.
 
         Raises:
             HatError: a scan is already running; memory could not be allocated; the board is not initialized,
                 does not respond, or responds incorrectly.
             ValueError: a scan argument is invalid.
-
-        Examples:
-            >>> a_in_scan_start(channel_mask = 0x05, samples_per_channel = 1000, sample_rate_per_channel = 10000)
-
-            This will include channels 0 and 2 in the scan.  1000 samples will be acquired per
-            channel, resulting in 2000 samples being read (samples_per_channel * number of channels).
-            The sample rate per channel is 10,000 Hz, so the ADC will convert at a frequency of
-            20,000 Hz (sample_rate_per_channel * number of channels).  The scan will start immediately.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
 
         # Perform some argument checking
         if channel_mask == 0:
-            raise ValueError("channel_mask must be > 0.")
+            raise ValueError("channel_mask must be nonzero.")
 
         num_channels = 0
         for index in range(8):

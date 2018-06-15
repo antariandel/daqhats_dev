@@ -9,11 +9,19 @@ fi
 echo "Removing shared library"
 echo
 make -C lib uninstall
+echo
+
+# Removed compiled examples
+echo "Removing compiled examples"
+echo
+make -C examples/c clean
+echo
 
 # Remove tools
 echo "Removing tools"
 echo
 make -C tools uninstall
+echo
 
 # Restore changes to SPI/I2C
 if [ -e "/etc/mcc/hats/enabled_spi" ]; then
@@ -28,7 +36,6 @@ fi
 # Remove EEPROM images
 echo "Removing EEPROM images"
 rm -rf /etc/mcc/hats
-
 echo
 
 # Remove the Python packages

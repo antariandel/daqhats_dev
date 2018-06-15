@@ -7,7 +7,7 @@ Functions
 ================================  =======================================================
 Function                          Description
 --------------------------------  -------------------------------------------------------
-:c:func:`hat_list`                Return a list of detected MCC HAT boards.
+:c:func:`hat_list`                Return a list of detected DAQ HAT boards.
 :c:func:`hat_wait_for_interrupt`  Wait for an interrupt to occur.
 :c:func:`hat_interrupt_active`    Read the current interrupt status.
 ================================  =======================================================
@@ -40,6 +40,7 @@ HatInfo structure
 Analog Input / Scan Options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. doxygendefine:: OPTS_DEFAULT
 .. doxygendefine:: OPTS_NOSCALEDATA
 .. doxygendefine:: OPTS_NOCALIBRATEDATA
 .. doxygendefine:: OPTS_EXTCLOCK
