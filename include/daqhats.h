@@ -1,18 +1,18 @@
 /**
 *   @file daqhats.h
 *   @author Measurement Computing Corp.
-*   @brief This file contains definitions used across all MCC HATs.
+*   @brief This file contains definitions used across all DAQ HATs.
 *
 *   @date 1 Feb 2018
 */
 #ifndef _DAQHATS_H
 #define _DAQHATS_H
 
-// include files for HAT boards
+// include files for DAQ HAT boards
 #include "mcc118.h"
 #include "mcc134.h"
 
-/// Known MCC HAT IDs.
+/// Known DAQ HAT IDs.
 enum HatIDs
 {
     HAT_ID_ANY = 0,             ///< Match any MCC ID in [hat_list()](@ref hat_list)
@@ -35,14 +35,15 @@ enum ResultCode
 };
 
 // Other definitions
-#define MAX_NUMBER_HATS         8   ///< The maximum number of MCC HATs that may be connected.
+#define MAX_NUMBER_HATS         8   ///< The maximum number of DAQ HATs that may be connected.
 
 // Scan / read flags
+#define OPTS_DEFAULT            (0x0000)    ///< Use default behavior
 #define OPTS_NOSCALEDATA        (0x0001)    ///< Return ADC code instead of scaled data (voltage, temperature, etc.)
-#define OPTS_NOCALIBRATEDATA    (0x0002)    ///< Return uncalibrated data.
-#define OPTS_EXTCLOCK           (0x0004)    ///< Use an external sample clock.
-#define OPTS_EXTTRIGGER         (0x0008)    ///< Use an external trigger.
-#define OPTS_CONTINUOUS         (0x0010)    ///< Scan until stopped.
+#define OPTS_NOCALIBRATEDATA    (0x0002)    ///< Return data without the calibration factors applied.
+#define OPTS_EXTCLOCK           (0x0004)    ///< Use an external clock to initiate data conversion.
+#define OPTS_EXTTRIGGER         (0x0008)    ///< Use an external trigger to start the operation.
+#define OPTS_CONTINUOUS         (0x0010)    ///< Convert data until stopped by the user.
 
 //! Contains information about a specific board.
 struct HatInfo
@@ -58,10 +59,10 @@ extern "C" {
 #endif
 
 /**
-*   Return a list of detected MCC HAT boards.
+*   Return a list of detected DAQ HAT boards.
 *
-*   It creates the list from the HAT EEPROM files that are currently on the
-*   system.  In the case of a single HAT at address 0 this information is
+*   It creates the list from the DAQ HAT EEPROM files that are currently on the
+*   system.  In the case of a single DAQ HAT at address 0 this information is
 *   automatically provided by Raspbian.  However, when you have a stack of
 *   multiple boards you must extract the EEPROM images using the daqhats_read_eeproms
 *   tool.

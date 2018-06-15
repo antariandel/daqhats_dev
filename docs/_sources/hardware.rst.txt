@@ -1,8 +1,8 @@
 .. _install:
 
-************************
-Installing the HAT board
-************************
+****************************
+Installing the DAQ HAT board
+****************************
 
 Installing a single board
 *************************
@@ -40,11 +40,13 @@ Installing a single board
 Installing multiple boards
 **************************
 
-1. Follow steps 1-6 in the single board installation procedure for the first HAT board.  
-2. Connect all desired field wiring to the first board because the screw terminals will not be accessible once additional boards are installed above it.
-3. Install the standoffs of the additional board by inserting the male threaded portions through the 4 corner holes of the installed HAT board and threading them into the standoffs below.
-4. Install the next 2x20 receptacle with extended leads onto the leads of the previous 2x20 receptacle by pressing the female portion of the new receptacle onto the previous receptacle leads, being careful not to bend the leads of either receptacle.
-5. Install the appropriate address jumpers onto address header locations A0-A2 of the new HAT board. The recommended addressing method is to have the addresses increment from 0 as the boards are installed, i.e. 0, 1, 2, and so forth.  **There must always be a board at address 0.** The jumpers are installed in this manner (install jumpers where "Y" appears):
+
+Follow steps 1-6 in the single board installation procedure for the first HAT board.  
+
+1. **Connect all desired field wiring to the installed board - the screw terminals will not be accessible once additional boards are installed above it.**
+2. Install the standoffs of the additional board by inserting the male threaded portions through the 4 corner holes of the installed HAT board and threading them into the standoffs below.
+3. Install the next 2x20 receptacle with extended leads onto the leads of the previous 2x20 receptacle by pressing the female portion of the new receptacle onto the previous receptacle leads, being careful not to bend the leads of either receptacle.
+4. Install the appropriate address jumpers onto address header locations A0-A2 of the new HAT board. The recommended addressing method is to have the addresses increment from 0 as the boards are installed, i.e. 0, 1, 2, and so forth.  **There must always be a board at address 0.** The jumpers are installed in this manner (install jumpers where "Y" appears):
 
     ===========     ======  ======  ======
     **Address**     **A0**  **A1**  **A2**
@@ -60,7 +62,7 @@ Installing multiple boards
     ===========     ======  ======  ======
 
     
-6. Insert the new HAT board onto the leads of the 2x20 receptacle so that the leads go into the holes on the bottom of the HAT board and come out through the 2x20 connector on the top of the HAT board.  The 4 mounting holes in the corners of the HAT board must line up with the standoffs.  Slide the HAT board down until it rests on the standoffs.
-7. Repeat steps 2-6 for each board to be added.
-8. Insert the included screws through the mounting holes on the top HAT board into the threaded holes in the standoffs and lightly tighten them.
+5. Insert the new HAT board onto the leads of the 2x20 receptacle so that the leads go into the holes on the bottom of the HAT board and come out through the 2x20 connector on the top of the HAT board.  The 4 mounting holes in the corners of the HAT board must line up with the standoffs.  Slide the HAT board down until it rests on the standoffs.
+6. Repeat steps 1-5 for each board to be added.
+7. Insert the included screws through the mounting holes on the top HAT board into the threaded holes in the standoffs and lightly tighten them.
 

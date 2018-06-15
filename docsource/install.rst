@@ -7,7 +7,7 @@ The project is hosted at https://github.com/nwright98/daqhats.
 Installation
 ************
 
-1. Power off the Raspberry Pi then attach one or more HAT boards, using unique address settings for each. When using a single board, leave it at address 0 (all address jumpers removed.) One board must always be at address 0 so the OS reads a HAT EEPROM and initializes the hardware correctly.
+1. Power off the Raspberry Pi then attach one or more HAT boards (see :ref:`install`).
 2. Power on the Pi and log in.  Open a terminal window if using the graphical interface.
 3. If git is not already installed, update installation packages and install it::
 

@@ -1,18 +1,19 @@
-OBJ = continuous_scan.o
+NAME = continuous_scan
+OBJ = $(NAME).o
 LIBS = -ldaqhats
 CFLAGS = -Wall -I/usr/local/include -g
 CC = gcc
 EXTENSION = .c
 
-all: continuous_scan
+all: $(NAME)
 
 %.o: %$(EXTENSION) $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-continuous_scan: $(OBJ)
+$(NAME): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
 
 clean:
-	rm -f *.o *~ core *~ 
+	@rm -f *.o *~ core *~ 

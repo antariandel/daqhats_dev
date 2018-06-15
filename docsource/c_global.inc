@@ -7,7 +7,7 @@ Functions
 ======================  =======================================================
 Function                Description
 ----------------------  -------------------------------------------------------
-:c:func:`hat_list`      Return a list of detected MCC HAT boards.
+:c:func:`hat_list`      Return a list of detected DAQ HAT boards.
 ======================  =======================================================
 
 .. doxygenfunction:: hat_list
@@ -36,6 +36,7 @@ HatInfo structure
 Analog Input / Scan Options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. doxygendefine:: OPTS_DEFAULT
 .. doxygendefine:: OPTS_NOSCALEDATA
 .. doxygendefine:: OPTS_NOCALIBRATEDATA
 .. doxygendefine:: OPTS_EXTCLOCK

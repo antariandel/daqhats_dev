@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'MCC HAT Library'
+project = u'MCC DAQ HAT Library'
 copyright = u'2018, Measurement Computing'
 author = u'Measurement Computing'
 
@@ -144,7 +144,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class], toctree_only).
 latex_documents = [
-    (master_doc, 'daqhatLibrary.tex', u'MCC HAT Library Documentation',
+    (master_doc, 'daqhatLibrary.tex', u'MCC DAQ HAT Library Documentation',
      u'Measurement Computing', 'manual', True),
 ]
 
@@ -155,7 +155,7 @@ latx_show_urls = 'inline'
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'daqhatlibrary', u'MCC HAT Library Documentation',
+    (master_doc, 'daqhatlibrary', u'MCC DAQ HAT Library Documentation',
      [author], 1)
 ]
 
@@ -166,8 +166,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'daqhatLibrary', u'MCC HAT Library Documentation',
-     author, 'daqhatLibrary', 'One line description of project.',
+    (master_doc, 'daqhatLibrary', u'MCC DAQ HAT Library Documentation',
+     author, 'daqhatLibrary', 'Software Library for MCC DAQ HATs.',
      'Miscellaneous'),
 ]
 
@@ -184,6 +184,3 @@ breathe_domain_by_extension = {
    "c" : "c"
 }
 breathe_show_define_initializer = True
-
-#autosummary_generate = True
-
