@@ -470,9 +470,9 @@ class mcc118(Hat):
 
         result = _libc.mcc118_a_in_scan_buffer_size(self._address, byref(data_value))
 
-        if result == RESULT_RESOURCE_UNAVAIL:
+        if result == self._RESULT_RESOURCE_UNAVAIL:
             raise HatError(self._address, "No scan is running.")
-        elif result != RESULT_BAD_PARAMETER:
+        elif result != self._RESULT_SUCCESS:
             raise HatError(self._address, "Incorrect response {}.".format(result))
         return data_value.value
 
@@ -537,9 +537,11 @@ class mcc118(Hat):
 
         # python 2 / 3 workaround for xrange
         if sys.version_info.major > 2:
-            xrange = range
+            my_range = range
+        else:
+            my_range = xrange
 
-        data_list = [data_buffer[i] for i in xrange(total_read)]
+        data_list = [data_buffer[i] for i in my_range(total_read)]
         return {'running': (status.value & self._STATUS_RUNNING) != 0,
             'hardware_overrun': (status.value & self._STATUS_HW_OVERRUN) != 0,
             'buffer_overrun': (status.value & self._STATUS_BUFFER_OVERRUN) != 0,
