@@ -5,6 +5,7 @@ import os.path
 from ctypes import *
 from daqhats.hats import Hat, HatError
 from array import array
+import sys
 
 # Load the library
 libname = 'libdaqhats.so.0'
@@ -118,7 +119,11 @@ class mcc134(Hat):
         buffer = create_string_buffer(9)
         if _libc.mcc134_serial(self._address, buffer) != self._RESULT_SUCCESS:
             raise HatError(self._address, "Incorrect response.")
-        return buffer.value
+        if sys.version_info > (3, 0):
+            my_serial = buffer.value.decode()
+        else:
+            my_serial = buffer.value
+        return my_serial
 
     def calibration_date(self):
         """
@@ -136,7 +141,11 @@ class mcc134(Hat):
         buffer = create_string_buffer(11)
         if _libc.mcc134_calibration_date(self._address, buffer) != self._RESULT_SUCCESS:
             raise HatError(self._address, "Incorrect response.")
-        return buffer.value
+        if sys.version_info > (3, 0):
+            my_date = buffer.value.decode()
+        else:
+            my_date = buffer.value
+        return my_date
 
     def calibration_coefficient_read(self, channel):
         """
