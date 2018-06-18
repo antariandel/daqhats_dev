@@ -163,7 +163,11 @@ class mcc118(Hat):
         buffer = create_string_buffer(9)
         if _libc.mcc118_serial(self._address, buffer) != self._RESULT_SUCCESS:
             raise HatError(self._address, "Incorrect response.")
-        return buffer.value
+        if sys.version_info > (3, 0):
+            my_serial = buffer.value.decode()
+        else:
+            my_serial = buffer.value
+        return my_serial
 
     def blink_led(self, count):
         """
@@ -200,7 +204,11 @@ class mcc118(Hat):
         buffer = create_string_buffer(11)
         if _libc.mcc118_calibration_date(self._address, buffer) != self._RESULT_SUCCESS:
             raise HatError(self._address, "Incorrect response.")
-        return buffer.value
+        if sys.version_info > (3, 0):
+            my_date = buffer.value.decode()
+        else:
+            my_date = buffer.value
+        return my_date
 
     def calibration_coefficient_read(self, channel):
         """

@@ -2,8 +2,8 @@
 Wraps the global methods from the MCC Hat library for use in Python.
 """
 import os.path
-#from enum import IntEnum
 from ctypes import *
+import sys
 
 # Load the library
 libname = 'libdaqhats.so.0'
@@ -89,12 +89,20 @@ def hat_list(filter_by_id = 0):
     my_list = []
     for item in my_info:
         name = cast(item.product_name, c_char_p)
-        info = {
-            'address'       : item.address,
-            'id'            : item.id,
-            'version'       : item.version,
-            'product_name'  : name.value
-        }
+        if sys.version_info > (3, 0):
+            info = {
+                'address'       : item.address,
+                'id'            : item.id,
+                'version'       : item.version,
+                'product_name'  : name.value.decode()
+            }
+        else:
+            info = {
+                'address'       : item.address,
+                'id'            : item.id,
+                'version'       : item.version,
+                'product_name'  : name.value
+            }
         my_list.append(info)
 
     return my_list
