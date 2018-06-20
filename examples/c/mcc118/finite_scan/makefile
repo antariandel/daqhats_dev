@@ -16,4 +16,4 @@ $(NAME): $(OBJ)
 .PHONY: clean
 
 clean:
-	@rm -f *.o *~ core *~ 
+	@rm -f *.o *~ core $(NAME) test.csv
