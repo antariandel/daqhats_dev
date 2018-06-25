@@ -4,13 +4,15 @@ Global functions and data
 Functions
 ---------
 
-======================  =======================================================
-Function                Description
-----------------------  -------------------------------------------------------
-:c:func:`hat_list`      Return a list of detected DAQ HAT boards.
-======================  =======================================================
+===========================  ===================================================
+Function                     Description
+---------------------------  ---------------------------------------------------
+:c:func:`hat_list`           Return a list of detected DAQ HAT boards.
+:c:func:`hat_error_message`  Return a text description for a DAQ HAT result.
+===========================  ===================================================
 
 .. doxygenfunction:: hat_list
+.. doxygenfunction:: hat_error_message
 
 Data types and definitions
 --------------------------

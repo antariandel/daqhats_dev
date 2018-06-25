@@ -188,8 +188,8 @@ type of board.  The library may be used with C and C++.</p>
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
 <colgroup>
-<col width="29%" />
-<col width="71%" />
+<col width="35%" />
+<col width="65%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>Function</td>
@@ -197,6 +197,9 @@ type of board.  The library may be used with C and C++.</p>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#c.hat_list" title="hat_list"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_list()</span></code></a></td>
 <td>Return a list of detected DAQ HAT boards.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.hat_error_message" title="hat_error_message"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_error_message()</span></code></a></td>
+<td>Return a text description for a DAQ HAT result.</td>
 </tr>
 </tbody>
 </table>
@@ -227,6 +230,22 @@ type of board.  The library may be used with C and C++.</p>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">filter_id</span></code>: An optional <a class="reference internal" href="#daqhats_8h_1a30cd29e26738a6f6d11746f3ccfa06e8"><span class="std std-ref">ID</span></a> filter to only return boards with a specific ID. Use <a class="reference internal" href="#daqhats_8h_1a30cd29e26738a6f6d11746f3ccfa06e8a52d705896d388224ec9cac80d44ccc3c"><span class="std std-ref">HAT_ID_ANY</span></a> to return all boards. </li>
 <li><code class="docutils literal notranslate"><span class="pre">list</span></code>: A pointer to a user-allocated array of struct <a class="reference internal" href="#structHatInfo"><span class="std std-ref">HatInfo</span></a>. The function will fill the structures with information about the detected boards. You may have an array of the maximum number of boards (<a class="reference internal" href="#daqhats_8h_1af19d06df1dc47bdbc0206b8fc7ad7c4d"><span class="std std-ref">MAX_NUMBER_HATS</span></a>) or call this function while passing NULL for list, which will return the count of boards found, then allocate the correct amount of memory and call this function again with a valid pointer. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.hat_error_message">
+<span class="target" id="daqhats_8h_1ab0c4d9e2f684598fb95239d3b9019e5b"></span>const char* <code class="descname">hat_error_message</code><span class="sig-paren">(</span>int<em>&nbsp;result</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hat_error_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a text description for a DAQ HAT result code.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The error message. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">result</span></code>: The <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a> returned from a DAQ HAT function </li>
 </ul>
 </dd>
 </dl>
