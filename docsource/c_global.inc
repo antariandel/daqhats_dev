@@ -33,8 +33,10 @@ HatInfo structure
 .. doxygenstruct:: HatInfo
     :members:
 
-Analog Input / Scan Options
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Analog Input / Scan Option Flags
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+See individual function documentation for detailed usage information.
 
 .. doxygendefine:: OPTS_DEFAULT
 .. doxygendefine:: OPTS_NOSCALEDATA
