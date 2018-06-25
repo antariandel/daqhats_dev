@@ -118,6 +118,15 @@ extern "C" {
 */
 int hat_list(uint16_t filter_id, struct HatInfo* list);
 
+/**
+*   Return a text description for a DAQ HAT result code.
+*
+*   @param result  The [Result code](@ref ResultCode) returned from a DAQ HAT
+*       function
+*   @return The error message.
+*/
+const char* hat_error_message(int result);
+
 #ifdef __cplusplus
 }
 #endif

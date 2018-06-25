@@ -55,6 +55,7 @@
 #define ADDR1_GPIO              13
 #define ADDR2_GPIO              26
 
+
 // EEPROM header structure
 struct _Header
 {
@@ -112,6 +113,18 @@ static const char* const BOARD_LOCKFILES[] =
 static const char* const HAT_SETTINGS_DIR = "/etc/mcc/hats";
 static const char* const SYS_HAT_DIR = "/proc/device-tree/hat";
 static const char* const VENDOR_NAME = "Measurement Computing Corp.";
+
+static const char* HAT_ERROR_MESSAGES[] =
+{
+    "Success.",
+    "An incorrect parameter was passed to the function.",
+    "The device is busy.",
+    "There was a timeout accessing a resource.",
+    "There was a timeout while obtaining a resource lock.",
+    "The device at the specified address is not the correct type.",
+    "A needed resource was not available.",
+    "An unknown error occurred."
+};
 
 // *****************************************************************************
 // Variables
@@ -768,4 +781,31 @@ int _hat_info(uint8_t address, struct HatInfo* entry, char* pData,
     }
 
     return RESULT_SUCCESS;
+}
+
+/******************************************************************************
+  Return an error description string.
+ *****************************************************************************/
+const char* hat_error_message(int result)
+{
+    switch (result)
+    {
+    case RESULT_SUCCESS:
+        return HAT_ERROR_MESSAGES[0];
+    case RESULT_BAD_PARAMETER:
+        return HAT_ERROR_MESSAGES[1];
+    case RESULT_BUSY:
+        return HAT_ERROR_MESSAGES[2];
+    case RESULT_TIMEOUT:
+        return HAT_ERROR_MESSAGES[3];
+    case RESULT_LOCK_TIMEOUT:
+        return HAT_ERROR_MESSAGES[4];
+    case RESULT_INVALID_DEVICE:
+        return HAT_ERROR_MESSAGES[5];
+    case RESULT_RESOURCE_UNAVAIL:
+        return HAT_ERROR_MESSAGES[6];
+    case RESULT_UNDEFINED:
+    default:
+        return HAT_ERROR_MESSAGES[7];
+    }
 }
