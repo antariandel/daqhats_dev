@@ -648,7 +648,7 @@ class mcc118(Hat): # pylint: disable=invalid-name
             c_ulong, POINTER(c_ulong)]
 
         samples_read_per_channel = c_ulong(0)
-        samples_to_read = c_ulong(0)
+        samples_to_read = 0
         status = c_ushort(0)
         timed_out = False
 
@@ -665,17 +665,17 @@ class mcc118(Hat): # pylint: disable=invalid-name
                     result))
 
             # allocate a buffer large enough for all the data
-            samples_to_read = samples_available
-            buffer_size = samples_available * num_channels
+            samples_to_read = samples_available.value
+            buffer_size = samples_available.value * num_channels
             data_buffer = (c_double * buffer_size)()
         elif samples_per_channel == 0:
             # only read the status
-            samples_to_read.value = 0
+            samples_to_read = 0
             buffer_size = 0
             data_buffer = None
         elif samples_per_channel > 0:
             # read the specified number of samples
-            samples_to_read.value = samples_per_channel
+            samples_to_read = samples_per_channel
             # create a C buffer for the read
             buffer_size = samples_per_channel * num_channels
             data_buffer = (c_double * buffer_size)()
@@ -777,6 +777,7 @@ class mcc118(Hat): # pylint: disable=invalid-name
         samples_read_per_channel = c_ulong()
         status = c_ushort()
         timed_out = False
+        samples_to_read = 0
 
         if samples_per_channel < 0:
             # read all available data
@@ -791,17 +792,17 @@ class mcc118(Hat): # pylint: disable=invalid-name
                     result))
 
             # allocate a buffer large enough for all the data
-            samples_to_read = samples_available
-            buffer_size = samples_available * num_channels
+            samples_to_read = samples_available.value
+            buffer_size = samples_available.value * num_channels
             data_buffer = numpy.empty(buffer_size, dtype=numpy.float64)
         elif samples_per_channel == 0:
             # only read the status
-            samples_to_read.value = 0
+            samples_to_read = 0
             buffer_size = 0
             data_buffer = None
         elif samples_per_channel > 0:
             # read the specified number of samples
-            samples_to_read.value = samples_per_channel
+            samples_to_read = samples_per_channel
             # create a C buffer for the read
             buffer_size = samples_per_channel * num_channels
             data_buffer = numpy.empty(buffer_size, dtype=numpy.float64)
