@@ -866,9 +866,9 @@ type of board.  The library may be used with C and C++.</p>
 <li><a class="reference internal" href="#mcc118_8h_1a799b04d03f49612e3e636b56c3972b80"><span class="std std-ref">STATUS_RUNNING</span></a>: The scan is running. </li>
 </ul>
 </li>
-<li><code class="docutils literal notranslate"><span class="pre">samples_per_channel</span></code>: The number of samples per channel to read. Specify <strong>-1</strong> to read all available samples. If buffer does not contain enough space then the function will read as many samples per channel as will fit in <strong>buffer</strong>. </li>
-<li><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: The amount of time in seconds to wait for the samples to be read. Specify a negative number to wait indefinitely or <strong>0</strong> to return immediately with whatever samples are available. </li>
-<li><code class="docutils literal notranslate"><span class="pre">buffer</span></code>: The buffer to read samples into. </li>
+<li><code class="docutils literal notranslate"><span class="pre">samples_per_channel</span></code>: The number of samples per channel to read. Specify <strong>-1</strong> to read all available samples in the scan thread buffer, ignoring <strong>timeout</strong>. If <strong>buffer</strong> does not contain enough space then the function will read as many samples per channel as will fit in <strong>buffer</strong>. </li>
+<li><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: The amount of time in seconds to wait for the samples to be read. Specify a negative number to wait indefinitely or <strong>0</strong> to return immediately with whatever samples are available (up to the value of <strong>samples_per_channel</strong> or <strong>buffer_size_samples</strong>.) </li>
+<li><code class="docutils literal notranslate"><span class="pre">buffer</span></code>: The user data buffer that receives the samples. </li>
 <li><code class="docutils literal notranslate"><span class="pre">buffer_size_samples</span></code>: The size of the buffer in samples. Each sample is a <strong>double</strong>. </li>
 <li><code class="docutils literal notranslate"><span class="pre">samples_read_per_channel</span></code>: Returns the actual number of samples read from each channel. </li>
 </ul>

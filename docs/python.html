@@ -873,7 +873,8 @@ the scan thread buffer.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a namedtuple containing the following field names:<div class="line-block">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>a namedtuple containing the following field names:</p>
+<div class="line-block">
 <div class="line"><strong>running</strong> (bool): True if the scan is running, False if it has
 stopped or completed.</div>
 <div class="line"><strong>hardware_overrun</strong> (bool): True if the hardware could not
@@ -885,12 +886,17 @@ and data acquisition started.</div>
 <div class="line"><strong>samples_available</strong> (int): The number of samples per channel
 currently in the scan buffer.</div>
 </div>
+</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">namedtuple</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">namedtuple</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or
-responds incorrectly.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – A scan is not active, the board is not initialized, does</li>
+<li>not respond, or responds incorrectly.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -909,16 +915,16 @@ background scan and optionally reads sampled data from the scan buffer.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>samples_per_channel</strong> (<em>int</em>) – The number of samples per channel to read
-from the scan buffer.  Specify a negative number to read all
-available samples or 0 to only read the scan status and return
-no data.</li>
+from the scan buffer. Specify a negative number to return all
+available samples immediately and ignore <strong>timeout</strong> or 0 to
+only read the scan status and return no data.</li>
 <li><strong>timeout</strong> (<em>float</em>) – The amount of time in seconds to wait for the
-samples to be read.  Specify a negative number to wait
+samples to be read. Specify a negative number to wait
 indefinitely, or 0 to return immediately with the samples that
-are already in the scan buffer.  If the timeout is met and the
-specified number of samples have not been read, then the
-function will return with the amount that has been read and the
-timeout status set.</li>
+are already in the scan buffer (up to <strong>samples_per_channel</strong>.)
+If the timeout is met and the specified number of samples have
+not been read, then the function will return all the available
+samples and the timeout status set.</li>
 </ul>
 </td>
 </tr>
@@ -943,8 +949,11 @@ buffer.</div>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">namedtuple</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or
-responds incorrectly.</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – A scan is not active, the board is not initialized, does</li>
+<li>not respond, or responds incorrectly.</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – Incorrect argument.</li>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -998,8 +1007,11 @@ scan buffer.</div>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">namedtuple</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or
-responds incorrectly.</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – A scan is not active, the board is not initialized, does</li>
+<li>not respond, or responds incorrectly.</li>
+<li><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code> – Incorrect argument.</li>
+</ul>
 </td>
 </tr>
 </tbody>

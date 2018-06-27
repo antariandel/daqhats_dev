@@ -570,8 +570,8 @@ class mcc118(Hat): # pylint: disable=invalid-name
                 currently in the scan buffer.
 
         Raises:
-            HatError: the board is not initialized, does not respond, or
-                responds incorrectly.
+            HatError: A scan is not active, the board is not initialized, does
+            not respond, or responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -582,7 +582,9 @@ class mcc118(Hat): # pylint: disable=invalid-name
         result = self._lib.mcc118_a_in_scan_status(
             self._address, byref(status), byref(samples_available))
 
-        if result != self._RESULT_SUCCESS:
+        if result == self._RESULT_RESOURCE_UNAVAIL:
+            raise HatError(self._address, "Scan not active.")
+        elif result != self._RESULT_SUCCESS:
             raise HatError(self._address, "Incorrect response {}.".format(
                 result))
 
@@ -607,16 +609,16 @@ class mcc118(Hat): # pylint: disable=invalid-name
 
         Args:
             samples_per_channel (int): The number of samples per channel to read
-                from the scan buffer.  Specify a negative number to read all
-                available samples or 0 to only read the scan status and return
-                no data.
+                from the scan buffer. Specify a negative number to return all
+                available samples immediately and ignore **timeout** or 0 to
+                only read the scan status and return no data.
             timeout (float): The amount of time in seconds to wait for the
-                samples to be read.  Specify a negative number to wait
+                samples to be read. Specify a negative number to wait
                 indefinitely, or 0 to return immediately with the samples that
-                are already in the scan buffer.  If the timeout is met and the
-                specified number of samples have not been read, then the
-                function will return with the amount that has been read and the
-                timeout status set.
+                are already in the scan buffer (up to **samples_per_channel**.)
+                If the timeout is met and the specified number of samples have
+                not been read, then the function will return all the available
+                samples and the timeout status set.
 
         Returns:
             namedtuple: a namedtuple containing the following field names:
@@ -635,8 +637,9 @@ class mcc118(Hat): # pylint: disable=invalid-name
                 buffer.
 
         Raises:
-            HatError: the board is not initialized, does not respond, or
-                responds incorrectly.
+            HatError: A scan is not active, the board is not initialized, does
+            not respond, or responds incorrectly.
+            ValueError: Incorrect argument.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -756,8 +759,9 @@ class mcc118(Hat): # pylint: disable=invalid-name
                 scan buffer.
 
         Raises:
-            HatError: the board is not initialized, does not respond, or
-                responds incorrectly.
+            HatError: A scan is not active, the board is not initialized, does
+            not respond, or responds incorrectly.
+            ValueError: Incorrect argument.
         """
         try:
             import numpy

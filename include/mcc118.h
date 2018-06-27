@@ -389,13 +389,14 @@ int mcc118_a_in_scan_status(uint8_t address, uint16_t* status,
 *           been met.
 *       - [STATUS_RUNNING](@ref STATUS_RUNNING): The scan is running.
 *   @param samples_per_channel  The number of samples per channel to read.  
-*       Specify \b -1 to read all available samples. If buffer does not contain
-*       enough space then the function will read as many samples per channel as
-*       will fit in \b buffer.
-*   @param timeout  The amount of time in seconds to wait for the samples to be 
-*       read. Specify a negative number to wait indefinitely or \b 0 to return 
-*       immediately with whatever samples are available.
-*   @param buffer   The buffer to read samples into.
+*       Specify \b -1 to read all available samples in the scan thread buffer,
+*       ignoring \b timeout. If \b buffer does not contain enough space then the
+*       function will read as many samples per channel as will fit in \b buffer.
+*   @param timeout  The amount of time in seconds to wait for the samples to be
+*       read. Specify a negative number to wait indefinitely or \b 0 to return
+*       immediately with whatever samples are available (up to the value of
+*       \b samples_per_channel or \b buffer_size_samples.)
+*   @param buffer   The user data buffer that receives the samples.
 *   @param buffer_size_samples  The size of the buffer in samples. Each sample 
 *       is a \b double.
 *   @param samples_read_per_channel Returns the actual number of samples read 
