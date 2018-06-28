@@ -1,31 +1,22 @@
-# MCC HAT Development
+# MCC DAQ HAT Library
 <table>
-	<tr><td>Info<td>Contains C and Python Libraries for interacting with Measurement Computing HAT boards.
+	<tr><td>Info<td>Contains C and Python Libraries for interacting with Measurement Computing DAQ HAT boards.
 	<tr><td>Author<td>Measurement Computing
 </table>
 
 ## About
-This is the development repository for Measurement Computing HAT boards. The **daqhats** package was created and is supported by Measurement Computing Corporation (MCC).
+This is the development repository for Measurement Computing DAQ HAT boards. The **daqhats** library was created and is supported by Measurement Computing Corporation (MCC).
 
 ## Prerequisites
-- Rasbian or Rasbian Lite image
-- Raspberry Pi A+, B+, 2, and 3
+- Raspbian or Raspbian Lite image (may work with other Raspberry Pi operating systems)
+- Raspberry Pi A+, B+, 2, or 3
 - C, C++, Python 2.7 or Python 3.4
-- *other requirements?*
 
 ## Raspberry Pi Configuration
-1. Download the latest image of Raspbian (larger, contains graphical interface and programs) or Raspbian lite (smaller, terminal only.)
-2. Write the image to a micro SD card using an image writer tool such as Win32 Disk Imager
-3. After the image has been written, a new drive letter should be available with the contents of one partition on the SD card.
-   If you are going to use the Pi over ssh, create an empty text file in this drive named "ssh". This will enable the ssh server after the Pi boots.
-4. Install the SD card in your Pi, connect it to the network (if using Ethernet), and then power on the Pi.
-5. Log into the Pi (locally with keyboard / monitor, or remotely using ssh) using the default user *pi* and password *raspberry*. The default hostname is *raspberrypi*, so if no other Pis with this name are on your network, and your PC has Bonjour support, you can ssh to the Pi using the destination *raspberrypi.local*.
-6. Change the hostname to a unique value by running `sudo raspi-config`, select "Hostname", and enter the new hostname. This allows you to access your Pi on the network by hostname, and makes the default hostname available to other users installing new Pi boards.   
-   Select "Finish", then allow the Pi to reboot.
-7. Log in to your Pi with the new hostname, for example *hostname.local*.
+Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Raspberry Pi.
 
 ## Build Instructions
-1. Power off the Raspberry Pi and attach one or more HAT boards, using unique address settings for each. Refer to [Installing the HAT board](https://nwright98.github.io/daqhats/hardware.html) for detailed information. (*update link to mccdaq repo when available*)   
+1. Power off the Raspberry Pi and attach one or more DAQ HAT boards, using unique address settings for each. Refer to [Installing the HAT board](https://www.mccdaq.com/PDFs/Manuals/DAQ-HAT/hardware.html) for detailed information.   
    When using a single board, leave it at address 0 (all address jumpers removed.) One board must always be at address 0 to ensure that the OS reads a HAT EEPROM and initializes the hardware correctly.
 2. Power on the Pi, log in, and open a terminal window (if using the graphical interface.)
 3. Update your installation packages and install git (if not installed):
@@ -34,7 +25,7 @@ This is the development repository for Measurement Computing HAT boards. The **d
    sudo apt-get update
    sudo apt-get install git
    ```
-4. Download the daqhats package to the root of your home folder:
+4. Download the daqhats library to the root of your home folder:
 
    ```
    cd ~
@@ -54,13 +45,13 @@ This is the development repository for Measurement Computing HAT boards. The **d
    ```
 You can now run the example programs under ~/daqhats/examples and create your own programs. Refer to the [Examples](#examples) section below for more information.
 
-#### Uninstall the daqhats Package
+#### Uninstall the daqhats library
 
 ```
 cd ~/daqhats
 sudo ./uninstall.sh
 ```
-#### Update the EEPROM
+#### Update the EEPROM images
 If you change your board stack, you must update the saved EEPROM images so that the library has the correct board information:
 
 ```
@@ -68,41 +59,45 @@ sudo daqhats_read_eeproms
 ```
 
 ## Examples
-The daqhats package provides example programs in C and Python for each HAT board under ~/daqhats/examples. Some examples are ready-to-run and others will need to be built. The example programs are available in the following formats:
+The daqhats library provides common and board-specific example programs developed with C/C++ and Python. The examples are available under ~/daqhats/examples, and are provided in the following formats:
 
-- console/terminal
-- GUI
-- Python web server
-- IFTTT (If This Then That) web server
+- console-based (C/C++)
+- User interface
+  - Web server (Python)
+  - IFTTT (If This Then That) web service (Python)
+  - CodeBlocks (C/C++)
 
-Refer to the Examples README for information about the MCC HAT examples that are available (*insert readme link when available*).
+Refer to the README.md file in each example folder for more information.
 
 ## Usage
-The following is a basic Python example demonstrating how to read and display analog data from the MCC 118 voltage measurement board.
+The following is a basic Python example demonstrating how to read each MCC 118 voltage input channel and display the results.
 ```
-    #!/usr/bin/env python
-    #
-    # Read and display analog input values
-    #
-    import time
-    import daqhats as hats
+	#!/usr/bin/env python
+	#
+	# MCC 118 example program
+	# Read and display analog input values
+	#
+	import sys
+	import daqhats as hats
 
-    # get hat list of MCC HAT boards
-    list = hats.hat_list(filter_by_id = hats.HatIDs.MCC_118)
-    if not list:
-        print("No boards found")
-        sys.exit()
+	# get hat list of MCC HAT boards
+	list = hats.hat_list(filter_by_id = hats.HatIDs.ANY)
+	if not list:
+		print("No boards found")
+		sys.exit()
 
-    # Read and display every channel from the first board
-    board = hats.mcc118(list[0]['address'])
-    print("Board {}:".format(entry['address']))
-    for channel in range(board.a_in_num_channels()):
-        value = board.a_in_read(channel)
-        print("  Ch {0}: {1:.3f}".format(channel, value))
+	# Read and display every channel
+	for entry in list: 
+    if entry.id == hats.HatIDs.MCC_118:
+        print("Board {}: MCC 118".format(entry.address))
+        board = hats.mcc118(entry.address)
+        for channel in range(board.a_in_num_channels()):
+            value = board.a_in_read(channel)
+            print("  Ch {0}: {1:.3f}".format(channel, value))	
 ```
 	
 ## Support/Feedback
-The **daqhats** package is supported by MCC. Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx). 
+The **daqhats** library is supported by MCC. Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx). 
 
 ## Documentation 
-Documentation for the daqhats package is available at https://nwright98.github.io/daqhats/ (*replace with mccdaq/daqhats link when available*). 
+Documentation for the daqhats library is available at [mccdaq.com](https://www.mccdaq.com/PDFs/Manuals/DAQ-HAT/) . 
