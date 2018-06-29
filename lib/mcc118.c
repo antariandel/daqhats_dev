@@ -61,7 +61,8 @@
 
 #define CMD_READ_REPLY          0x7F
 
-#define MAX_TX_DATA_SIZE        (256)    // size of transmit / receive SPI buffer in device
+#define MAX_TX_DATA_SIZE        (256)    // size of transmit / receive SPI 
+                                         // buffer in device
 
 #define MSG_START               (0xDB)
 
@@ -98,8 +99,10 @@
 #define FW_RES_OTHER_ERROR      0x06
 
 
-#define SERIAL_SIZE     (8+1)   ///< The maximum size of the serial number string, plus NULL.
-#define CAL_DATE_SIZE   (10+1)  ///< The maximum size of the calibration date string, plus NULL.
+#define SERIAL_SIZE     (8+1)   ///< The maximum size of the serial number 
+                                // string, plus NULL.
+#define CAL_DATE_SIZE   (10+1)  ///< The maximum size of the calibration date 
+                                // string, plus NULL.
 #define NUM_CHANNELS    8       ///< The number of analog input channels.
 
 #define MAX_SCAN_BUFFER_SIZE_SAMPLES    (16ul*1024ul*1024ul)    // 16 MS
@@ -176,10 +179,13 @@ static bool log_open = false;
 
 static const char* const spi_device = SPI_DEVICE_0; // the spidev device
 static const enum SpiBus spi_bus_num = SPI_BUS_0;   // for obtain_lock()
-static const uint8_t spi_mode = SPI_MODE_1;         // use mode 1 (CPOL=0, CPHA=1)
+static const uint8_t spi_mode = SPI_MODE_1;         // use mode 1 (CPOL=0, 
+                                                    // CPHA=1)
 static const uint8_t spi_bits = 8;                  // 8 bits per transfer
-static const uint32_t spi_speed = 10000000;         // maximum SPI clock frequency
-static const uint16_t spi_delay = 0;                // delay in us before removing CS
+static const uint32_t spi_speed = 10000000;         // maximum SPI clock 
+                                                    // frequency
+static const uint16_t spi_delay = 0;                // delay in us before 
+                                                    // removing CS
 
 // *****************************************************************************
 // Local Functions
@@ -216,7 +222,8 @@ static bool _check_addr(uint8_t address)
 /******************************************************************************
   Parse a buffer and look for a valid message
  *****************************************************************************/
-static bool _parse_buffer(uint8_t* buffer, uint16_t length, uint16_t* frame_start, uint16_t* frame_length, uint16_t* remaining)
+static bool _parse_buffer(uint8_t* buffer, uint16_t length, 
+    uint16_t* frame_start, uint16_t* frame_length, uint16_t* remaining)
 {
     uint8_t* ptr = buffer;
     uint16_t index;
@@ -299,7 +306,8 @@ static bool _parse_buffer(uint8_t* buffer, uint16_t length, uint16_t* frame_star
 /******************************************************************************
   Create a message frame for sending to the device
  *****************************************************************************/
-static int _create_frame(uint8_t* buffer, uint8_t command, uint16_t count, void* data)
+static int _create_frame(uint8_t* buffer, uint8_t command, uint16_t count, 
+    void* data)
 {
     if (count > MAX_TX_DATA_SIZE)
     {
@@ -333,8 +341,9 @@ static int _create_frame(uint8_t* buffer, uint8_t command, uint16_t count, void*
 
   Return: RESULT_SUCCESS if successful
  *****************************************************************************/
-static int _spi_transfer(uint8_t address, uint8_t command, void* tx_data, uint16_t tx_data_count,
-    void* rx_data, uint16_t rx_data_count, uint32_t reply_timeout_us, uint32_t retry_us)
+static int _spi_transfer(uint8_t address, uint8_t command, void* tx_data, 
+    uint16_t tx_data_count, void* rx_data, uint16_t rx_data_count, 
+    uint32_t reply_timeout_us, uint32_t retry_us)
 {
     struct timespec start_time;
     struct timespec current_time;
@@ -457,7 +466,8 @@ static int _spi_transfer(uint8_t address, uint8_t command, void* tx_data, uint16
     uint16_t remaining = 0;
     uint16_t read_amount = rx_data_count + MSG_RX_HEADER_SIZE;
 
-    // only read the first byte of the reply in order to test for the device readiness
+    // only read the first byte of the reply in order to test for the device 
+    // readiness
     struct spi_ioc_transfer tr1 = {
         .tx_buf = (uintptr_t)temp_buffer,
         .rx_buf = (uintptr_t)rx_buffer,
@@ -509,7 +519,8 @@ static int _spi_transfer(uint8_t address, uint8_t command, void* tx_data, uint16
             if ((ret = ioctl(dev->spi_fd, SPI_IOC_MESSAGE(1), &tr2)) >= 1)
             {
                 // parse the reply
-                got_reply = _parse_buffer(rx_buffer, read_amount+1, &frame_start, &frame_length, &remaining);
+                got_reply = _parse_buffer(rx_buffer, read_amount+1, 
+                    &frame_start, &frame_length, &remaining);
             }
             else
             {
@@ -533,14 +544,16 @@ static int _spi_transfer(uint8_t address, uint8_t command, void* tx_data, uint16
         return RESULT_TIMEOUT;
     }
 
-    if (rx_buffer[frame_start+MSG_RX_INDEX_COMMAND] == tx_buffer[MSG_TX_INDEX_COMMAND])
+    if (rx_buffer[frame_start+MSG_RX_INDEX_COMMAND] == 
+        tx_buffer[MSG_TX_INDEX_COMMAND])
     {
         switch (rx_buffer[frame_start+MSG_RX_INDEX_STATUS])
         {
         case FW_RES_SUCCESS:
             if (rx_data_count > 0)
             {
-                memcpy(rx_data, &rx_buffer[frame_start+MSG_RX_INDEX_DATA], rx_data_count);
+                memcpy(rx_data, &rx_buffer[frame_start+MSG_RX_INDEX_DATA], 
+                    rx_data_count);
             }
             ret = RESULT_SUCCESS;
             break;
@@ -683,7 +696,8 @@ static int _parse_factory_data(cJSON* root, struct mcc118FactoryData* data)
                     calchild->valuestring)
                 {
                     // Found the calibration date
-                    strncpy(data->cal_date, calchild->valuestring, CAL_DATE_SIZE);
+                    strncpy(data->cal_date, calchild->valuestring, 
+                        CAL_DATE_SIZE);
                     got_date = true;
                 }
                 else if (!strcmp(calchild->string, "slopes") &&
@@ -815,8 +829,10 @@ static int _a_in_read_scan_data(uint8_t address, uint16_t sample_count,
         if (calibrated)
         {
             // apply the appropriate cal factor to each sample in the list
-            buffer[count] *= dev->scan_info->slopes[dev->scan_info->channel_index];
-            buffer[count] += dev->scan_info->offsets[dev->scan_info->channel_index];
+            buffer[count] *= dev->scan_info->slopes[
+                dev->scan_info->channel_index];
+            buffer[count] += dev->scan_info->offsets[
+                dev->scan_info->channel_index];
         }
 
         // convert to volts if desired
@@ -897,7 +913,8 @@ static void* _scan_thread(void* arg)
     while (!info->stop_thread && !done)
     {
         // read the scan status
-        if (_spi_transfer(address, CMD_AINSCANSTATUS, NULL, 0, rx_buffer, 5, 1*MSEC, 20) == RESULT_SUCCESS)
+        if (_spi_transfer(address, CMD_AINSCANSTATUS, NULL, 0, rx_buffer, 5, 
+            1*MSEC, 20) == RESULT_SUCCESS)
         {
             available_samples = ((uint16_t)rx_buffer[2] << 8) + rx_buffer[1];
             max_read_now = ((uint16_t)rx_buffer[4] << 8) + rx_buffer[3];
@@ -945,11 +962,14 @@ static void* _scan_thread(void* arg)
                         read_count = (info->buffer_size - info->write_index);
                     }
 
-                    if ((error = _a_in_read_scan_data(address, read_count, scaled, calibrated,
-                        &info->scan_buffer[info->write_index])) == RESULT_SUCCESS)
+                    if ((error = _a_in_read_scan_data(address, read_count, 
+                        scaled, calibrated, 
+                        &info->scan_buffer[info->write_index])) == 
+                        RESULT_SUCCESS)
                     {
 #ifdef DEBUG
-                        sprintf(str, "scan_thread_read %d %d %d", info->write_index, read_count, info->buffer_depth);
+                        sprintf(str, "scan_thread_read %d %d %d", 
+                            info->write_index, read_count, info->buffer_depth);
                         _syslog(str);
 #endif
                         info->write_index += read_count;
@@ -1044,9 +1064,11 @@ int mcc118_open(uint8_t address)
 
     if (_devices[address] == NULL)
     {
-        // this is either the first time this device is being opened or it is not a 118
+        // this is either the first time this device is being opened or it is 
+        // not a 118
 
-        // read the EEPROM file(s), verify that it is an MCC 118, and get the cal data
+        // read the EEPROM file(s), verify that it is an MCC 118, and get the 
+        // cal data
         if (_hat_info(address, &info, NULL, &custom_size) == RESULT_SUCCESS)
         {
             if (info.id == HAT_ID_MCC_118)
@@ -1061,13 +1083,15 @@ int mcc118_open(uint8_t address)
         }
         else
         {
-            // no EEPROM info was found - allow opening the board with an uninitialized EEPROM
+            // no EEPROM info was found - allow opening the board with an 
+            // uninitialized EEPROM
             custom_size = 0;
             custom_data = NULL;
         }
 
         // create a struct to hold device instance data
-        _devices[address] = (struct mcc118Device*)malloc(sizeof(struct mcc118Device));
+        _devices[address] = (struct mcc118Device*)malloc(
+            sizeof(struct mcc118Device));
         dev = _devices[address];
 
         // initialize the struct elements
@@ -1106,7 +1130,8 @@ int mcc118_open(uint8_t address)
     }
     else
     {
-        // the device has already been opened and initialized, increment reference count
+        // the device has already been opened and initialized, increment 
+        // reference count
         dev = _devices[address];
         dev->handle_count++;
     }
@@ -1116,11 +1141,13 @@ int mcc118_open(uint8_t address)
     do
     {
         // Try to communicate with the device and verify that it is an MCC 118
-        ret = _spi_transfer(address, CMD_ID, NULL, 0, id_data, 3*sizeof(uint16_t), 20*MSEC, 10);
+        ret = _spi_transfer(address, CMD_ID, NULL, 0, id_data, 
+            3*sizeof(uint16_t), 20*MSEC, 10);
 
         if (ret == RESULT_SUCCESS)
         {
-            // the ID command returns the product ID, compare it with the MCC 118
+            // the ID command returns the product ID, compare it with the MCC 
+            // 118
             if ((id_data[0] == HAT_ID_MCC_118) ||
                 (id_data[0] == HAT_ID_MCC_118_BOOTLOADER))
             {
@@ -1204,7 +1231,8 @@ int mcc118_blink_led(uint8_t address, uint8_t count)
     }
 
     // send command
-    int ret = _spi_transfer(address, CMD_BLINK, &count, 1, NULL, 0, 20*MSEC, 10);
+    int ret = _spi_transfer(address, CMD_BLINK, &count, 1, NULL, 0, 20*MSEC, 
+        10);
     return ret;
 }
 
@@ -1212,7 +1240,8 @@ int mcc118_blink_led(uint8_t address, uint8_t count)
 /******************************************************************************
   Return the board firmware and bootloader versions
  *****************************************************************************/
-int mcc118_firmware_version(uint8_t address, uint16_t* version, uint16_t* boot_version)
+int mcc118_firmware_version(uint8_t address, uint16_t* version, 
+    uint16_t* boot_version)
 {
     if (!_check_addr(address))
     {
@@ -1285,7 +1314,8 @@ int mcc118_calibration_date(uint8_t address, char* buffer)
 /******************************************************************************
   Read the calibration coefficients.
  *****************************************************************************/
-int mcc118_calibration_coefficient_read(uint8_t address, uint8_t channel, double* slope, double* offset)
+int mcc118_calibration_coefficient_read(uint8_t address, uint8_t channel, 
+    double* slope, double* offset)
 {
     // validate parameters
     if (!_check_addr(address) ||
@@ -1304,7 +1334,8 @@ int mcc118_calibration_coefficient_read(uint8_t address, uint8_t channel, double
 /******************************************************************************
   Write the calibration coefficients.
  *****************************************************************************/
-int mcc118_calibration_coefficient_write(uint8_t address, uint8_t channel, double slope, double offset)
+int mcc118_calibration_coefficient_write(uint8_t address, uint8_t channel, 
+    double slope, double offset)
 {
     // validate parameters
     if (!_check_addr(address) ||
@@ -1327,7 +1358,8 @@ int mcc118_calibration_coefficient_write(uint8_t address, uint8_t channel, doubl
 /******************************************************************************
   Perform a single reading of an analog input channel and return the value.
  *****************************************************************************/
-int mcc118_a_in_read(uint8_t address, uint8_t channel, uint32_t options, double* value)
+int mcc118_a_in_read(uint8_t address, uint8_t channel, uint32_t options, 
+    double* value)
 {
     int ret;
     uint16_t code;
@@ -1392,7 +1424,8 @@ int mcc118_trigger_mode(uint8_t address, uint8_t mode)
 /******************************************************************************
   Read the actual scan rate for a set of scan parameters.
  *****************************************************************************/
-int mcc118_a_in_scan_actual_rate(uint8_t channel_count, double sample_rate_per_channel, double* actual_sample_rate_per_channel)
+int mcc118_a_in_scan_actual_rate(uint8_t channel_count, 
+    double sample_rate_per_channel, double* actual_sample_rate_per_channel)
 {
     double adc_rate;
     uint32_t period;
@@ -1431,8 +1464,9 @@ int mcc118_a_in_scan_actual_rate(uint8_t channel_count, double sample_rate_per_c
   structure and scan buffer, send the start command to the device, then start a
   scan data thread that constantly reads the scan status and data.
  *****************************************************************************/
-int mcc118_a_in_scan_start(uint8_t address, uint8_t channel_mask, uint32_t samples_per_channel,
-    double sample_rate_per_channel, uint32_t options)
+int mcc118_a_in_scan_start(uint8_t address, uint8_t channel_mask, 
+    uint32_t samples_per_channel, double sample_rate_per_channel, 
+    uint32_t options)
 {
     int result;
     uint8_t num_channels;
@@ -1461,7 +1495,8 @@ int mcc118_a_in_scan_start(uint8_t address, uint8_t channel_mask, uint32_t sampl
         return RESULT_BUSY;
     }
 
-    dev->scan_info = (struct mcc118ScanThreadInfo*)calloc(sizeof(struct mcc118ScanThreadInfo), 1);
+    dev->scan_info = (struct mcc118ScanThreadInfo*)calloc(
+        sizeof(struct mcc118ScanThreadInfo), 1);
     if (dev->scan_info == NULL)
     {
         return RESULT_RESOURCE_UNAVAIL;
@@ -1475,7 +1510,8 @@ int mcc118_a_in_scan_start(uint8_t address, uint8_t channel_mask, uint32_t sampl
     {
         if (channel_mask & (1 << channel))
         {
-            // save the channel list and coefficients for calibrating the incoming data
+            // save the channel list and coefficients for calibrating the 
+            // incoming data
             info->channels[num_channels] = channel;
             info->slopes[num_channels] = dev->factory_data.slopes[channel];
             info->offsets[num_channels] = dev->factory_data.offsets[channel];
@@ -1541,7 +1577,8 @@ int mcc118_a_in_scan_start(uint8_t address, uint8_t channel_mask, uint32_t sampl
     }
     else
     {
-        // Finite scan - buffer size is the number of channels * samples_per_channel,
+        // Finite scan - buffer size is the number of channels * 
+        // samples_per_channel,
         info->buffer_size = samples_per_channel;
     }
 
@@ -1572,7 +1609,8 @@ int mcc118_a_in_scan_start(uint8_t address, uint8_t channel_mask, uint32_t sampl
     else
     {
         info->read_threshold = (uint16_t)(adc_rate / 10);
-        info->read_threshold = COUNT_NORMALIZE(info->read_threshold, info->channel_count);
+        info->read_threshold = COUNT_NORMALIZE(info->read_threshold, 
+            info->channel_count);
         if (info->read_threshold == 0)
         {
             info->read_threshold = info->channel_count;
@@ -1611,7 +1649,8 @@ int mcc118_a_in_scan_start(uint8_t address, uint8_t channel_mask, uint32_t sampl
         }
         else
         {
-            period = (uint32_t)(CLOCK_TIMEBASE / sample_rate_per_channel + 0.5) - 1;
+            period = (uint32_t)(CLOCK_TIMEBASE / sample_rate_per_channel + 0.5) 
+                - 1;
         }
     }
 
@@ -1637,7 +1676,8 @@ int mcc118_a_in_scan_start(uint8_t address, uint8_t channel_mask, uint32_t sampl
     buffer[8] = channel_mask;
     buffer[9] = scan_options;
 
-    result = _spi_transfer(address, CMD_AINSCANSTART, buffer, 10, NULL, 0, 20*MSEC, 0);
+    result = _spi_transfer(address, CMD_AINSCANSTART, buffer, 10, NULL, 0, 
+        20*MSEC, 0);
 
     if (result != RESULT_SUCCESS)
     {
@@ -1651,8 +1691,8 @@ int mcc118_a_in_scan_start(uint8_t address, uint8_t channel_mask, uint32_t sampl
     // create the scan data thread
     uint8_t* temp_address = (uint8_t*)malloc(sizeof(uint8_t));
     *temp_address = address;
-    if ((result = pthread_create(&info->handle, &attr, &_scan_thread, temp_address))
-        != 0)
+    if ((result = pthread_create(&info->handle, &attr, &_scan_thread, 
+        temp_address)) != 0)
     {
         free(temp_address);
         mcc118_a_in_scan_stop(address);
@@ -1671,7 +1711,8 @@ int mcc118_a_in_scan_start(uint8_t address, uint8_t channel_mask, uint32_t sampl
 }
 
 /******************************************************************************
-  Return the size of the internal scan buffer in samples (0 if scan is not running).
+  Return the size of the internal scan buffer in samples (0 if scan is not 
+  running).
  *****************************************************************************/
 int mcc118_a_in_scan_buffer_size(uint8_t address, uint32_t* buffer_size_samples)
 {
@@ -1705,12 +1746,67 @@ int mcc118_a_in_scan_channel_count(uint8_t address)
 }
 
 /******************************************************************************
+  Read the scan status and amount of data in the scan buffer.
+ *****************************************************************************/
+int mcc118_a_in_scan_status(uint8_t address, uint16_t* status, 
+    uint32_t* samples_per_channel)
+{
+    struct mcc118ScanThreadInfo* info;
+    uint16_t stat;
+
+    if (!_check_addr(address) ||
+        (status == NULL))
+    {
+        return RESULT_BAD_PARAMETER;
+    }
+
+    stat = 0;
+
+    if ((info = _devices[address]->scan_info) == NULL)
+    {
+        // scan not running?
+        *status = 0;
+        if (samples_per_channel)
+        {
+            *samples_per_channel = 0;
+        }
+        return RESULT_RESOURCE_UNAVAIL;
+    }
+
+    if (samples_per_channel)
+    {
+        *samples_per_channel = info->buffer_depth / info->channel_count;
+    }
+
+    if (info->hw_overrun)
+    {
+        stat |= STATUS_HW_OVERRUN;
+    }
+    if (info->buffer_overrun)
+    {
+        stat |= STATUS_BUFFER_OVERRUN;
+    }
+    if (info->triggered)
+    {
+        stat |= STATUS_TRIGGERED;
+    }
+    if (info->scan_running)
+    {
+        stat |= STATUS_RUNNING;
+    }
+
+    *status = stat;
+    return RESULT_SUCCESS;
+}
+
+/******************************************************************************
   Read the specified amount of data from the scan buffer.  If
   samples_per_channel == -1, return all available samples.  If timeout is
   negative, wait indefinitely.  If it is 0,  return immediately with the
   available data.
  *****************************************************************************/
-int mcc118_a_in_scan_read(uint8_t address, uint16_t* status, int32_t samples_per_channel, double timeout, double* buffer,
+int mcc118_a_in_scan_read(uint8_t address, uint16_t* status, 
+    int32_t samples_per_channel, double timeout, double* buffer,
     uint32_t buffer_size_samples, uint32_t* samples_read_per_channel)
 {
     uint32_t samples_to_read;
@@ -1778,8 +1874,10 @@ int mcc118_a_in_scan_read(uint8_t address, uint16_t* status, int32_t samples_per
 
     if (buffer_size_samples < samples_to_read)
     {
-        // buffer is not large enough, so read the amount of samples that will fit
-        samples_to_read = COUNT_NORMALIZE(buffer_size_samples, info->channel_count);
+        // buffer is not large enough, so read the amount of samples that will 
+        // fit
+        samples_to_read = COUNT_NORMALIZE(buffer_size_samples, 
+            info->channel_count);
     }
 
     if (samples_to_read)
@@ -1793,14 +1891,16 @@ int mcc118_a_in_scan_read(uint8_t address, uint16_t* status, int32_t samples_per
             {
                 // read in increments of the number of channels in the scan
                 current_read = MIN(info->buffer_depth, samples_to_read);
-                current_read = COUNT_NORMALIZE(current_read, info->channel_count);
+                current_read = COUNT_NORMALIZE(current_read, 
+                    info->channel_count);
 
                 // check for a wrap at the end of the scan buffer
                 max_read = info->buffer_size - info->read_index;
                 if (max_read < current_read)
                 {
                     // when wrapping, perform two copies
-                    memcpy(&buffer[samples_read], &info->scan_buffer[info->read_index],
+                    memcpy(&buffer[samples_read], 
+                        &info->scan_buffer[info->read_index],  
                         max_read*sizeof(double));
 
                     samples_read += max_read;
@@ -1812,7 +1912,8 @@ int mcc118_a_in_scan_read(uint8_t address, uint16_t* status, int32_t samples_per
                 }
                 else
                 {
-                    memcpy(&buffer[samples_read], &info->scan_buffer[info->read_index],
+                    memcpy(&buffer[samples_read], 
+                        &info->scan_buffer[info->read_index],
                         current_read*sizeof(double));
                     samples_read += current_read;
                     info->read_index += current_read;
@@ -1833,7 +1934,8 @@ int mcc118_a_in_scan_read(uint8_t address, uint16_t* status, int32_t samples_per
             if (!no_timeout)
             {
                 clock_gettime(CLOCK_MONOTONIC, &current_time);
-                timed_out = (_difftime_us(&start_time, &current_time) >= timeout_us);
+                timed_out = (_difftime_us(&start_time, &current_time) >= 
+                    timeout_us);
             }
 
             if (info->hw_overrun)
@@ -1906,7 +2008,8 @@ int mcc118_a_in_scan_stop(uint8_t address)
     }
 
     // send scan stop command
-    int ret = _spi_transfer(address, CMD_AINSCANSTOP, NULL, 0, NULL, 0, 20*MSEC, 10);
+    int ret = _spi_transfer(address, CMD_AINSCANSTOP, NULL, 0, NULL, 0, 20*MSEC, 
+        10);
     return ret;
 }
 
@@ -1925,8 +2028,8 @@ int mcc118_a_in_scan_cleanup(uint8_t address)
     {
         if (_devices[address]->scan_info->handle != 0)
         {
-            // If the thread is running then tell it to stop and wait for it.  It will
-            // send the a_in_stop_scan command.
+            // If the thread is running then tell it to stop and wait for it. 
+            // It will send the a_in_stop_scan command.
             _devices[address]->scan_info->stop_thread = true;
 
             pthread_join(_devices[address]->scan_info->handle, NULL);
@@ -1954,7 +2057,8 @@ int mcc118_test_clock(uint8_t address, uint8_t mode, uint8_t* pValue)
     }
 
     // send test clock command
-    int ret = _spi_transfer(address, CMD_TESTCLOCK, &mode, 1, pValue, pValue ? 1 : 0, 20*MSEC, 0);
+    int ret = _spi_transfer(address, CMD_TESTCLOCK, &mode, 1, pValue, 
+        pValue ? 1 : 0, 20*MSEC, 0);
 
     return ret;
 }
@@ -1970,7 +2074,8 @@ int mcc118_test_trigger(uint8_t address, uint8_t* pState)
     }
 
     // send test trigger command
-    int ret = _spi_transfer(address, CMD_TESTTRIGGER, NULL, 0, pState, pState ? 1 : 0, 20*MSEC, 0);
+    int ret = _spi_transfer(address, CMD_TESTTRIGGER, NULL, 0, pState, 
+        pState ? 1 : 0, 20*MSEC, 0);
 
     return ret;
 }
@@ -1978,7 +2083,8 @@ int mcc118_test_trigger(uint8_t address, uint8_t* pState)
 /******************************************************************************
   Read program memory from the bootloader region.
  *****************************************************************************/
-int mcc118_bootmem_read(uint8_t address, uint16_t mem_address, uint16_t count, uint8_t* buffer)
+int mcc118_bootmem_read(uint8_t address, uint16_t mem_address, uint16_t count, 
+    uint8_t* buffer)
 {
     uint8_t temp[4];
 
@@ -1994,7 +2100,8 @@ int mcc118_bootmem_read(uint8_t address, uint16_t mem_address, uint16_t count, u
     temp[2] = (uint8_t)count;
     temp[3] = (uint8_t)(count >> 8);
 
-    int ret = _spi_transfer(address, CMD_BOOTMEM_READ, temp, 4, buffer, count, 20*MSEC, 100);
+    int ret = _spi_transfer(address, CMD_BOOTMEM_READ, temp, 4, buffer, count, 
+        20*MSEC, 100);
 
     return ret;
 }
@@ -2002,7 +2109,8 @@ int mcc118_bootmem_read(uint8_t address, uint16_t mem_address, uint16_t count, u
 /******************************************************************************
   Write program memory in the bootloader region.
  *****************************************************************************/
-int mcc118_bootmem_write(uint8_t address, uint16_t mem_address, uint16_t count, uint8_t* buffer)
+int mcc118_bootmem_write(uint8_t address, uint16_t mem_address, uint16_t count, 
+    uint8_t* buffer)
 {
     uint8_t* temp;
 
@@ -2018,7 +2126,8 @@ int mcc118_bootmem_write(uint8_t address, uint16_t mem_address, uint16_t count, 
     temp[1] = (uint8_t)(mem_address >> 8);
     memcpy(&temp[2], buffer, count);
 
-    int ret = _spi_transfer(address, CMD_BOOTMEM_WRITE, temp, count + 2, NULL, 0, 500*MSEC, 100);
+    int ret = _spi_transfer(address, CMD_BOOTMEM_WRITE, temp, count + 2, NULL, 
+        0, 500*MSEC, 100);
 
     free(temp);
     return ret;
@@ -2052,13 +2161,15 @@ int mcc118_enter_bootloader(uint8_t address)
     // issue a bootloader command within 500ms to remain in bootloader
     usleep(200000);
 
-    if ((result = _spi_transfer(address, CMD_BL_ENTER, NULL, 0, NULL, 0, 20*MSEC, 10)) != RESULT_SUCCESS)
+    if ((result = _spi_transfer(address, CMD_BL_ENTER, NULL, 0, NULL, 0, 
+        20*MSEC, 10)) != RESULT_SUCCESS)
     {
         return result;
     }
 
     // Try to communicate with the device and verify that it is an MCC 118
-    if ((result = _spi_transfer(address, CMD_ID, NULL, 0, id_data, 3*sizeof(uint16_t), 20*MSEC, 10)) != RESULT_SUCCESS)
+    if ((result = _spi_transfer(address, CMD_ID, NULL, 0, id_data, 
+        3*sizeof(uint16_t), 20*MSEC, 10)) != RESULT_SUCCESS)
     {
         return result;
     }
@@ -2082,7 +2193,8 @@ int mcc118_bl_erase(uint8_t address)
     }
 
     // send command
-    int ret = _spi_transfer(address, CMD_BL_ERASE, NULL, 0, NULL, 0, 1000*MSEC, 1000);
+    int ret = _spi_transfer(address, CMD_BL_ERASE, NULL, 0, NULL, 0, 1000*MSEC, 
+        1000);
 
     return ret;
 }
@@ -2098,7 +2210,8 @@ int mcc118_bl_write(uint8_t address, uint8_t* hex_record, uint8_t length)
     }
 
     // send command
-    int ret = _spi_transfer(address, CMD_BL_WRITE, hex_record, length, NULL, 0, 100*MSEC, 100);
+    int ret = _spi_transfer(address, CMD_BL_WRITE, hex_record, length, NULL, 0, 
+        100*MSEC, 100);
 
     return ret;
 }
@@ -2106,7 +2219,8 @@ int mcc118_bl_write(uint8_t address, uint8_t* hex_record, uint8_t length)
 /******************************************************************************
   Read the CRC of firmware program memory.
  *****************************************************************************/
-int mcc118_bl_read_crc(uint8_t address, uint32_t mem_address, uint32_t count, uint16_t* pCRC)
+int mcc118_bl_read_crc(uint8_t address, uint32_t mem_address, uint32_t count, 
+    uint16_t* pCRC)
 {
     uint32_t args[2];
 
@@ -2119,7 +2233,8 @@ int mcc118_bl_read_crc(uint8_t address, uint32_t mem_address, uint32_t count, ui
     args[0] = mem_address;
     args[1] = count;
 
-    int ret = _spi_transfer(address, CMD_BL_READ_CRC, args, 2*sizeof(uint32_t), pCRC, pCRC ? sizeof(uint16_t) : 0, 500*MSEC, 1000);
+    int ret = _spi_transfer(address, CMD_BL_READ_CRC, args, 2*sizeof(uint32_t), 
+        pCRC, pCRC ? sizeof(uint16_t) : 0, 500*MSEC, 1000);
 
     return ret;
 }
@@ -2135,7 +2250,8 @@ int mcc118_bl_jump(uint8_t address)
     }
 
     // send command
-    int ret = _spi_transfer(address, CMD_BL_JUMP, NULL, 0, NULL, 0, 20*MSEC, 10);
+    int ret = _spi_transfer(address, CMD_BL_JUMP, NULL, 0, NULL, 0, 20*MSEC, 
+        10);
 
     return ret;
 }

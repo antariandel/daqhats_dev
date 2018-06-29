@@ -14,5 +14,5 @@ if not list:
 
 # send the blink command to each board
 for entry in list: 
-    hats.mcc118(entry['address']).blink_led(10)
+    hats.mcc118(entry.address).blink_led(10)
     

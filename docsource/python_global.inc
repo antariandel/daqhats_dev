@@ -29,6 +29,12 @@ Trigger modes
 .. autoclass:: TriggerModes
     :members:
 
+Scan / read option flags
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: OptionFlags
+    :members:
+
 HatError class
 --------------
 

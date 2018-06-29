@@ -22,7 +22,8 @@ Function                                        Description
 :c:func:`mcc118_a_in_scan_actual_rate`          Read the actual sample rate for a set of scan parameters.
 :c:func:`mcc118_a_in_scan_start`                Start a hardware-paced analog input scan.
 :c:func:`mcc118_a_in_scan_buffer_size`          Read the size of the internal scan data buffer.
-:c:func:`mcc118_a_in_scan_read`                 Read scan data / status.
+:c:func:`mcc118_a_in_scan_status`               Read the scan status.
+:c:func:`mcc118_a_in_scan_read`                 Read scan data and status.
 :c:func:`mcc118_a_in_scan_channel_count`        Get the number of channels in the current scan.
 :c:func:`mcc118_a_in_scan_stop`                 Stop the scan.
 :c:func:`mcc118_a_in_scan_cleanup`              Free scan resources.
@@ -43,6 +44,7 @@ Function                                        Description
 .. doxygenfunction:: mcc118_a_in_scan_actual_rate
 .. doxygenfunction:: mcc118_a_in_scan_start
 .. doxygenfunction:: mcc118_a_in_scan_buffer_size
+.. doxygenfunction:: mcc118_a_in_scan_status
 .. doxygenfunction:: mcc118_a_in_scan_read
 .. doxygenfunction:: mcc118_a_in_scan_channel_count
 .. doxygenfunction:: mcc118_a_in_scan_stop

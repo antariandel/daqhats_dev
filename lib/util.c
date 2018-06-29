@@ -55,6 +55,7 @@
 #define ADDR1_GPIO              13
 #define ADDR2_GPIO              26
 
+
 // EEPROM header structure
 struct _Header
 {
@@ -113,6 +114,18 @@ static const char* const HAT_SETTINGS_DIR = "/etc/mcc/hats";
 static const char* const SYS_HAT_DIR = "/proc/device-tree/hat";
 static const char* const VENDOR_NAME = "Measurement Computing Corp.";
 
+static const char* HAT_ERROR_MESSAGES[] =
+{
+    "Success.",
+    "An incorrect parameter was passed to the function.",
+    "The device is busy.",
+    "There was a timeout accessing a resource.",
+    "There was a timeout while obtaining a resource lock.",
+    "The device at the specified address is not the correct type.",
+    "A needed resource was not available.",
+    "An unknown error occurred."
+};
+
 // *****************************************************************************
 // Variables
 static bool _address_initialized = false;
@@ -163,7 +176,8 @@ void _set_address(uint8_t address)
 }
 
 /******************************************************************************
-  Returns the absolute difference in microseconds between two struct timeval values.
+  Returns the absolute difference in microseconds between two struct timeval 
+  values.
  *****************************************************************************/
 uint32_t _difftime_us(struct timespec* start, struct timespec* end)
 {
@@ -172,7 +186,8 @@ uint32_t _difftime_us(struct timespec* start, struct timespec* end)
     if (!start || !end)
         return 0;
 
-    diff = (end->tv_sec*1e6 + end->tv_nsec/1000) - (start->tv_sec*1e6 + start->tv_nsec/1000);
+    diff = (end->tv_sec*1e6 + end->tv_nsec/1000) - (start->tv_sec*1e6 + 
+        start->tv_nsec/1000);
     if (diff < 0)
         return (uint32_t)-diff;
     else
@@ -187,7 +202,8 @@ uint32_t _difftime_ms(struct timespec* start, struct timespec* end)
     if (!start || !end)
         return 0;
 
-    diff = (end->tv_sec*1e3 + end->tv_nsec/1e6) - (start->tv_sec*1e3 + start->tv_nsec/1e6);
+    diff = (end->tv_sec*1e3 + end->tv_nsec/1e6) - (start->tv_sec*1e3 + 
+        start->tv_nsec/1e6);
     if (diff < 0)
         return (uint32_t)-diff;
     else
@@ -543,7 +559,8 @@ int hat_list(uint16_t filter_id, struct HatInfo* pList)
 /******************************************************************************
   Return factory data for a specific HAT board as a jSON string.
  *****************************************************************************/
-int _hat_info(uint8_t address, struct HatInfo* entry, char* pData, uint16_t* pSize)
+int _hat_info(uint8_t address, struct HatInfo* entry, char* pData, 
+    uint16_t* pSize)
 {
     bool found_custom;
     bool found_vendor;
@@ -662,7 +679,8 @@ int _hat_info(uint8_t address, struct HatInfo* entry, char* pData, uint16_t* pSi
                 (atom_num < header.numatoms) &&
                 !error)
             {
-                if (read(eeprom_fd, &atom, ATOM_SIZE-CRC_SIZE) == ATOM_SIZE-CRC_SIZE)
+                if (read(eeprom_fd, &atom, ATOM_SIZE-CRC_SIZE) == 
+                    ATOM_SIZE-CRC_SIZE)
                 {
                     // process the atom by type
                     if (atom.type == ATOM_VENDOR_TYPE)
@@ -672,7 +690,8 @@ int _hat_info(uint8_t address, struct HatInfo* entry, char* pData, uint16_t* pSi
                         {
                             vinf.vstr = (char*)malloc(vinf.vslen+1);
                             vinf.pstr = (char*)malloc(vinf.pslen+1);
-                            if (read(eeprom_fd, vinf.vstr, vinf.vslen) != vinf.vslen)
+                            if (read(eeprom_fd, vinf.vstr, vinf.vslen) != 
+                                vinf.vslen)
                             {
                                 free(vinf.vstr);
                                 free(vinf.pstr);
@@ -680,7 +699,8 @@ int _hat_info(uint8_t address, struct HatInfo* entry, char* pData, uint16_t* pSi
                                 continue;
                             }
                             vinf.vstr[vinf.vslen] = '\0';
-                            if (read(eeprom_fd, vinf.pstr, vinf.pslen) != vinf.pslen)
+                            if (read(eeprom_fd, vinf.pstr, vinf.pslen) != 
+                                vinf.pslen)
                             {
                                 free(vinf.vstr);
                                 free(vinf.pstr);
@@ -698,7 +718,8 @@ int _hat_info(uint8_t address, struct HatInfo* entry, char* pData, uint16_t* pSi
                                     entry->address = address;
                                     entry->id = vinf.pid;
                                     entry->version = vinf.pver;
-                                    strncpy(entry->product_name, vinf.pstr, 256);
+                                    strncpy(entry->product_name, vinf.pstr, 
+                                        256);
                                 }
                                 found_vendor = true;
                             }
@@ -760,4 +781,31 @@ int _hat_info(uint8_t address, struct HatInfo* entry, char* pData, uint16_t* pSi
     }
 
     return RESULT_SUCCESS;
+}
+
+/******************************************************************************
+  Return an error description string.
+ *****************************************************************************/
+const char* hat_error_message(int result)
+{
+    switch (result)
+    {
+    case RESULT_SUCCESS:
+        return HAT_ERROR_MESSAGES[0];
+    case RESULT_BAD_PARAMETER:
+        return HAT_ERROR_MESSAGES[1];
+    case RESULT_BUSY:
+        return HAT_ERROR_MESSAGES[2];
+    case RESULT_TIMEOUT:
+        return HAT_ERROR_MESSAGES[3];
+    case RESULT_LOCK_TIMEOUT:
+        return HAT_ERROR_MESSAGES[4];
+    case RESULT_INVALID_DEVICE:
+        return HAT_ERROR_MESSAGES[5];
+    case RESULT_RESOURCE_UNAVAIL:
+        return HAT_ERROR_MESSAGES[6];
+    case RESULT_UNDEFINED:
+    default:
+        return HAT_ERROR_MESSAGES[7];
+    }
 }
