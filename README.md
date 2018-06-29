@@ -36,7 +36,7 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
    ```
    cd ~/daqhats
    sudo ./install.sh
-   ```
+   ```   
 6. [Optional] Use the firmware update tool to update the firmware on your MCC HAT board. The "0" in the example below is the board address. The line with the "-b" option updates the bootloader. Repeat the two commands for each HAT address in your board stack. This example demonstrates how to update the firmware on the MCC 118 HAT that is installed at address 0.
 
    ```
@@ -45,17 +45,17 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
    ```
 You can now run the example programs under ~/daqhats/examples and create your own programs. Refer to the [Examples](#examples) section below for more information.
 
-#### Uninstall the daqhats library
-
-```
-cd ~/daqhats
-sudo ./uninstall.sh
-```
 #### Update the EEPROM images
 If you change your board stack, you must update the saved EEPROM images so that the library has the correct board information:
 
 ```
 sudo daqhats_read_eeproms
+```
+#### Uninstall the daqhats library
+If you want to uninstall the the daqhats library, use the following commands:
+```
+cd ~/daqhats
+sudo ./uninstall.sh
 ```
 
 ## Examples
@@ -70,7 +70,7 @@ The daqhats library provides common and board-specific example programs develope
 Refer to the README.md file in each example folder for more information.
 
 ## Usage
-The following is a basic Python example demonstrating how to read each MCC 118 voltage input channel and display the results.
+The following is a basic Python example demonstrating how to read MCC 118 voltage inputs and display channel values.
 ```
 	#!/usr/bin/env python
 	#
@@ -93,11 +93,11 @@ The following is a basic Python example demonstrating how to read each MCC 118 v
         board = hats.mcc118(entry.address)
         for channel in range(board.a_in_num_channels()):
             value = board.a_in_read(channel)
-            print("  Ch {0}: {1:.3f}".format(channel, value))	
+            print("Ch {0}: {1:.3f}".format(channel, value))	
 ```
 	
 ## Support/Feedback
-The **daqhats** library is supported by MCC. Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx). 
+The **daqhats** library is supported by MCC. Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx).
 
 ## Documentation 
-Documentation for the daqhats library is available at [mccdaq.com](https://www.mccdaq.com/PDFs/Manuals/DAQ-HAT/) . 
+Documentation for the daqhats library is available at [mccdaq.com](https://www.mccdaq.com/PDFs/Manuals/DAQ-HAT/). 
