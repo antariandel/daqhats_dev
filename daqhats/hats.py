@@ -82,10 +82,10 @@ def hat_list(filter_by_id=0):
         list: A list of namedtuples, the number of elements match the number of
         DAQ HATs found. Each namedtuple will contain the following field names
 
-        | **address** (int): device address
-        | **id** (int): device product ID, identifies the type of DAQ HAT
-        | **version** (int): device hardware version
-        | **product_name** (str): device product name
+        * **address** (int): device address
+        * **id** (int): device product ID, identifies the type of DAQ HAT
+        * **version** (int): device hardware version
+        * **product_name** (str): device product name
     """
     _libc = _load_daqhats_library()
     if _libc == 0:
@@ -107,7 +107,8 @@ def hat_list(filter_by_id=0):
 
     # create the list of dictionaries to return
     my_list = []
-    hat_info = namedtuple('HatInfo', ['address', 'id', 'version', 'product_name'])
+    hat_info = namedtuple('HatInfo', 
+                          ['address', 'id', 'version', 'product_name'])
     for item in my_info:
         name = cast(item.product_name, c_char_p)
         if sys.version_info > (3, 0):
