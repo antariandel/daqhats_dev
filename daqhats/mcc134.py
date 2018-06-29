@@ -29,9 +29,10 @@ class mcc134(Hat): # pylint: disable=invalid-name
         HatError: the board did not respond or was of an incorrect type
     """
 
-    OPEN_TC_VALUE = -9999.0         #: Return value for an open thermocouple.
-    OVERRANGE_TC_VALUE = -8888.0    #: Return value for thermocouple voltage
-                                    # outside the valid range.
+    #: Return value for an open thermocouple.
+    OPEN_TC_VALUE = -9999.0
+    #: Return value for thermocouple voltage outside the valid range.
+    OVERRANGE_TC_VALUE = -8888.0    
 
     _AIN_NUM_CHANNELS = 4           # Number of analog channels
 
@@ -105,7 +106,7 @@ class mcc134(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -129,7 +130,7 @@ class mcc134(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -155,12 +156,12 @@ class mcc134(Hat): # pylint: disable=invalid-name
         Returns:
             namedtuple: a namedtuple containing the following field names
 
-            | **slope** (float): The slope.
-            | **offset** (float): The offset.
+            * **slope** (float): The slope.
+            * **offset** (float): The offset.
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -193,7 +194,7 @@ class mcc134(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -208,7 +209,7 @@ class mcc134(Hat): # pylint: disable=invalid-name
         Return the number of analog input channels.
 
         Returns:
-            int: the number of channels.
+            int: The number of channels.
         """
         return mcc134._AIN_NUM_CHANNELS
 
@@ -225,7 +226,7 @@ class mcc134(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -234,15 +235,24 @@ class mcc134(Hat): # pylint: disable=invalid-name
             raise HatError(self._address, "Incorrect response.")
         return
 
-    def a_in_read(self, channel, scaled=True, calibrated=True):
+    def a_in_read(self, channel, options=OptionFlags.DEFAULT):
         """
         Read an analog input channel and return the value.
 
+        **options** is an ORed combination of OptionFlags. Valid flags for this
+        method are:
+
+        * :py:const:`OptionFlags.DEFAULT`: Return a calibrated voltage value.
+          Any other flags will override DEFAULT behavior.
+        * :py:const:`OptionFlags.NOSCALEDATA`: Return an ADC code (a value
+          between -8,388,608 and 8,388,607) rather than voltage.
+        * :py:const:`OptionFlags.NOCALIBRATEDATA`: Return data without the
+          calibration factors applied.
+
         Args:
             channel (int): The analog input channel number, 0-3.
-            scaled (bool): True to return voltage, False to return ADC code.
-            calibrated (bool): True to apply calibration to the value, False to
-                return uncalibrated value.
+            options (int): ORed combination of :py:class:`OptionFlags`,
+                :py:const:`OptionFlags.DEFAULT` if unspecified.
 
         Returns:
             float: the read value
@@ -260,12 +270,6 @@ class mcc134(Hat): # pylint: disable=invalid-name
                              format(channel, self._AIN_NUM_CHANNELS-1))
 
         data_value = c_double()
-
-        options = 0
-        if not scaled:
-            options |= OptionFlags.NOSCALEDATA
-        if not calibrated:
-            options |= OptionFlags.NOCALIBRATEDATA
 
         if (self._lib.mcc134_a_in_read(
                 self._address, channel, options, byref(data_value))
@@ -289,7 +293,7 @@ class mcc134(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -316,7 +320,7 @@ class mcc134(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")

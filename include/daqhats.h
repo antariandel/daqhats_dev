@@ -20,7 +20,7 @@ enum HatIDs
     /// MCC 118 ID
     HAT_ID_MCC_118 = 0x0142,
     /// MCC 118 in firmware update mode ID
-    HAT_ID_MCC_118_BOOTLOADER = 0x8142
+    HAT_ID_MCC_118_BOOTLOADER = 0x8142,
     /// MCC 134 ID
     HAT_ID_MCC_134 = 0x0143     
 };
