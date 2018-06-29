@@ -107,7 +107,7 @@ def hat_list(filter_by_id=0):
 
     # create the list of dictionaries to return
     my_list = []
-    hat_info = namedtuple('HatInfo', 
+    hat_info = namedtuple('HatInfo',
                           ['address', 'id', 'version', 'product_name'])
     for item in my_info:
         name = cast(item.product_name, c_char_p)
