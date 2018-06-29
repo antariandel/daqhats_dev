@@ -12,7 +12,7 @@
 
 // TC types from nist.c
 /// Thermocouple type constants
-enum tcTypes
+enum TcTypes
 {
     /// J type
     TC_TYPE_J = 0,
@@ -152,17 +152,25 @@ int mcc134_a_in_num_channels(void);
 int mcc134_self_offset_correction(uint8_t address);
 
 /**
-*   @brief Read an analog input channel.
+*   @brief Read an analog input channel and return the value.
 *
-*   Reads the specified channel and returns the value as voltage or ADC code.
-*   ADC code will be returned if the [OPTS_NOSCALEDATA](@ref OPTS_NOSCALEDATA)
-*   option is specified; otherwise, voltage will be returned.
+*   The valid options are:
+*       - [OPTS_NOSCALEDATA](@ref OPTS_NOSCALEDATA): Return ADC code (a value 
+*           between -8,388,608 and 8,388,607) rather than voltage.
+*       - [OPTS_NOCALIBRATEDATA](@ref OPTS_NOCALIBRATEDATA): Return data without 
+*           the calibration factors applied.
+*
+*   The options parameter is set to 0 or [OPTS_DEFAULT](@ref OPTS_DEFAULT) for 
+*   default operation, which is scaled and calibrated data.
+*
+*   Multiple options may be specified by ORing the flags. For instance, 
+*   specifying [OPTS_NOSCALEDATA](@ref OPTS_NOSCALEDATA) | 
+*   [OPTS_NOCALIBRATEDATA](@ref OPTS_NOCALIBRATEDATA) will return the value read 
+*   from the ADC without calibration or converting to voltage.
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
 *   @param channel  The analog input channel number (0 - 3).
-*   @param options  Options bitmask (only
-*       [OPTS_NOSCALEDATA](@ref OPTS_NOSCALEDATA) and 
-*       [OPTS_NOCALIBRATEDATA](@ref OPTS_NOCALIBRATEDATA) are used)
+*   @param options  Options bitmask
 *   @param value    Receives the analog input value.
 *   @return [Result code](@ref ResultCode),
 *       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
@@ -175,12 +183,12 @@ int mcc134_a_in_read(uint8_t address, uint8_t channel, uint32_t options,
 *
 *   Tells the MCC 134 library what thermocouple type is connected to the
 *   specified channel. This is needed for correct temperature calculations. The
-*   type is one of [tcTypes](@ref tcTypes) and the board will default to all
+*   type is one of [TcTypes](@ref TcTypes) and the board will default to all
 *   channels set to [TC_TYPE_J](@ref TC_TYPE_J) when it is first opened.
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
 *   @param channel  The analog input channel number (0 - 3).
-*   @param type  The thermocouple type, one of [tcTypes](@ref tcTypes).
+*   @param type  The thermocouple type, one of [TcTypes](@ref TcTypes).
 *   @return [Result code](@ref ResultCode),
 *       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
 */
@@ -190,12 +198,12 @@ int mcc134_tc_type_write(uint8_t address, uint8_t channel, uint8_t type);
 *   @brief Read the thermocouple type for a channel.
 *
 *   Reads the current thermocouple type for the specified channel. The type is
-*   one of [tcTypes](@ref tcTypes) and the board will default to all channels
+*   one of [TcTypes](@ref TcTypes) and the board will default to all channels
 *   set to [TC_TYPE_J](@ref TC_TYPE_J) when it is first opened.
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
 *   @param channel  The analog input channel number (0 - 3).
-*   @param type  Receives the thermocouple type, one of [tcTypes](@ref tcTypes).
+*   @param type  Receives the thermocouple type, one of [TcTypes](@ref TcTypes).
 *   @return [Result code](@ref ResultCode),
 *       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
 */
