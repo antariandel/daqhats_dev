@@ -11,6 +11,7 @@ class HatIDs(object):   # pylint: disable=too-few-public-methods
     ANY = 0             #: Match any MCC ID in :py:func:`hat_list`
     MCC_118 = 0x0142    #: MCC 118 ID
     MCC_134 = 0x0143    #: MCC 134 ID
+    MCC_152 = 0x0144    #: MCC 152 ID
 
 class TriggerModes(object): # pylint: disable=too-few-public-methods
     """Scan trigger input modes."""
@@ -107,7 +108,7 @@ def hat_list(filter_by_id=0):
 
     # create the list of dictionaries to return
     my_list = []
-    hat_info = namedtuple('HatInfo', 
+    hat_info = namedtuple('HatInfo',
                           ['address', 'id', 'version', 'product_name'])
     for item in my_info:
         name = cast(item.product_name, c_char_p)

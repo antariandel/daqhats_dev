@@ -143,7 +143,7 @@ const char* hat_error_message(int result);
 *
 *   @return 1 if interrupt is active, 0 if inactive.
 */
-int hat_interrupt_active(void);
+int hat_interrupt_state(void);
 
 /**
 *   Wait for an interrupt to occur.

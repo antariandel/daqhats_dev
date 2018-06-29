@@ -817,7 +817,7 @@ const char* hat_error_message(int result)
 /******************************************************************************
   Return the interrupt status.
  *****************************************************************************/
-int hat_interrupt_active(void)
+int hat_interrupt_state(void)
 {
     if (gpio_status(IRQ_GPIO) == 0)
     {

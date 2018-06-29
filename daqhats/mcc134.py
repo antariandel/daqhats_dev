@@ -32,7 +32,7 @@ class mcc134(Hat): # pylint: disable=invalid-name
     #: Return value for an open thermocouple.
     OPEN_TC_VALUE = -9999.0
     #: Return value for thermocouple voltage outside the valid range.
-    OVERRANGE_TC_VALUE = -8888.0    
+    OVERRANGE_TC_VALUE = -8888.0
 
     _AIN_NUM_CHANNELS = 4           # Number of analog channels
 

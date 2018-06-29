@@ -3,7 +3,7 @@
 *   author Measurement Computing Corp.
 *   brief This file contains functions used with the MCC 152.
 *
-*   date 4 May 2018
+*   06/29/2018
 */
 
 #include <stdint.h>
@@ -33,7 +33,8 @@
 #define MAX_CODE            4095
 #define VOLTAGE_RANGE       5.0
 
-#define SERIAL_SIZE         (8+1)   // The maximum size of the serial number string, plus NULL.
+// The maximum size of the serial number string, plus NULL.
+#define SERIAL_SIZE         (8+1)   
 
 #define I2C_BASE_ADDR       (0x20)
 
@@ -52,7 +53,7 @@ struct mcc152FactoryData
 // Local data for each open MCC 152 board.
 struct mcc152Device
 {
-    uint16_t handle_count;              // the number of handles open to this device
+    uint16_t handle_count;        // the number of handles open to this device
     uint8_t last_command;
     uint8_t output_port;
     uint8_t direction;
@@ -62,10 +63,13 @@ struct mcc152Device
 
 static const char* const spi_device = SPI_DEVICE_1; // the spidev device
 static const enum SpiBus spi_bus_num = SPI_BUS_1;   // for obtain_lock()
-static const uint8_t spi_mode = SPI_MODE_1;         // use mode 1 (CPOL=0, CPHA=1)
+static const uint8_t spi_mode = SPI_MODE_1;         // use mode 1
+                                                    // (CPOL=0, CPHA=1)
 static const uint8_t spi_bits = 8;                  // 8 bits per transfer
-static const uint32_t spi_rate = 50000000;          // maximum SPI clock frequency
-static const uint16_t spi_delay = 0;                // delay in us before removing CS
+static const uint32_t spi_rate = 50000000;          // maximum SPI clock
+                                                    // frequency
+static const uint16_t spi_delay = 0;                // delay in us before
+                                                    // removing CS
 
 #define CMD_INPUT_PORT          0x00
 #define CMD_OUTPUT_PORT         0x01
@@ -315,8 +319,8 @@ int _mcc152_i2c_read(uint8_t address, uint8_t command, uint8_t* value)
     }
     
     // If the command has not changed since the last transfer then just perform
-    // a read byte; otherwise, perform read byte data which writes the command to
-    // the I/O expander.
+    // a read byte; otherwise, perform read byte data which writes the command
+    // to the I/O expander.
     if (command == _devices[address]->last_command)
     {
         ret = _read_byte(i2c_fd);
@@ -343,13 +347,15 @@ int _mcc152_i2c_read(uint8_t address, uint8_t command, uint8_t* value)
     return ret;
 }
 
-static int _mcc152_dio_reg_write(uint8_t address, uint8_t command, uint8_t channel, uint8_t value, bool use_cache)
+static int _mcc152_dio_reg_write(uint8_t address, uint8_t command,
+    uint8_t channel, uint8_t value, bool use_cache)
 {
     int ret;
     uint8_t reg_value;
     
     if (!_check_addr(address) ||                // check address failed
-        ((channel > NUM_DIO_CHANNELS) && (channel != DIO_CHANNEL_ALL))) // bad channel
+        // bad channel
+        ((channel > NUM_DIO_CHANNELS) && (channel != DIO_CHANNEL_ALL))) 
     {
         return RESULT_BAD_PARAMETER;
     }    
@@ -410,13 +416,15 @@ static int _mcc152_dio_reg_write(uint8_t address, uint8_t command, uint8_t chann
 /******************************************************************************
   Read I/O expander register.
  *****************************************************************************/
-static int _mcc152_dio_reg_read(uint8_t address, uint8_t command, uint8_t channel, uint8_t* value)
+static int _mcc152_dio_reg_read(uint8_t address, uint8_t command,
+    uint8_t channel, uint8_t* value)
 {
     int ret;
     uint8_t reg_value;
     
     if (!_check_addr(address) ||                // check address failed
-        ((channel > NUM_DIO_CHANNELS) && (channel != DIO_CHANNEL_ALL)) ||   // bad channel
+        // bad channel        
+        ((channel > NUM_DIO_CHANNELS) && (channel != DIO_CHANNEL_ALL)) ||
         (value == NULL))                        // bad pointer
     {
         return RESULT_BAD_PARAMETER;
@@ -542,7 +550,7 @@ static void _mcc152_lib_init(void)
 static int _mcc152_dac_write(int address, uint16_t code)
 {
     if (!_check_addr(address) ||                // check address failed
-        (code > MAX_CODE))                        // bad pointer
+        (code > MAX_CODE))                      // bad pointer
     {
         return RESULT_BAD_PARAMETER;
     }    
@@ -565,7 +573,8 @@ static int _mcc152_dio_init(int address)
     }
     
     // read the registers that have local cache
-    ret = _mcc152_i2c_read(address, CMD_OUTPUT_PORT, &_devices[address]->output_port);
+    ret = _mcc152_i2c_read(address, CMD_OUTPUT_PORT, 
+        &_devices[address]->output_port);
     if (ret != RESULT_SUCCESS)
     {
         return ret;
@@ -603,9 +612,11 @@ int mcc152_open(uint8_t address)
     
     if (_devices[address] == NULL)
     {
-        // this is either the first time this device is being opened or it is not a 152
+        // this is either the first time this device is being opened or it is
+        // not a 152
     
-        // read the EEPROM file(s), verify that it is an MCC 152, and get the cal data
+        // read the EEPROM file(s), verify that it is an MCC 152, and get the
+        // data
         if (_hat_info(address, &info, NULL, &custom_size) == RESULT_SUCCESS)
         {
             if (info.id == HAT_ID_MCC_152)
@@ -620,12 +631,14 @@ int mcc152_open(uint8_t address)
         }
         else
         {
-            // no EEPROM info was found - allow opening the board with an uninitialized EEPROM
+            // no EEPROM info was found - allow opening the board with an
+            // uninitialized EEPROM
             custom_size = 0;
         }
     
         // create a struct to hold device instance data
-        _devices[address] = (struct mcc152Device*)calloc(1, sizeof(struct mcc152Device));
+        _devices[address] = (struct mcc152Device*)calloc(1,
+            sizeof(struct mcc152Device));
         dev = _devices[address];
         
         // initialize the struct elements
@@ -667,7 +680,8 @@ int mcc152_open(uint8_t address)
     }
     else
     {
-        // the device has already been opened and initialized, increment reference count
+        // the device has already been opened and initialized, increment
+        // reference count
         dev = _devices[address];
         dev->handle_count++;
     }
@@ -748,7 +762,8 @@ int mcc152_serial(uint8_t address, char* buffer)
 /******************************************************************************
   Write an analog output channel.
  *****************************************************************************/
-int mcc152_a_out_write(uint8_t address, uint8_t channel, uint32_t options, double value)
+int mcc152_a_out_write(uint8_t address, uint8_t channel, uint32_t options,
+    double value)
 {
     uint16_t code;
     int result;
@@ -932,7 +947,8 @@ int mcc152_dio_input_read(uint8_t address, uint8_t channel, uint8_t* value)
  *****************************************************************************/
 int mcc152_dio_output_write(uint8_t address, uint8_t channel, uint8_t value)
 {
-    return _mcc152_dio_reg_write(address, CMD_OUTPUT_PORT, channel, value, true);
+    return _mcc152_dio_reg_write(address, CMD_OUTPUT_PORT, channel, value,
+        true);
 }
 
 /******************************************************************************
@@ -962,15 +978,18 @@ int mcc152_dio_direction_read(uint8_t address, uint8_t channel, uint8_t* value)
 /******************************************************************************
   Configure DIO pull-up / pull-down resistor(s).
  *****************************************************************************/
-int mcc152_dio_pull_config_write(uint8_t address, uint8_t channel, uint8_t value)
+int mcc152_dio_pull_config_write(uint8_t address, uint8_t channel,
+    uint8_t value)
 {
-    return _mcc152_dio_reg_write(address, CMD_PULL_SELECT, channel, value, false);
+    return _mcc152_dio_reg_write(address, CMD_PULL_SELECT, channel, value,
+        false);
 }
 
 /******************************************************************************
   Read DIO pull-up / pull-down configuration.
  *****************************************************************************/
-int mcc152_dio_pull_config_read(uint8_t address, uint8_t channel, uint8_t* value)
+int mcc152_dio_pull_config_read(uint8_t address, uint8_t channel,
+    uint8_t* value)
 {
     return _mcc152_dio_reg_read(address, CMD_PULL_SELECT, channel, value);
 }
@@ -978,7 +997,8 @@ int mcc152_dio_pull_config_read(uint8_t address, uint8_t channel, uint8_t* value
 /******************************************************************************
   Enable DIO pull-up / pull-down resistor(s).
  *****************************************************************************/
-int mcc152_dio_pull_enable_write(uint8_t address, uint8_t channel, uint8_t value)
+int mcc152_dio_pull_enable_write(uint8_t address, uint8_t channel,
+    uint8_t value)
 {
     return _mcc152_dio_reg_write(address, CMD_PULL_ENABLE, channel, value, false);
 }
@@ -986,7 +1006,8 @@ int mcc152_dio_pull_enable_write(uint8_t address, uint8_t channel, uint8_t value
 /******************************************************************************
   Read DIO pull-up / pull-down enable setting.
  *****************************************************************************/
-int mcc152_dio_pull_enable_read(uint8_t address, uint8_t channel, uint8_t* value)
+int mcc152_dio_pull_enable_read(uint8_t address, uint8_t channel,
+    uint8_t* value)
 {
     return _mcc152_dio_reg_read(address, CMD_PULL_ENABLE, channel, value);
 }
@@ -994,7 +1015,8 @@ int mcc152_dio_pull_enable_read(uint8_t address, uint8_t channel, uint8_t* value
 /******************************************************************************
   Configure DIO input inversion.
  *****************************************************************************/
-int mcc152_dio_input_invert_write(uint8_t address, uint8_t channel, uint8_t value)
+int mcc152_dio_input_invert_write(uint8_t address, uint8_t channel,
+    uint8_t value)
 {
     return _mcc152_dio_reg_write(address, CMD_POLARITY, channel, value, false);
 }
@@ -1002,7 +1024,8 @@ int mcc152_dio_input_invert_write(uint8_t address, uint8_t channel, uint8_t valu
 /******************************************************************************
   Read DIO input inversion configuration.
  *****************************************************************************/
-int mcc152_dio_input_invert_read(uint8_t address, uint8_t channel, uint8_t* value)
+int mcc152_dio_input_invert_read(uint8_t address, uint8_t channel,
+    uint8_t* value)
 {
     return _mcc152_dio_reg_read(address, CMD_POLARITY, channel, value);
 }
@@ -1010,15 +1033,18 @@ int mcc152_dio_input_invert_read(uint8_t address, uint8_t channel, uint8_t* valu
 /******************************************************************************
   Configure DIO input latching.
  *****************************************************************************/
-int mcc152_dio_input_latch_write(uint8_t address, uint8_t channel, uint8_t value)
+int mcc152_dio_input_latch_write(uint8_t address, uint8_t channel,
+    uint8_t value)
 {
-    return _mcc152_dio_reg_write(address, CMD_INPUT_LATCH, channel, value, false);
+    return _mcc152_dio_reg_write(address, CMD_INPUT_LATCH, channel, value,
+        false);
 }
 
 /******************************************************************************
   Read DIO input latching configuration.
  *****************************************************************************/
-int mcc152_dio_input_latch_read(uint8_t address, uint8_t channel, uint8_t* value)
+int mcc152_dio_input_latch_read(uint8_t address, uint8_t channel,
+    uint8_t* value)
 {
     return _mcc152_dio_reg_read(address, CMD_INPUT_LATCH, channel, value);
 }
@@ -1028,7 +1054,8 @@ int mcc152_dio_input_latch_read(uint8_t address, uint8_t channel, uint8_t* value
  *****************************************************************************/
 int mcc152_dio_output_type_write(uint8_t address, uint8_t value)
 {
-    return _mcc152_dio_reg_write(address, CMD_OUTPUT_CONFIG, DIO_CHANNEL_ALL, value == 0 ? 0 : 1, false);
+    return _mcc152_dio_reg_write(address, CMD_OUTPUT_CONFIG, DIO_CHANNEL_ALL,
+        value == 0 ? 0 : 1, false);
 }
 
 /******************************************************************************
@@ -1036,13 +1063,15 @@ int mcc152_dio_output_type_write(uint8_t address, uint8_t value)
  *****************************************************************************/
 int mcc152_dio_output_type_read(uint8_t address, uint8_t* value)
 {
-    return _mcc152_dio_reg_read(address, CMD_OUTPUT_CONFIG, DIO_CHANNEL_ALL, value);
+    return _mcc152_dio_reg_read(address, CMD_OUTPUT_CONFIG, DIO_CHANNEL_ALL,
+        value);
 }
 
 /******************************************************************************
   Write DIO interrupt mask.
  *****************************************************************************/
-int mcc152_dio_interrupt_mask_write(uint8_t address, uint8_t channel, uint8_t value)
+int mcc152_dio_interrupt_mask_write(uint8_t address, uint8_t channel,
+    uint8_t value)
 {
     return _mcc152_dio_reg_write(address, CMD_INT_MASK, channel, value, false);
 }
@@ -1050,7 +1079,8 @@ int mcc152_dio_interrupt_mask_write(uint8_t address, uint8_t channel, uint8_t va
 /******************************************************************************
   Read DIO interrupt mask.
  *****************************************************************************/
-int mcc152_dio_interrupt_mask_read(uint8_t address, uint8_t channel, uint8_t* value)
+int mcc152_dio_interrupt_mask_read(uint8_t address, uint8_t channel,
+    uint8_t* value)
 {
     return _mcc152_dio_reg_read(address, CMD_INT_MASK, channel, value);
 }
@@ -1058,7 +1088,8 @@ int mcc152_dio_interrupt_mask_read(uint8_t address, uint8_t channel, uint8_t* va
 /******************************************************************************
   Read DIO interrupt status.
  *****************************************************************************/
-int mcc152_dio_interrupt_status_read(uint8_t address, uint8_t channel, uint8_t* value)
+int mcc152_dio_interrupt_status_read(uint8_t address, uint8_t channel,
+    uint8_t* value)
 {
     return _mcc152_dio_reg_read(address, CMD_INT_STATUS, channel, value);
 }
