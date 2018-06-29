@@ -3,7 +3,7 @@
 *   author Measurement Computing Corp.
 *   brief This file contains utility functions for the MCC HATs.
 *
-*   date 11/3/2017
+*   date 06/29/2018
 */
 #include <stdio.h>
 #include <stdbool.h>
@@ -410,7 +410,8 @@ int hat_list(uint16_t filter_id, struct HatInfo* pList)
     count = 0;
 
     // EEPROM 0 will always use the built-in OS support to prevent caching info
-    // for a single board that is swapped out (such as during manufacturing test.)
+    // for a single board that is swapped out (such as during manufacturing
+    // test.)
 
     sprintf(filename, "%s/vendor", SYS_HAT_DIR);
     // open vendor file and compare against VENDOR_NAME
@@ -465,8 +466,8 @@ int hat_list(uint16_t filter_id, struct HatInfo* pList)
     if (eeprom_fd != -1)
         close(eeprom_fd);
 
-    // Boards 1-7 will be supported with the read_eeproms utility that copies the
-    // EEPROM contents to /etc/mcc/hats
+    // Boards 1-7 will be supported with the read_eeproms utility that copies 
+    // the EEPROM contents to /etc/mcc/hats
     for (address = 1; address < MAX_NUMBER_HATS; address++)
     {
         // look for HAT eeprom.bin files in /etc/mcc/hats
@@ -568,7 +569,6 @@ int _hat_info(uint8_t address, struct HatInfo* entry, char* pData,
     char filename[256];
     char temp[256];
     uint8_t atom_num;
-    //char* custom_buffer;
     uint16_t custom_size;
     int eeprom_fd;
     struct _Header header;

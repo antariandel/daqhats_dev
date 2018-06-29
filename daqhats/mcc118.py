@@ -110,7 +110,6 @@ class mcc118(Hat): # pylint: disable=invalid-name
             self._initialized = False
             raise HatError(self._address, "Board not responding.")
 
-        #self._scanning = False
         return
 
     def __del__(self):
@@ -126,13 +125,13 @@ class mcc118(Hat): # pylint: disable=invalid-name
         Returns:
             namedtuple: a namedtuple containing the following field names
 
-            | **version** (string): The firmware version, i.e "1.03".
-            | **bootloader_version** (string): The bootloader version,
-                i.e "1.01".
+            * **version** (string): The firmware version, i.e "1.03".
+            * **bootloader_version** (string): The bootloader version,
+              i.e "1.01".
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -160,7 +159,7 @@ class mcc118(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -186,7 +185,7 @@ class mcc118(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -203,7 +202,7 @@ class mcc118(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -229,12 +228,12 @@ class mcc118(Hat): # pylint: disable=invalid-name
         Returns:
             namedtuple: a namedtuple containing the following field names
 
-            | **slope** (float): The slope.
-            | **offset** (float): The offset.
+            * **slope** (float): The slope.
+            * **offset** (float): The offset.
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -268,7 +267,7 @@ class mcc118(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -298,7 +297,7 @@ class mcc118(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: the board is not initialized, does not respond, or
-            responds incorrectly.
+                responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -481,7 +480,7 @@ class mcc118(Hat): # pylint: disable=invalid-name
 
         Raises:
             HatError: a scan is active; memory could not be allocated; the board
-            is not initialized, does not respond, or responds incorrectly.
+                is not initialized, does not respond, or responds incorrectly.
             ValueError: a scan argument is invalid.
         """
         if not self._initialized:
@@ -558,20 +557,20 @@ class mcc118(Hat): # pylint: disable=invalid-name
         Returns:
             namedtuple: a namedtuple containing the following field names:
 
-            | **running** (bool): True if the scan is running, False if it has
-                stopped or completed.
-            | **hardware_overrun** (bool): True if the hardware could not
-                acquire and unload samples fast enough and data was lost.
-            | **buffer_overrun** (bool): True if the background scan buffer was
-                not read fast enough and data was lost.
-            | **triggered** (bool): True if the trigger conditions have been met
-                and data acquisition started.
-            | **samples_available** (int): The number of samples per channel
-                currently in the scan buffer.
+            * **running** (bool): True if the scan is running, False if it has
+              stopped or completed.
+            * **hardware_overrun** (bool): True if the hardware could not
+              acquire and unload samples fast enough and data was lost.
+            * **buffer_overrun** (bool): True if the background scan buffer was
+              not read fast enough and data was lost.
+            * **triggered** (bool): True if the trigger conditions have been met
+              and data acquisition started.
+            * **samples_available** (int): The number of samples per channel
+              currently in the scan buffer.
 
         Raises:
             HatError: A scan is not active, the board is not initialized, does
-            not respond, or responds incorrectly.
+                not respond, or responds incorrectly.
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
@@ -623,22 +622,22 @@ class mcc118(Hat): # pylint: disable=invalid-name
         Returns:
             namedtuple: a namedtuple containing the following field names:
 
-            | **running** (bool): True if the scan is running, False if it has
-                stopped or completed.
-            | **hardware_overrun** (bool): True if the hardware could not
-                acquire and unload samples fast enough and data was lost.
-            | **buffer_overrun** (bool): True if the background scan buffer was
-                not read fast enough and data was lost.
-            | **triggered** (bool): True if the trigger conditions have been met
-                and data acquisition started.
-            | **timeout** (bool): True if the timeout time expired before the
-                specified number of samples were read.
-            | **data** (list of float): The data that was read from the scan
-                buffer.
+            * **running** (bool): True if the scan is running, False if it has
+              stopped or completed.
+            * **hardware_overrun** (bool): True if the hardware could not
+              acquire and unload samples fast enough and data was lost.
+            * **buffer_overrun** (bool): True if the background scan buffer was
+              not read fast enough and data was lost.
+            * **triggered** (bool): True if the trigger conditions have been met
+              and data acquisition started.
+            * **timeout** (bool): True if the timeout time expired before the
+              specified number of samples were read.
+            * **data** (list of float): The data that was read from the scan
+              buffer.
 
         Raises:
             HatError: A scan is not active, the board is not initialized, does
-            not respond, or responds incorrectly.
+                not respond, or responds incorrectly.
             ValueError: Incorrect argument.
         """
         if not self._initialized:
@@ -745,22 +744,22 @@ class mcc118(Hat): # pylint: disable=invalid-name
         Returns:
             namedtuple: a namedtuple containing the following field names:
 
-            | **running** (bool): True if the scan is running, False if it has
-                stopped or completed.
-            | **hardware_overrun** (bool): True if the hardware could not
-                acquire and unload samples fast enough and data was lost.
-            | **buffer_overrun** (bool): True if the background scan buffer was
-                not read fast enough and data was lost.
-            | **triggered** (bool): True if the trigger conditions have been met
-                and data acquisition started.
-            | **timeout** (bool): True if the timeout time expired before the
-                specified number of samples were read.
-            | **data** (NumPy array of float64): The data that was read from the
-                scan buffer.
+            * **running** (bool): True if the scan is running, False if it has
+              stopped or completed.
+            * **hardware_overrun** (bool): True if the hardware could not
+              acquire and unload samples fast enough and data was lost.
+            * **buffer_overrun** (bool): True if the background scan buffer was
+              not read fast enough and data was lost.
+            * **triggered** (bool): True if the trigger conditions have been met
+              and data acquisition started.
+            * **timeout** (bool): True if the timeout time expired before the
+              specified number of samples were read.
+            * **data** (NumPy array of float64): The data that was read from the
+              scan buffer.
 
         Raises:
             HatError: A scan is not active, the board is not initialized, does
-            not respond, or responds incorrectly.
+                not respond, or responds incorrectly.
             ValueError: Incorrect argument.
         """
         try:
