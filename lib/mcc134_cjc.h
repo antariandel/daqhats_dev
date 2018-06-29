@@ -3,7 +3,7 @@
 *   Measurement Computing Corp.
 *   This file contains functions used with the CJC sensor on the MCC 134.
 *
-*   1 Feb 2018
+*   06/29/2018
 */
 #ifndef _MCC134_CJC_H
 #define _MCC134_CJC_H

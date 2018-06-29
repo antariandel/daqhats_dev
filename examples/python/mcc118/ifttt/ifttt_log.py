@@ -48,7 +48,7 @@ if not list:
     print("No MCC 1118 boards found")
     sys.exit()
 
-board = hats.mcc118(list[0]['address'])
+board = hats.mcc118(list[0].address)
 
 while True:
     # read the voltages

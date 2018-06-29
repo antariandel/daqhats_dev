@@ -46,5 +46,5 @@ uninstall:
 .PHONY: clean
 
 clean:
-	-${RM} $(BUILD_DIR)/${TARGET_LIB} ${OBJS} ${DEPS}
-	-rmdir $(BUILD_DIR)
+	@${RM} $(BUILD_DIR)/${TARGET_LIB} ${OBJS} ${DEPS}
+	@rmdir $(BUILD_DIR)

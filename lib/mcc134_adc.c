@@ -3,7 +3,7 @@
 *   Measurement Computing Corp.
 *   This file contains functions used with the ADC on the MCC 134.
 *
-*   11 Apr 2018
+*   06/29/2018
 */
 #include <unistd.h>
 #include <stdio.h>
@@ -56,8 +56,9 @@
 // The gain is fixed at 16x for a +/-128 mV range to cover all TC types.
 #define PGA_GAIN_INDEX      4
 
-// These are the times from the data sheet based on a 4.096 MHz clock.  However, the internal
-// oscillator has a 5% tolerance, so add 5% to the times for worst case timing.
+// These are the times from the data sheet based on a 4.096 MHz clock.  However,
+// the internal oscillator has a 5% tolerance so add 5% to the times for worst
+// case timing.
 static const uint32_t _calibration_times_us[] = 
 {
     (uint32_t)(3201.01 * 1.05 * 1000), 
@@ -86,8 +87,9 @@ static const uint32_t _conversion_times_us[] =
     (uint32_t)(0.514 * 1.05 * 1000)
 };
 
-extern int _mcc134_spi_transfer(uint8_t address, uint8_t spi_bus, uint8_t spi_mode, 
-    uint32_t spi_rate, uint8_t spi_delay, void* tx_data, void* rx_data, uint8_t data_count);
+extern int _mcc134_spi_transfer(uint8_t address, uint8_t spi_bus,
+    uint8_t spi_mode, uint32_t spi_rate, uint8_t spi_delay, void* tx_data,
+    void* rx_data, uint8_t data_count);
     
 int _mcc134_adc_init(uint8_t address)
 {
@@ -104,7 +106,8 @@ int _mcc134_adc_init(uint8_t address)
     
     // reset the ADC to defaults
     buffer[0] = CMD_RESET;
-    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE, SPI_DELAY, buffer, NULL, 1)) != RESULT_SUCCESS)
+    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE,
+        SPI_DELAY, buffer, NULL, 1)) != RESULT_SUCCESS)
     {
         _release_lock(lock_fd);
         return result;
@@ -118,9 +121,12 @@ int _mcc134_adc_init(uint8_t address)
     buffer[1] = 4-1;        // count - 1
     buffer[2] = 0x01;       // MUX0
     buffer[3] = 0x00;       // VBIAS
-    buffer[4] = 0x30;       // MUX1: internal ref always on and selected, normal mux operation
-    buffer[5] = (PGA_GAIN_INDEX << 4) + DATA_RATE_INDEX; // SYS0: specified gain and data rate
-    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE, SPI_DELAY, buffer, NULL, 6)) != RESULT_SUCCESS)
+    buffer[4] = 0x30;       // MUX1: internal ref always on and selected, normal
+                            //       mux operation
+    buffer[5] = (PGA_GAIN_INDEX << 4) + DATA_RATE_INDEX; // SYS0: specified gain
+                                                            //and data rate
+    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE,
+        SPI_DELAY, buffer, NULL, 6)) != RESULT_SUCCESS)
     {
         _release_lock(lock_fd);
         return RESULT_SUCCESS;
@@ -146,7 +152,8 @@ int _mcc134_adc_calibrate_self_offset(uint8_t address)
     }
     
     buffer[0] = CMD_SELFOCAL;
-    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE, SPI_DELAY, buffer, NULL, 1)) != RESULT_SUCCESS)
+    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE,
+        SPI_DELAY, buffer, NULL, 1)) != RESULT_SUCCESS)
     {
         _release_lock(lock_fd);
         return result;
@@ -159,7 +166,8 @@ int _mcc134_adc_calibrate_self_offset(uint8_t address)
     return RESULT_SUCCESS;
 }
 
-int _mcc134_adc_read_code(uint8_t address, uint8_t hi_input, uint8_t lo_input, int32_t* code)
+int _mcc134_adc_read_code(uint8_t address, uint8_t hi_input, uint8_t lo_input,
+    int32_t* code)
 {
     int32_t mycode[2];
     int index;
@@ -182,7 +190,8 @@ int _mcc134_adc_read_code(uint8_t address, uint8_t hi_input, uint8_t lo_input, i
     buffer[0] = CMD_WREG | REG_MUX0;
     buffer[1] = 1-1;
     buffer[2] = regval; // MUX0: select positive and negative ADC inputs
-    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE, SPI_DELAY, buffer, NULL, 3)) != RESULT_SUCCESS)
+    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE,
+        SPI_DELAY, buffer, NULL, 3)) != RESULT_SUCCESS)
     {
         _release_lock(lock_fd);
         return result;
@@ -191,14 +200,16 @@ int _mcc134_adc_read_code(uint8_t address, uint8_t hi_input, uint8_t lo_input, i
     // wait for conversion
     usleep(_conversion_times_us[DATA_RATE_INDEX]);
     
-    // Since we are not using the DRDY signal there is a chance we will read the result while the 
-    // data register is being updated, resulting in corrupted data.  Read multiple times to ensure the correct value.
+    // Since we are not using the DRDY signal there is a chance we will read the
+    // result while the data register is being updated, resulting in corrupted
+    // data.  Read multiple times to ensure the correct value.
     buffer[0] = CMD_RDATA;
     buffer[1] = CMD_NOP;
     buffer[2] = CMD_NOP;
     buffer[3] = CMD_NOP;
     
-    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE, SPI_DELAY, buffer, rbuffer, 4)) != RESULT_SUCCESS)
+    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE,
+        SPI_DELAY, buffer, rbuffer, 4)) != RESULT_SUCCESS)
     {
         _release_lock(lock_fd);
         return result;
@@ -213,7 +224,8 @@ int _mcc134_adc_read_code(uint8_t address, uint8_t hi_input, uint8_t lo_input, i
     {
         usleep(100);
         
-        if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE, SPI_DELAY, buffer, rbuffer, 4)) != RESULT_SUCCESS)
+        if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE,
+            SPI_DELAY, buffer, rbuffer, 4)) != RESULT_SUCCESS)
         {
             _release_lock(lock_fd);
             return result;

@@ -35,5 +35,5 @@ Data
 Thermocouple types
 ~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: tcTypes
+.. autoclass:: TcTypes
     :members:

@@ -67,10 +67,10 @@ int main(int argc, char* argv[])
     // wait for scan to complete
     do
     {
-        if (mcc118_a_in_scan_read(address, &status, 0, 0.0, NULL, 0, NULL)
+        if (mcc118_a_in_scan_status(address, &status, NULL)
             != RESULT_SUCCESS)
         {
-            printf("mcc118_a_in_scan_read failed\n");
+            printf("mcc118_a_in_scan_status failed\n");
             mcc118_a_in_scan_stop(address);
             mcc118_a_in_scan_cleanup(address);
             mcc118_close(address);

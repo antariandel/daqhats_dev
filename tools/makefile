@@ -27,6 +27,6 @@ uninstall:
 .DEFAULT_GOAL := all
 
 clean:
-	rm -f *.o *~ core mcc118_firmware_update
+	@rm -f *.o *~ core mcc118_firmware_update
 
 

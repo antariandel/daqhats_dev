@@ -3,7 +3,7 @@
 *   author Measurement Computing Corp.
 *   brief This file contains functions used with the MCC 134.
 *
-*   date 4 Apr 2018
+*   date 06/29/2018
 */
 
 #include <stdint.h>
@@ -38,16 +38,22 @@
 #define NEG_OVERRANGE_VOLTS -0.012
 #define NUM_CHANNELS        4       // The number of analog input channels.
 
-#define SERIAL_SIZE         (8+1)   // The maximum size of the serial number string, plus NULL.
-#define CAL_DATE_SIZE       (10+1)  // The maximum size of the calibration date string, plus NULL.
+// The maximum size of the serial number string, plus NULL.
+#define SERIAL_SIZE         (8+1)
+// The maximum size of the calibration date string, plus NULL.
+#define CAL_DATE_SIZE       (10+1)
 
 #define MIN(a, b)           ((a < b) ? a : b)
 #define MAX(a, b)           ((a > b) ? a : b)
 
 // Constants used by the CJC thread
-#define CJC_READ_INTERVAL_US    1000000     // read interval time, us
-#define CJC_AVERAGE_COUNT       120         // average window in samples
-#define CJC_STARTUP_TIME_US     250000      // wait at least 240ms for first reading
+
+// read interval time, us
+#define CJC_READ_INTERVAL_US    1000000     
+// average window in samples
+#define CJC_AVERAGE_COUNT       120         
+// wait at least 240ms for first reading
+#define CJC_STARTUP_TIME_US     250000      
 
 // Map the channel inputs to the ADC pins
 const uint8_t CHAN_HI[NUM_CHANNELS] = {0, 4, 6, 2};
@@ -78,14 +84,23 @@ struct mcc134FactoryData
 // Local data for each open MCC 134 board.
 struct mcc134Device
 {
-    uint16_t handle_count;              // the number of handles open to this device
-    uint8_t tc_types[NUM_CHANNELS];     // the thermocouple types
-    bool last_reading_open;             // true if last reading was railed high - used for improving settling performance
-    bool cjc_valid;                     // true when the CJC sensor is ready to operate
-    double cjc_temperature;             // the averaged CJC sensor reading, returned from the CJC thread
+    // the number of handles open to this device
+    uint16_t handle_count;              
+    // the thermocouple types
+    uint8_t tc_types[NUM_CHANNELS];     
+    // true if last reading was railed high - used for improving settling
+    // performance
+    bool last_reading_open;             
+    // true when the CJC sensor is ready to operate
+    bool cjc_valid;                     
+    // the averaged CJC sensor reading, returned from the CJC thread
+    double cjc_temperature;             
+    // tell the CJC thread to stop
     bool stop_thread;
+    // the CJC thread handle
     pthread_t cjc_handle;
-    struct mcc134FactoryData factory_data;   // Factory data
+    // Factory data
+    struct mcc134FactoryData factory_data;   
 };
 
 /// \endcond
@@ -96,7 +111,8 @@ struct mcc134Device
 static struct mcc134Device* _devices[MAX_NUMBER_HATS];
 static bool _mcc134_lib_initialized = false;
 
-#define SPI_BITS    8       // 8 bits per transfer
+// 8 bits per transfer
+#define SPI_BITS    8       
 
 //*****************************************************************************
 // Local Functions
@@ -121,7 +137,9 @@ static bool _check_addr(uint8_t address)
 /******************************************************************************
   Perform a SPI transfer to the ADC or CJC sensor
  *****************************************************************************/
-int _mcc134_spi_transfer(uint8_t address, uint8_t spi_bus, uint8_t spi_mode, uint32_t spi_rate, uint8_t spi_delay, void* tx_data, void* rx_data, uint8_t data_count)
+int _mcc134_spi_transfer(uint8_t address, uint8_t spi_bus, uint8_t spi_mode,
+    uint32_t spi_rate, uint8_t spi_delay, void* tx_data, void* rx_data,
+    uint8_t data_count)
 {
     int lock_fd;
     int spi_fd;
@@ -316,7 +334,8 @@ static int _parse_factory_data(cJSON* root, struct mcc134FactoryData* data)
                     calchild->valuestring)
                 {
                     // Found the calibration date
-                    strncpy(data->cal_date, calchild->valuestring, CAL_DATE_SIZE);
+                    strncpy(data->cal_date, calchild->valuestring,
+                        CAL_DATE_SIZE);
                     got_date = true;
                 }
                 else if (!strcmp(calchild->string, "slopes") &&
@@ -523,9 +542,11 @@ int mcc134_open(uint8_t address)
     
     if (_devices[address] == NULL)
     {
-        // this is either the first time this device is being opened or it is not a 134
+        // this is either the first time this device is being opened or it is
+        // not a 134
     
-        // read the EEPROM file(s), verify that it is an MCC 134, and get the cal data
+        // read the EEPROM file(s), verify that it is an MCC 134, and get the
+        // cal data
         if (_hat_info(address, &info, NULL, &custom_size) == RESULT_SUCCESS)
         {
             if (info.id == HAT_ID_MCC_134)
@@ -540,12 +561,14 @@ int mcc134_open(uint8_t address)
         }
         else
         {
-            // no EEPROM info was found - allow opening the board with an uninitialized EEPROM
+            // no EEPROM info was found - allow opening the board with an
+            // uninitialized EEPROM
             custom_size = 0;
         }
     
         // create a struct to hold device instance data
-        _devices[address] = (struct mcc134Device*)calloc(1, sizeof(struct mcc134Device));
+        _devices[address] = (struct mcc134Device*)calloc(1,
+            sizeof(struct mcc134Device));
         dev = _devices[address];
         
         // initialize the struct elements
@@ -600,8 +623,8 @@ int mcc134_open(uint8_t address)
         
         uint8_t* temp_address = (uint8_t*)malloc(sizeof(uint8_t));
         *temp_address = address;
-        if ((result = pthread_create(&dev->cjc_handle, &attr, &_cjc_thread, temp_address))
-            != 0)
+        if ((result = pthread_create(&dev->cjc_handle, &attr, &_cjc_thread,
+            temp_address)) != 0)
         {
             free(temp_address);
             pthread_attr_destroy(&attr);
@@ -620,7 +643,8 @@ int mcc134_open(uint8_t address)
         }
 
         // perform an offset correction
-        if ((result = _mcc134_adc_calibrate_self_offset(address)) != RESULT_SUCCESS)
+        if ((result = _mcc134_adc_calibrate_self_offset(address)) 
+            != RESULT_SUCCESS)
         {
             mcc134_close(address);
             return result;
@@ -628,7 +652,8 @@ int mcc134_open(uint8_t address)
     }
     else
     {
-        // the device has already been opened and initialized, increment reference count
+        // the device has already been opened and initialized, increment
+        // reference count
         dev = _devices[address];
         dev->handle_count++;
     }
@@ -725,7 +750,8 @@ int mcc134_calibration_date(uint8_t address, char* buffer)
 /******************************************************************************
   Read the calibration coefficients.
  *****************************************************************************/
-int mcc134_calibration_coefficient_read(uint8_t address, uint8_t channel, double* slope, double* offset)
+int mcc134_calibration_coefficient_read(uint8_t address, uint8_t channel,
+    double* slope, double* offset)
 {
     // validate parameters
     if (!_check_addr(address) ||
@@ -744,7 +770,8 @@ int mcc134_calibration_coefficient_read(uint8_t address, uint8_t channel, double
 /******************************************************************************
   Write the calibration coefficients.
  *****************************************************************************/
-int mcc134_calibration_coefficient_write(uint8_t address, uint8_t channel, double slope, double offset)
+int mcc134_calibration_coefficient_write(uint8_t address, uint8_t channel,
+    double slope, double offset)
 {
     // validate parameters
     if (!_check_addr(address) ||
@@ -774,7 +801,8 @@ int mcc134_self_offset_correction(uint8_t address)
 /******************************************************************************
   Read an analog input channel.
  *****************************************************************************/
-int mcc134_a_in_read(uint8_t address, uint8_t channel, uint32_t options, double* value)
+int mcc134_a_in_read(uint8_t address, uint8_t channel, uint32_t options,
+    double* value)
 {
     int32_t code;
     double val;
@@ -790,12 +818,14 @@ int mcc134_a_in_read(uint8_t address, uint8_t channel, uint32_t options, double*
     if (_devices[address]->last_reading_open)
     {
         // perform an extra reading for better settling
-        if ((result = _mcc134_adc_read_code(address, CHAN_HI[channel], CHAN_LO[channel], &code)) != RESULT_SUCCESS)
+        if ((result = _mcc134_adc_read_code(address, CHAN_HI[channel],
+            CHAN_LO[channel], &code)) != RESULT_SUCCESS)
         {
             return result;
         }
     }
-    if ((result = _mcc134_adc_read_code(address, CHAN_HI[channel], CHAN_LO[channel], &code)) != RESULT_SUCCESS)
+    if ((result = _mcc134_adc_read_code(address, CHAN_HI[channel],
+        CHAN_LO[channel], &code)) != RESULT_SUCCESS)
     {
         return result;
     }
@@ -824,14 +854,16 @@ int mcc134_a_in_read(uint8_t address, uint8_t channel, uint32_t options, double*
         }
         else
         {
-            val = ((double)code * _devices[address]->factory_data.slopes[channel]) + 
+            val = ((double)code * 
+                _devices[address]->factory_data.slopes[channel]) + 
                 _devices[address]->factory_data.offsets[channel];
         }
 
         // calculate voltage?
         if ((options & OPTS_NOSCALEDATA) == 0)
         {
-            val = (val * (REFERENCE_VOLTS / PGA_GAIN)) / ((double)(MAX_CODE + 1) / 2);
+            val = (val * (REFERENCE_VOLTS / PGA_GAIN)) / 
+                ((double)(MAX_CODE + 1) / 2);
         }
     }
     
@@ -913,7 +945,8 @@ int mcc134_t_in_read(uint8_t address, uint8_t channel, double* temperature)
     {
         val = OPEN_TC_VALUE;
     }
-    else if ((voltage_reading > POS_OVERRANGE_VOLTS) || (voltage_reading < NEG_OVERRANGE_VOLTS))
+    else if ((voltage_reading > POS_OVERRANGE_VOLTS) || 
+        (voltage_reading < NEG_OVERRANGE_VOLTS))
     {
         val = OVERRANGE_TC_VALUE;
     }

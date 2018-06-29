@@ -3,7 +3,7 @@
 *   Measurement Computing Corp.
 *   This file contains functions used with the CJC sensor on the MCC 134.
 *
-*   1 Feb 2018
+*   06/29/2018
 */
 #include <unistd.h>
 #include "daqhats.h"
@@ -34,8 +34,9 @@
 
 #define C_PER_BIT   (1.0/128.0)
 
-extern int _mcc134_spi_transfer(uint8_t address, uint8_t spi_bus, uint8_t spi_mode, 
-    uint32_t spi_rate, uint8_t spi_delay, void* tx_data, void* rx_data, uint8_t data_count);
+extern int _mcc134_spi_transfer(uint8_t address, uint8_t spi_bus,
+    uint8_t spi_mode, uint32_t spi_rate, uint8_t spi_delay, void* tx_data,
+    void* rx_data, uint8_t data_count);
     
 
 int _mcc134_cjc_init(uint8_t address)
@@ -48,7 +49,8 @@ int _mcc134_cjc_init(uint8_t address)
     buffer[1] = 0xFF;
     buffer[2] = 0xFF;
     buffer[3] = 0xFF;
-    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE, SPI_DELAY, buffer, NULL, 4)) != RESULT_SUCCESS)
+    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE,
+        SPI_DELAY, buffer, NULL, 4)) != RESULT_SUCCESS)
     {
         return result;
     }
@@ -59,7 +61,8 @@ int _mcc134_cjc_init(uint8_t address)
     // read the ID register
     buffer[0] = REG_ID | READ_REG;
     buffer[1] = 0;
-    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE, SPI_DELAY, buffer, buffer, 2)) != RESULT_SUCCESS)
+    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE,
+        SPI_DELAY, buffer, buffer, 2)) != RESULT_SUCCESS)
     {
         return result;
     }
@@ -73,7 +76,8 @@ int _mcc134_cjc_init(uint8_t address)
     // configure for 16 bits, 1 SPS mode
     buffer[0] = REG_CONFIG;
     buffer[1] = 0xC0;
-    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE, SPI_DELAY, buffer, NULL, 2)) != RESULT_SUCCESS)
+    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE,
+        SPI_DELAY, buffer, NULL, 2)) != RESULT_SUCCESS)
     {
         return result;
     }
@@ -93,7 +97,8 @@ int _mcc134_cjc_read_temp(uint8_t address, double* temp)
     buffer[1] = 0;
     buffer[2] = 0;
     
-    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE, SPI_DELAY, buffer, buffer, 3)) != RESULT_SUCCESS)
+    if ((result = _mcc134_spi_transfer(address, SPI_BUS, SPI_MODE, SPI_RATE,
+        SPI_DELAY, buffer, buffer, 3)) != RESULT_SUCCESS)
     {
         return result;
     }
