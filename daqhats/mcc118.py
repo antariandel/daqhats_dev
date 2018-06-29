@@ -110,7 +110,6 @@ class mcc118(Hat): # pylint: disable=invalid-name
             self._initialized = False
             raise HatError(self._address, "Board not responding.")
 
-        #self._scanning = False
         return
 
     def __del__(self):
