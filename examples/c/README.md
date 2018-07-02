@@ -22,5 +22,11 @@ To configure multiple MCC 118 HATs to synchronously acquire data:
   * Set the OPTS_EXTCLOCK scan option on all but one of the MCC 118 HAT devices.</li>
   * Set the OPTS_EXTTRIGGER scan option on all MCC 118 HAT devices.</li></ol>
 
+To run an example, open a terminal window and enter the following commands:
+```
+   cd ~/daqhats/examples/c/<MCC HAT folder>
+   sudo ./<example_name>.c
+```
+
 ## Support/Feedback
 Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx).
