@@ -29,7 +29,7 @@ Board components
 ----------------
 Screw terminals
 ^^^^^^^^^^^^^^^
-- **CH 0 In** to **CH 7 In** (CHx): Single-ended analog input terminals.
+- **Ch 0 In** to **Ch 7 In** (CHx): Single-ended analog input terminals.
 - **Clock** (CLK): Bidirectional terminal for scan clock input / output. Set the direction with software. 
   Set for input to clock the scans with an external clock signal, or output to use the internal scan clock.
 - **Trigger** (TRIG): External digital trigger input terminal. The trigger mode is software configurable for edge or level sensitive, 
