@@ -1,33 +1,25 @@
-# C++ Console-Based Examples
+# C/C++ Console-Based Examples
 
 ## About
-Console-based examples show how to perform continuous and finite scans, trigger an acquisition, 
-and how to connect multiple DAQ HATs together to synchronously acquire data.
-Console-based programs shipped are fully compiled.
+The C/C++ console-based examples demonstrate various scan modes and trigger options to familiarize yourself
+with the daqhats library and MCC 118. All examples are shipped fully compiled and ready-to-run, and can
+be customized to suit your needs.
 
-### continuous_scan
-The continuous_scan example continuously acquires blocks of analog input data for a user-specified group of channels until the 
-acquisition is stopped by the user.  The last sample of data for each channel is displayed for each block of 
-data received from the device.
+- **single_value_read**: acquire data from user-specified channels using a software-timed loop. On each loop iteration a single value is read from each channel.
 
-### finite_scan
-The finite_scan example acquires blocks of analog input data for a user-specified group of channels.  The last sample of data 
-for each channel is displayed for each block of data received from the device.  The acquisition is stopped when the 
-specified number of samples is acquired for each channel.
-	
-### finite_scan_with_trigger	   
-The finite_scan_with_trigger example acquires waits for an external trigger to occur and then acquires blocks of analog input data for a user-specified group of channels.  The last sample of data for each channel is displayed for each block  of data received from the device.  The acquisition is stopped when  the specified number of samples is acquired for each channel.
+- **continuous_scan**: continuously acquire analog input data from user-specified channels until the scan is stopped. The last sample of data for each channel is displayed for each block of data received from the device.
 
-### multi_hat_synchronous_scan
-The multi_hat_synchronous_scan example gets synchronous data from multiple MCC118 HAT devices using the external clock and external trigger scan options.  
- - Stack the DAQ HAT boards onto the Pi using the instructions in [Installing the HAT board](https://www.mccdaq.com/PDFs/Manuals/DAQ-HAT/hardware.html).
- - Wire the CLK terminals together on all MCC 118 HAT devices being used.
- - Connect an external trigger source to the TRIG terminals on all MCC 118 HAT devices being used 
- - Set the OPTS_EXTCLOCK scan option on all but one of the MCC 118 HAT devices.
- - Set the OPTS_EXTTRIGGER scan option on all MCC 118 HAT devices.
+- **finite_scan**: acquire analog input data from user-specified channels. The last sample of data for each channel is displayed for each block of data received from the device. The acquisition stops when the specified number of samples is acquired for each channel.
 
-### Single_value_read	MCC118 Functions Demonstrated:
-The Single_value_read example demonstrates acquiring data using a software timed loop to read a single value from each selected channel on each iteration of the loop.
+- **finite_scan_with_trigger**: acquire analog input data from user-specified channels after an external trigger occurs. The last sample of data for each channel is displayed for each block of data received from the device. The acquisition stops when the specified number of samples is acquired for each channel.
+
+- **multi_hat_synchronous_scan**: acquire synchronous data from multiple MCC 118 HATs using the external clock and external trigger scan options. 
+Perform the following procedure to configure the MCC 118 HATs for a synchronous acquisition:
+   1. Stack the DAQ HAT boards onto the Pi using the instructions in [Installing the HAT board](https://www.mccdaq.com/PDFs/Manuals/DAQ-HAT/hardware.html).
+   2. Wire the CLK terminals together on each MCC 118 HAT device.
+   3. Connect an external trigger source to the TRIG terminal on each MCC 118 HAT device.
+   4. Set the OPTS_EXTCLOCK scan option on all but one of the MCC 118 HAT devices.
+   5. Set the OPTS_EXTTRIGGER scan option on all MCC 118 HAT devices.
 
 ## Support/Feedback
-Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx). 
+Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx).
