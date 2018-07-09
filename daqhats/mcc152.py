@@ -149,7 +149,7 @@ class mcc152(Hat): # pylint: disable=invalid-name
         if (self._lib.mcc152_serial(self._address, my_buffer)
                 != self._RESULT_SUCCESS):
             raise HatError(self._address, "Incorrect response.")
-            my_serial = my_buffer.value.decode('ascii')
+        my_serial = my_buffer.value.decode('ascii')
         return my_serial
 
     @staticmethod
