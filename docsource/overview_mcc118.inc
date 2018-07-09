@@ -4,8 +4,8 @@ MCC 118
 The MCC 118 is an 8-channel analog voltage input board with the following features:
 
 - 12-bit, 100 kS/s A/D converter
-- ± 10 V single-ended analog inputs
-- Factory calibration with ± 20.8 mV input accuracy
+- ±10 V single-ended analog inputs
+- Factory calibration with ±20.8 mV input accuracy
 - Bidirectional scan clock
 - Onboard sample buffers
 - Digital trigger input
@@ -29,13 +29,13 @@ Board components
 ----------------
 Screw terminals
 ^^^^^^^^^^^^^^^
-- **CH 0 In** to **CH 7 In**: Single-ended analog input terminals.
-- **Clock**: Bidirectional terminal for scan clock input / output. Set the direction with software. 
+- **Ch 0 In** to **Ch 7 In** (CHx): Single-ended analog input terminals.
+- **Clock** (CLK): Bidirectional terminal for scan clock input / output. Set the direction with software. 
   Set for input to clock the scans with an external clock signal, or output to use the internal scan clock.
-- **Trigger**: External digital trigger input terminal. The trigger mode is software configurable for edge or level sensitive, 
+- **Trigger** (TRIG): External digital trigger input terminal. The trigger mode is software configurable for edge or level sensitive, 
   rising or falling edge, high or low level.
-- **AGND**: Common ground for the analog input terminals.
-- **DGND**: Common ground for the clock and trigger terminals.
+- **AGND** (GND): Common ground for the analog input terminals.
+- **DGND** (GND): Common ground for the clock and trigger terminals.
 
 Address jumpers
 ^^^^^^^^^^^^^^^
