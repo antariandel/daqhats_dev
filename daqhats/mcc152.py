@@ -1,7 +1,6 @@
 """
 Wraps all of the methods from the MCC 152 library for use in Python.
 """
-import sys
 from ctypes import c_ubyte, c_int, c_char_p, c_ulong, c_double, POINTER, \
     create_string_buffer, byref
 from daqhats.hats import Hat, HatError, OptionFlags
@@ -150,10 +149,7 @@ class mcc152(Hat): # pylint: disable=invalid-name
         if (self._lib.mcc152_serial(self._address, my_buffer)
                 != self._RESULT_SUCCESS):
             raise HatError(self._address, "Incorrect response.")
-        if sys.version_info > (3, 0):
-            my_serial = my_buffer.value.decode()
-        else:
-            my_serial = my_buffer.value
+            my_serial = my_buffer.value.decode('ascii')
         return my_serial
 
     @staticmethod
