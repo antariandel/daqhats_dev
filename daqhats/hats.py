@@ -4,7 +4,6 @@ Wraps the global methods from the MCC Hat library for use in Python.
 from collections import namedtuple
 from ctypes import cdll, Structure, c_ubyte, c_ushort, c_char, c_int, cast, \
     POINTER, c_char_p
-import sys
 
 class HatIDs(object):   # pylint: disable=too-few-public-methods
     """Known MCC HAT IDs."""
@@ -110,19 +109,11 @@ def hat_list(filter_by_id=0):
     hat_info = namedtuple('HatInfo',
                           ['address', 'id', 'version', 'product_name'])
     for item in my_info:
-        name = cast(item.product_name, c_char_p)
-        if sys.version_info > (3, 0):
-            info = hat_info(
-                address=item.address,
-                id=item.id,
-                version=item.version,
-                product_name=name.value.decode())
-        else:
-            info = hat_info(
-                address=item.address,
-                id=item.id,
-                version=item.version,
-                product_name=name.value)
+        info = hat_info(
+            address=item.address,
+            id=item.id,
+            version=item.version,
+            product_name=item.product_name.decode('ascii'))
         my_list.append(info)
 
     return my_list
