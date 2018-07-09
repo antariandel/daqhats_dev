@@ -145,7 +145,8 @@ class mcc118(Hat): # pylint: disable=invalid-name
             version.value >> 8, version.value & 0x00FF)
         boot_str = "{0:X}.{1:02X}".format(
             boot_version.value >> 8, boot_version.value & 0x00FF)
-        version_info = namedtuple('MCC118VersionInfo', ['version', 'bootloader_version'])
+        version_info = namedtuple(
+            'MCC118VersionInfo', ['version', 'bootloader_version'])
         return version_info(
             version=version_str,
             bootloader_version=boot_str)
@@ -165,7 +166,8 @@ class mcc118(Hat): # pylint: disable=invalid-name
             raise HatError(self._address, "Not initialized.")
         # create string to hold the result
         my_buffer = create_string_buffer(9)
-        if self._lib.mcc118_serial(self._address, my_buffer) != self._RESULT_SUCCESS:
+        if (self._lib.mcc118_serial(self._address, my_buffer)
+                != self._RESULT_SUCCESS):
             raise HatError(self._address, "Incorrect response.")
         my_serial = my_buffer.value.decode('ascii')
         return my_serial
@@ -186,7 +188,8 @@ class mcc118(Hat): # pylint: disable=invalid-name
         """
         if not self._initialized:
             raise HatError(self._address, "Not initialized.")
-        if self._lib.mcc118_blink_led(self._address, count) != self._RESULT_SUCCESS:
+        if (self._lib.mcc118_blink_led(self._address, count)
+                != self._RESULT_SUCCESS):
             raise HatError(self._address, "Incorrect response.")
         return
 
@@ -592,7 +595,8 @@ class mcc118(Hat): # pylint: disable=invalid-name
             triggered=(status.value & self._STATUS_TRIGGERED) != 0,
             samples_available=samples_available.value)
 
-    def a_in_scan_read(self, samples_per_channel, timeout): # pylint: disable=too-many-locals
+    def a_in_scan_read(self, samples_per_channel, timeout):
+        # pylint: disable=too-many-locals
         """
         Read scan status and data (as a list).
 
@@ -714,7 +718,8 @@ class mcc118(Hat): # pylint: disable=invalid-name
             timeout=timed_out,
             data=data_list)
 
-    def a_in_scan_read_numpy(self, samples_per_channel, timeout): # pylint: disable=too-many-locals
+    def a_in_scan_read_numpy(self, samples_per_channel, timeout):
+        # pylint: disable=too-many-locals
         """
         Read scan status and data (as a NumPy array).
 
