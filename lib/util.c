@@ -55,10 +55,7 @@
 #define ADDR1_GPIO              13
 #define ADDR2_GPIO              26
 
-<<<<<<< HEAD
 #define IRQ_GPIO                21
-=======
->>>>>>> 0.3
 
 // EEPROM header structure
 struct _Header
