@@ -100,4 +100,6 @@ The following is a basic Python example demonstrating how to read MCC 118 voltag
 The **daqhats** library is supported by MCC. Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx).
 
 ## Documentation 
+Current docs: https://nwright98.github.io/daqhats/index.html
+
 Documentation for the daqhats library is available at [mccdaq.com](https://www.mccdaq.com/PDFs/Manuals/DAQ-HAT/).
