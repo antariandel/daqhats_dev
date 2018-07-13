@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to the MCC HAT Library documentation! &mdash; MCC HAT Library 0.4.0 documentation</title>
+  <title>MCC DAQ HAT Library documentation &mdash; MCC DAQ HAT Library 0.4.0 documentation</title>
   
 
   
@@ -50,7 +50,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> MCC HAT Library
+            <a href="#" class="icon icon-home"> MCC DAQ HAT Library
           
 
           
@@ -86,7 +86,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Hardware Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the HAT board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the DAQ HAT board</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing and Using the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c.html">C Library Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="python.html">Python Library Reference</a></li>
@@ -104,7 +104,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">MCC HAT Library</a>
+          <a href="#">MCC DAQ HAT Library</a>
         
       </nav>
 
@@ -135,7 +135,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>Welcome to the MCC HAT Library documentation!</li>
+      <li>MCC DAQ HAT Library documentation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,8 +154,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-the-mcc-hat-library-documentation">
-<h1>Welcome to the MCC HAT Library documentation!<a class="headerlink" href="#welcome-to-the-mcc-hat-library-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="mcc-daq-hat-library-documentation">
+<h1>MCC DAQ HAT Library documentation<a class="headerlink" href="#mcc-daq-hat-library-documentation" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="_static/daqhatLibrary.pdf">PDF version of this document</a></p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -170,7 +170,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="overview.html#functional-block-diagram">Functional block diagram</a></li>
 <li class="toctree-l3"><a class="reference internal" href="overview.html#functional-details">Functional details</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="overview.html#clock-mode">Clock mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="overview.html#scan-clock">Scan clock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="overview.html#trigger">Trigger</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="overview.html#specifications">Specifications</a></li>
@@ -196,7 +197,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the HAT board</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the DAQ HAT board</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="hardware.html#installing-a-single-board">Installing a single board</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hardware.html#installing-multiple-boards">Installing multiple boards</a></li>
 </ul>
@@ -214,7 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="c.html#hat-ids">HAT IDs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c.html#result-codes">Result Codes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="c.html#hatinfo-structure">HatInfo structure</a></li>
-<li class="toctree-l4"><a class="reference internal" href="c.html#analog-input-scan-options">Analog Input / Scan Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="c.html#analog-input-scan-option-flags">Analog Input / Scan Option Flags</a></li>
 </ul>
 </li>
 </ul>
@@ -249,6 +250,7 @@
 <li class="toctree-l3"><a class="reference internal" href="python.html#data">Data</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="python.html#hat-ids">Hat IDs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="python.html#trigger-modes">Trigger modes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="python.html#scan-read-option-flags">Scan / read option flags</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="python.html#haterror-class">HatError class</a></li>

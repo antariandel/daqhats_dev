@@ -47,4 +47,4 @@ Data definitions
 Thermocouple Types
 ~~~~~~~~~~~~~~~~~~
 
-.. doxygenenum:: tcTypes
+.. doxygenenum:: TcTypes

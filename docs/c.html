@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>C Library Reference &mdash; MCC HAT Library 0.4.0 documentation</title>
+  <title>C Library Reference &mdash; MCC DAQ HAT Library 0.4.0 documentation</title>
   
 
   
@@ -51,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> MCC HAT Library
+            <a href="index.html" class="icon icon-home"> MCC DAQ HAT Library
           
 
           
@@ -87,7 +87,7 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Hardware Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the HAT board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the DAQ HAT board</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing and Using the Library</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">C Library Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#global-functions-and-data">Global functions and data</a><ul>
@@ -96,7 +96,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#hat-ids">HAT IDs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#result-codes">Result Codes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hatinfo-structure">HatInfo structure</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#analog-input-scan-options">Analog Input / Scan Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analog-input-scan-option-flags">Analog Input / Scan Option Flags</a></li>
 </ul>
 </li>
 </ul>
@@ -140,7 +140,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">MCC HAT Library</a>
+          <a href="index.html">MCC DAQ HAT Library</a>
         
       </nav>
 
@@ -192,7 +192,7 @@
             
   <div class="section" id="c-library-reference">
 <h1>C Library Reference<a class="headerlink" href="#c-library-reference" title="Permalink to this headline">¶</a></h1>
-<p>The C library is organized as a global function for listing the HAT boards attached
+<p>The C library is organized as a global function for listing the DAQ HAT boards attached
 to your system, and board-specific functions to provide full functionality for each
 type of board.  The library may be used with C and C++.</p>
 <div class="section" id="global-functions-and-data">
@@ -209,12 +209,15 @@ type of board.  The library may be used with C and C++.</p>
 <td>Description</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#c.hat_list" title="hat_list"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_list()</span></code></a></td>
-<td>Return a list of detected MCC HAT boards.</td>
+<td>Return a list of detected DAQ HAT boards.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.hat_wait_for_interrupt" title="hat_wait_for_interrupt"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.hat_error_message" title="hat_error_message"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_error_message()</span></code></a></td>
+<td>Return a text description for a DAQ HAT result.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.hat_wait_for_interrupt" title="hat_wait_for_interrupt"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code></a></td>
 <td>Wait for an interrupt to occur.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.hat_interrupt_active" title="hat_interrupt_active"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_interrupt_active()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.hat_interrupt_state" title="hat_interrupt_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code></a></td>
 <td>Read the current interrupt status.</td>
 </tr>
 </tbody>
@@ -222,13 +225,14 @@ type of board.  The library may be used with C and C++.</p>
 <dl class="function">
 <dt id="c.hat_list">
 <span class="target" id="daqhats_8h_1ab23b9501c36d525c9a9a642c7885bd06"></span>int <code class="descname">hat_list</code><span class="sig-paren">(</span>uint16_t<em>&nbsp;filter_id</em>, struct  <a class="reference internal" href="#c.HatInfo" title="HatInfo">HatInfo</a>  *<em>&nbsp;list</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hat_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of detected MCC HAT boards.</p>
-<p>It creates the list from the HAT EEPROM files that are currently on the system. In the case of a single HAT at address 0 this information is automatically provided by Raspbian. However, when you have a stack of multiple boards you must extract the EEPROM images using the daqhats_read_eeproms tool.</p>
+<dd><p>Return a list of detected DAQ HAT boards.</p>
+<p>It creates the list from the DAQ HAT EEPROM files that are currently on the system. In the case of a single DAQ HAT at address 0 this information is automatically provided by Raspbian. However, when you have a stack of multiple boards you must extract the EEPROM images using the <strong>daqhats_read_eeproms</strong> tool.</p>
 <p>Example usage: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">hat_list</span><span class="p">(</span><span class="n">HAT_ID_ANY</span><span class="p">,</span> <span class="n">NULL</span><span class="p">);</span>
 
 <span class="k">if</span> <span class="p">(</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">struct</span> <span class="n">HatInfo</span><span class="o">*</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">(</span><span class="n">struct</span> <span class="n">HatInfo</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">count</span> <span class="o">*</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">struct</span> <span class="n">HatInfo</span><span class="p">));</span>
+    <span class="n">struct</span> <span class="n">HatInfo</span><span class="o">*</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">(</span><span class="n">struct</span> <span class="n">HatInfo</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">count</span> <span class="o">*</span> 
+        <span class="n">sizeof</span><span class="p">(</span><span class="n">struct</span> <span class="n">HatInfo</span><span class="p">));</span>
     <span class="n">hat_list</span><span class="p">(</span><span class="n">HAT_ID_ANY</span><span class="p">,</span> <span class="nb">list</span><span class="p">);</span>
 
     <span class="o">//</span> <span class="n">perform</span> <span class="n">actions</span> <span class="k">with</span> <span class="nb">list</span>
@@ -245,6 +249,22 @@ type of board.  The library may be used with C and C++.</p>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">filter_id</span></code>: An optional <a class="reference internal" href="#daqhats_8h_1a30cd29e26738a6f6d11746f3ccfa06e8"><span class="std std-ref">ID</span></a> filter to only return boards with a specific ID. Use <a class="reference internal" href="#daqhats_8h_1a30cd29e26738a6f6d11746f3ccfa06e8a52d705896d388224ec9cac80d44ccc3c"><span class="std std-ref">HAT_ID_ANY</span></a> to return all boards. </li>
 <li><code class="docutils literal notranslate"><span class="pre">list</span></code>: A pointer to a user-allocated array of struct <a class="reference internal" href="#structHatInfo"><span class="std std-ref">HatInfo</span></a>. The function will fill the structures with information about the detected boards. You may have an array of the maximum number of boards (<a class="reference internal" href="#daqhats_8h_1af19d06df1dc47bdbc0206b8fc7ad7c4d"><span class="std std-ref">MAX_NUMBER_HATS</span></a>) or call this function while passing NULL for list, which will return the count of boards found, then allocate the correct amount of memory and call this function again with a valid pointer. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.hat_error_message">
+<span class="target" id="daqhats_8h_1ab0c4d9e2f684598fb95239d3b9019e5b"></span>const char* <code class="descname">hat_error_message</code><span class="sig-paren">(</span>int<em>&nbsp;result</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hat_error_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a text description for a DAQ HAT result code.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The error message. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">result</span></code>: The <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a> returned from a DAQ HAT function </li>
 </ul>
 </dd>
 </dl>
@@ -269,8 +289,8 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.hat_interrupt_active">
-<span class="target" id="daqhats_8h_1af64c909084e71f0e0bf513d7cc806148"></span>int <code class="descname">hat_interrupt_active</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.hat_interrupt_active" title="Permalink to this definition">¶</a></dt>
+<dt id="c.hat_interrupt_state">
+<span class="target" id="daqhats_8h_1a275955f80b2e8e67a896ac61bbca54a6"></span>int <code class="descname">hat_interrupt_state</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.hat_interrupt_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the current interrupt status.</p>
 <p>It returns the status of the interrupt signal. This signal can be shared by multiple boards so the status of each board that may generate must be read and the interrupt source(s) cleared before the interrupt will become inactive.</p>
 <p><dl class="docutils">
@@ -286,7 +306,7 @@ type of board.  The library may be used with C and C++.</p>
 <dl class="define">
 <dt id="c.MAX_NUMBER_HATS">
 <span class="target" id="daqhats_8h_1af19d06df1dc47bdbc0206b8fc7ad7c4d"></span><code class="descname">MAX_NUMBER_HATS</code> 8<a class="headerlink" href="#c.MAX_NUMBER_HATS" title="Permalink to this definition">¶</a></dt>
-<dd><p>The maximum number of MCC HATs that may be connected. </p>
+<dd><p>The maximum number of DAQ HATs that may be connected. </p>
 </dd></dl>
 
 <div class="section" id="hat-ids">
@@ -294,12 +314,12 @@ type of board.  The library may be used with C and C++.</p>
 <dl class="enum">
 <dt id="c.HatIDs">
 <span class="target" id="daqhats_8h_1a30cd29e26738a6f6d11746f3ccfa06e8"></span><em class="property">enum </em><code class="descname">HatIDs</code><a class="headerlink" href="#c.HatIDs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Known MCC HAT IDs. </p>
+<dd><p>Known DAQ HAT IDs. </p>
 <p><em>Values:</em></p>
 <dl class="enumvalue">
 <dt id="c.HAT_ID_ANY">
 <span class="target" id="daqhats_8h_1a30cd29e26738a6f6d11746f3ccfa06e8a52d705896d388224ec9cac80d44ccc3c"></span><code class="descname">HAT_ID_ANY</code> = 0<a class="headerlink" href="#c.HAT_ID_ANY" title="Permalink to this definition">¶</a></dt>
-<dd><p>Match any MCC ID in <a class="reference internal" href="#daqhats_8h_1ab23b9501c36d525c9a9a642c7885bd06"><span class="std std-ref">hat_list()</span></a>. </p>
+<dd><p>Match any DAQ HAT ID in <a class="reference internal" href="#daqhats_8h_1ab23b9501c36d525c9a9a642c7885bd06"><span class="std std-ref">hat_list()</span></a>. </p>
 </dd></dl>
 
 <dl class="enumvalue">
@@ -423,36 +443,43 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="analog-input-scan-options">
-<h4>Analog Input / Scan Options<a class="headerlink" href="#analog-input-scan-options" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="analog-input-scan-option-flags">
+<h4>Analog Input / Scan Option Flags<a class="headerlink" href="#analog-input-scan-option-flags" title="Permalink to this headline">¶</a></h4>
+<p>See individual function documentation for detailed usage information.</p>
+<dl class="define">
+<dt id="c.OPTS_DEFAULT">
+<span class="target" id="daqhats_8h_1ac3262ea2b2658ce9d272e6b1246edd35"></span><code class="descname">OPTS_DEFAULT</code> (0x0000)<a class="headerlink" href="#c.OPTS_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default behavior. </p>
+</dd></dl>
+
 <dl class="define">
 <dt id="c.OPTS_NOSCALEDATA">
 <span class="target" id="daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"></span><code class="descname">OPTS_NOSCALEDATA</code> (0x0001)<a class="headerlink" href="#c.OPTS_NOSCALEDATA" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read or write ADC/DAC code instead of scaled data (voltage, temperature, etc.) </p>
+<dd><p>Read / write unscaled data. </p>
 </dd></dl>
 
 <dl class="define">
 <dt id="c.OPTS_NOCALIBRATEDATA">
 <span class="target" id="daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"></span><code class="descname">OPTS_NOCALIBRATEDATA</code> (0x0002)<a class="headerlink" href="#c.OPTS_NOCALIBRATEDATA" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read or write uncalibrated data. </p>
+<dd><p>Read / write uncalibrated data. </p>
 </dd></dl>
 
 <dl class="define">
 <dt id="c.OPTS_EXTCLOCK">
 <span class="target" id="daqhats_8h_1a385c1e54c5caa4ddaab2bbed18a974a8"></span><code class="descname">OPTS_EXTCLOCK</code> (0x0004)<a class="headerlink" href="#c.OPTS_EXTCLOCK" title="Permalink to this definition">¶</a></dt>
-<dd><p>Use an external sample clock. </p>
+<dd><p>Use an external clock source. </p>
 </dd></dl>
 
 <dl class="define">
 <dt id="c.OPTS_EXTTRIGGER">
 <span class="target" id="daqhats_8h_1aa2c6cc0f41865f0885ab83c6aa446dc1"></span><code class="descname">OPTS_EXTTRIGGER</code> (0x0008)<a class="headerlink" href="#c.OPTS_EXTTRIGGER" title="Permalink to this definition">¶</a></dt>
-<dd><p>Use an external trigger. </p>
+<dd><p>Use an external trigger source. </p>
 </dd></dl>
 
 <dl class="define">
 <dt id="c.OPTS_CONTINUOUS">
 <span class="target" id="daqhats_8h_1af34e1d3813b5909d7b8bf3012a2d829a"></span><code class="descname">OPTS_CONTINUOUS</code> (0x0010)<a class="headerlink" href="#c.OPTS_CONTINUOUS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Scan until stopped. </p>
+<dd><p>Run until explicitly stopped. </p>
 </dd></dl>
 
 </div>
@@ -516,16 +543,19 @@ type of board.  The library may be used with C and C++.</p>
 <tr class="row-even"><td><a class="reference internal" href="#c.mcc118_a_in_scan_buffer_size" title="mcc118_a_in_scan_buffer_size"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_scan_buffer_size()</span></code></a></td>
 <td>Read the size of the internal scan data buffer.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_a_in_scan_read" title="mcc118_a_in_scan_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_scan_read()</span></code></a></td>
-<td>Read scan data / status.</td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_a_in_scan_status" title="mcc118_a_in_scan_status"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_scan_status()</span></code></a></td>
+<td>Read the scan status.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_a_in_scan_channel_count" title="mcc118_a_in_scan_channel_count"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_scan_channel_count()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_a_in_scan_read" title="mcc118_a_in_scan_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_scan_read()</span></code></a></td>
+<td>Read scan data and status.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_a_in_scan_channel_count" title="mcc118_a_in_scan_channel_count"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_scan_channel_count()</span></code></a></td>
 <td>Get the number of channels in the current scan.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_a_in_scan_stop" title="mcc118_a_in_scan_stop"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_scan_stop()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_a_in_scan_stop" title="mcc118_a_in_scan_stop"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_scan_stop()</span></code></a></td>
 <td>Stop the scan.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_a_in_scan_cleanup" title="mcc118_a_in_scan_cleanup"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_scan_cleanup()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_a_in_scan_cleanup" title="mcc118_a_in_scan_cleanup"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_scan_cleanup()</span></code></a></td>
 <td>Free scan resources.</td>
 </tr>
 </tbody>
@@ -582,6 +612,7 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.mcc118_blink_led">
 <span class="target" id="mcc118_8h_1a199973ec117aa99fd4ef6e8a004a2476"></span>int <code class="descname">mcc118_blink_led</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;count</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_blink_led" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blink the LED on the MCC 118. </p>
+<p>Passing 0 for count will result in the LED blinking continuously until the board is reset or <a class="reference internal" href="#mcc118_8h_1a199973ec117aa99fd4ef6e8a004a2476"><span class="std std-ref">mcc118_blink_led()</span></a> is called again with a non-zero value for count.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
@@ -674,7 +705,7 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.mcc118_calibration_coefficient_write">
 <span class="target" id="mcc118_8h_1a305cd3c6eef75521f7807a89927c86d9"></span>int <code class="descname">mcc118_calibration_coefficient_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, double<em>&nbsp;slope</em>, double<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_calibration_coefficient_write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Temporarily write the MCC 118 calibration coefficients for a single channel. </p>
-<p>The user can apply their own calibration coefficients by writing to these values. The values will reset to the factory values from the EEPROM whenever <a class="reference internal" href="#mcc118_8h_1a362f81b0b71d81f7ee1379daa133cac5"><span class="std std-ref">mcc118_open()</span></a> is called. This function will fail and return <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a67cf6a7b807c20e18dc78ab964b04911"><span class="std std-ref">RESULT_BUSY</span></a> if a scan is running when it is called.</p>
+<p>The user can apply their own calibration coefficients by writing to these values. The values will reset to the factory values from the EEPROM whenever <a class="reference internal" href="#mcc118_8h_1a362f81b0b71d81f7ee1379daa133cac5"><span class="std std-ref">mcc118_open()</span></a> is called. This function will fail and return <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a67cf6a7b807c20e18dc78ab964b04911"><span class="std std-ref">RESULT_BUSY</span></a> if a scan is active when it is called.</p>
 <p>The coefficients are applied in the library as: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calibrated_ADC_code</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw_ADC_code</span> <span class="o">*</span> <span class="n">slope</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span>
 </pre></div>
 </div>
@@ -709,7 +740,14 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.mcc118_a_in_read">
 <span class="target" id="mcc118_8h_1a2f1b2738ed0f5d9ceca081f6c6deb2e6"></span>int <code class="descname">mcc118_a_in_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint32_t<em>&nbsp;options</em>, double *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_a_in_read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a single reading of an analog input channel and return the value. </p>
-<p>Will return <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a67cf6a7b807c20e18dc78ab964b04911"><span class="std std-ref">RESULT_BUSY</span></a> if called while a scan is running.</p>
+<p>The valid options are:<ul class="simple">
+<li><a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a>: Return ADC code (a value between 0 and 4095) rather than voltage.</li>
+<li><a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a>: Return data without the calibration factors applied.</li>
+</ul>
+</p>
+<p>The options parameter is set to 0 or <a class="reference internal" href="#daqhats_8h_1ac3262ea2b2658ce9d272e6b1246edd35"><span class="std std-ref">OPTS_DEFAULT</span></a> for default operation, which is scaled and calibrated data.</p>
+<p>Multiple options may be specified by ORing the flags. For instance, specifying <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> | <a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a> will return the value read from the ADC without calibration or converting to voltage.</p>
+<p>The function will return <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a67cf6a7b807c20e18dc78ab964b04911"><span class="std std-ref">RESULT_BUSY</span></a> if called while a scan is running.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
@@ -717,7 +755,7 @@ type of board.  The library may be used with C and C++.</p>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
 <li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The analog input channel number, 0 - 7. </li>
-<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask (only <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> and <a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a> are supported) </li>
+<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask. </li>
 <li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the analog input value. </li>
 </ul>
 </dd>
@@ -746,7 +784,7 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.mcc118_a_in_scan_actual_rate">
 <span class="target" id="mcc118_8h_1a86fe5bed532f934cf55f6a2b17e803c2"></span>int <code class="descname">mcc118_a_in_scan_actual_rate</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;channel_count</em>, double<em>&nbsp;sample_rate_per_channel</em>, double *<em>&nbsp;actual_sample_rate_per_channel</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_a_in_scan_actual_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the actual sample rate per channel for a requested sample rate. </p>
-<p>The internal scan clock is generated from a 16 MHz clock source so only discrete frequency steps can be achieved. This function will return the actual rate for a requested channel count, rate and burst mode setting. This function does not perform any actions with a board, it simply calculates the rate.</p>
+<p>The internal scan clock is generated from a 16 MHz clock source so only discrete frequency steps can be achieved. This function will return the actual rate for a requested channel count and rate. This function does not perform any actions with a board, it simply calculates the rate.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a140e9ae03c9465d0a1881b9dff30518a"><span class="std std-ref">RESULT_BAD_PARAMETER</span></a> if the scan parameters are not achievable on an MCC 118. </dd>
@@ -766,9 +804,24 @@ type of board.  The library may be used with C and C++.</p>
 <span class="target" id="mcc118_8h_1a7bb6778d908b3513e7e64a1932bf7d38"></span>int <code class="descname">mcc118_a_in_scan_start</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel_mask</em>, uint32_t<em>&nbsp;samples_per_channel</em>, double<em>&nbsp;sample_rate_per_channel</em>, uint32_t<em>&nbsp;options</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_a_in_scan_start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start a hardware-paced analog input scan. </p>
 <p>The scan runs as a separate thread from the user’s code. The function will allocate a scan buffer and read data from the device into that buffer. The user reads the data from this buffer and the scan status using the <a class="reference internal" href="#mcc118_8h_1a1056c2b90b530ce6d0729d8ddb760662"><span class="std std-ref">mcc118_a_in_scan_read()</span></a> function. <a class="reference internal" href="#mcc118_8h_1a361841e611dfe77ad25a49f102f3bbcd"><span class="std std-ref">mcc118_a_in_scan_stop()</span></a> is used to stop a continuous scan, or to stop a finite scan before it completes. The user must call <a class="reference internal" href="#mcc118_8h_1ab11473109120c4734e43b340712972f3"><span class="std std-ref">mcc118_a_in_scan_cleanup()</span></a> after the scan has finished and all desired data has been read; this frees all resources from the scan and allows additional scans to be performed.</p>
+<p>The scan state has defined terminology:<ul class="simple">
+<li><strong>Active:</strong> <a class="reference internal" href="#mcc118_8h_1a7bb6778d908b3513e7e64a1932bf7d38"><span class="std std-ref">mcc118_a_in_scan_start()</span></a> has been called and the device may be acquiring data or finished with the acquisition. The scan has not been cleaned up by calling <a class="reference internal" href="#mcc118_8h_1ab11473109120c4734e43b340712972f3"><span class="std std-ref">mcc118_a_in_scan_cleanup()</span></a>, so another scan may not be started.</li>
+<li><strong>Running:</strong> The scan is active and the device is still acquiring data. Certain functions like <a class="reference internal" href="#mcc118_8h_1a2f1b2738ed0f5d9ceca081f6c6deb2e6"><span class="std std-ref">mcc118_a_in_read()</span></a> will return an error because the device is busy.</li>
+</ul>
+</p>
+<p>The valid options are:<ul class="simple">
+<li><a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a>: Returns ADC code (a value between 0 and 4095) rather than voltage.</li>
+<li><a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a>: Return data without the calibration factors applied.</li>
+<li><a class="reference internal" href="#daqhats_8h_1a385c1e54c5caa4ddaab2bbed18a974a8"><span class="std std-ref">OPTS_EXTCLOCK</span></a>: Use an external 3.3V or 5V logic signal at the CLK input as the scan clock. Multiple devices can be synchronized by connecting the CLK pins together and using this option on all but one device so they will be clocked by the single device using its internal clock. <strong>sample_rate_per_channel</strong> is only used for buffer sizing.</li>
+<li><a class="reference internal" href="#daqhats_8h_1aa2c6cc0f41865f0885ab83c6aa446dc1"><span class="std std-ref">OPTS_EXTTRIGGER</span></a>: Hold off the scan (after calling <a class="reference internal" href="#mcc118_8h_1a7bb6778d908b3513e7e64a1932bf7d38"><span class="std std-ref">mcc118_a_in_scan_start()</span></a>) until the trigger condition is met. The trigger is a 3.3V or 5V logic signal applied to the TRIG pin.</li>
+<li><a class="reference internal" href="#daqhats_8h_1af34e1d3813b5909d7b8bf3012a2d829a"><span class="std std-ref">OPTS_CONTINUOUS</span></a>: Scans continuously until stopped by the user by calling <a class="reference internal" href="#mcc118_8h_1a361841e611dfe77ad25a49f102f3bbcd"><span class="std std-ref">mcc118_a_in_scan_stop()</span></a> and writes data to a circular buffer. The data must be read before being overwritten to avoid a buffer overrun error. <strong>samples_per_channel</strong> is only used for buffer sizing.</li>
+</ul>
+</p>
+<p>The options parameter is set to 0 or <a class="reference internal" href="#daqhats_8h_1ac3262ea2b2658ce9d272e6b1246edd35"><span class="std std-ref">OPTS_DEFAULT</span></a> for default operation, which is scaled and calibrated data, internal scan clock, no trigger, and finite operation.</p>
+<p>Multiple options may be specified by ORing the flags. For instance, specifying <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> | <a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a> will return the values read from the ADC without calibration or converting to voltage.</p>
 <p>The buffer size will be allocated as follows:</p>
-<p><strong>Finite</strong> <strong>mode:</strong> Total number of samples in the scan</p>
-<p><strong>Continuous</strong> <strong>mode</strong> (buffer size is per channel): Either <strong>samples_per_channel</strong> or the value in the following table, whichever is greater</p>
+<p><strong>Finite</strong> mode: Total number of samples in the scan</p>
+<p><strong>Continuous</strong> mode (buffer size is per channel): Either <strong>samples_per_channel</strong> or the value in the following table, whichever is greater</p>
 <p><table border="1" class="docutils">
 <colgroup>
 <col width="36%" />
@@ -795,24 +848,17 @@ type of board.  The library may be used with C and C++.</p>
 </tbody>
 </table>
 </p>
-<p>Specifying a very large value for <strong>samples_per_channel</strong> could use too much of the Raspberry Pi memory. If the memory allocation fails, the function will return <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a64760672ed06a947256c161076afac6a"><span class="std std-ref">RESULT_RESOURCE_UNAVAIL</span></a>. The allocation could succeed, but the lack of free memory could cause other problems in the Raspberry Pi. If you need to acquire a high number of samples then it is better to run the scan in continuous mode and stop it when you have acquired the desired amount of data. If a scan is already running this function will return <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a67cf6a7b807c20e18dc78ab964b04911"><span class="std std-ref">RESULT_BUSY</span></a>.</p>
+<p>Specifying a very large value for <strong>samples_per_channel</strong> could use too much of the Raspberry Pi memory. If the memory allocation fails, the function will return <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a64760672ed06a947256c161076afac6a"><span class="std std-ref">RESULT_RESOURCE_UNAVAIL</span></a>. The allocation could succeed, but the lack of free memory could cause other problems in the Raspberry Pi. If you need to acquire a high number of samples then it is better to run the scan in continuous mode and stop it when you have acquired the desired amount of data. If a scan is already active this function will return <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a67cf6a7b807c20e18dc78ab964b04911"><span class="std std-ref">RESULT_BUSY</span></a>.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
-<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a67cf6a7b807c20e18dc78ab964b04911"><span class="std std-ref">RESULT_BUSY</span></a> if a scan is already running. </dd>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a67cf6a7b807c20e18dc78ab964b04911"><span class="std std-ref">RESULT_BUSY</span></a> if a scan is already active. </dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
 <li><code class="docutils literal notranslate"><span class="pre">channel_mask</span></code>: A bit mask of the channels to be scanned. Set each bit to enable the associated channel (0x01 - 0xFF.) </li>
-<li><code class="docutils literal notranslate"><span class="pre">samples_per_channel</span></code>: The number of samples to acquire for each channel in the scan. </li>
+<li><code class="docutils literal notranslate"><span class="pre">samples_per_channel</span></code>: The number of samples to acquire for each channel in the scan (finite mode,) or can be used to set a larger scan buffer size than the default value (continuous mode.) </li>
 <li><code class="docutils literal notranslate"><span class="pre">sample_rate_per_channel</span></code>: The sampling rate in samples per second per channel, max 100,000. When using an external sample clock set this value to the maximum expected rate of the clock. </li>
-<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: The options for the scan. This is a bitmask and may be an ORed combination of:<ul>
-<li><a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a>: Return ADC codes instead of voltage.</li>
-<li><a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a>: Return uncalibrated values.</li>
-<li><a class="reference internal" href="#daqhats_8h_1a385c1e54c5caa4ddaab2bbed18a974a8"><span class="std std-ref">OPTS_EXTCLOCK</span></a>: Use an external sample clock on the CLK input.</li>
-<li><a class="reference internal" href="#daqhats_8h_1aa2c6cc0f41865f0885ab83c6aa446dc1"><span class="std std-ref">OPTS_EXTTRIGGER</span></a>: Use an external trigger source on the TRIG input.</li>
-<li><a class="reference internal" href="#daqhats_8h_1af34e1d3813b5909d7b8bf3012a2d829a"><span class="std std-ref">OPTS_CONTINUOUS</span></a>: Scan until stopped (samples_per_channel is only used for buffer allocation.) </li>
-</ul>
-</li>
+<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: The options bitmask. </li>
 </ul>
 </dd>
 </dl>
@@ -826,11 +872,36 @@ type of board.  The library may be used with C and C++.</p>
 <p>An internal data buffer is allocated for the scan when <a class="reference internal" href="#mcc118_8h_1a7bb6778d908b3513e7e64a1932bf7d38"><span class="std std-ref">mcc118_a_in_scan_start()</span></a> is called. This function returns the total size of that buffer in samples.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
-<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a64760672ed06a947256c161076afac6a"><span class="std std-ref">RESULT_RESOURCE_UNAVAIL</span></a> if a scan is not currently running under this instance of the device, or <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a140e9ae03c9465d0a1881b9dff30518a"><span class="std std-ref">RESULT_BAD_PARAMETER</span></a> if the address is invalid or buffer_size_samples is NULL. </dd>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a64760672ed06a947256c161076afac6a"><span class="std std-ref">RESULT_RESOURCE_UNAVAIL</span></a> if a scan is not currently active, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a140e9ae03c9465d0a1881b9dff30518a"><span class="std std-ref">RESULT_BAD_PARAMETER</span></a> if the address is invalid or buffer_size_samples is NULL. </dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
 <li><code class="docutils literal notranslate"><span class="pre">buffer_size_samples</span></code>: Receives the size of the buffer in samples. Each sample is a <strong>double</strong>. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc118_a_in_scan_status">
+<span class="target" id="mcc118_8h_1a81652d8ff8fd4efcea557d8886bbea1e"></span>int <code class="descname">mcc118_a_in_scan_status</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint16_t *<em>&nbsp;status</em>, uint32_t *<em>&nbsp;samples_per_channel</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_a_in_scan_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads status and number of available samples from an analog input scan. </p>
+<p>The scan is started with <a class="reference internal" href="#mcc118_8h_1a7bb6778d908b3513e7e64a1932bf7d38"><span class="std std-ref">mcc118_a_in_scan_start()</span></a> and runs in a background thread that reads the data from the board into an internal scan buffer. This function reads the status of the scan and amount of data in the scan buffer.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a64760672ed06a947256c161076afac6a"><span class="std std-ref">RESULT_RESOURCE_UNAVAIL</span></a> if a scan has not been started under this instance of the device. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">status</span></code>: Receives the scan status, an ORed combination of the flags:<ul>
+<li><a class="reference internal" href="#mcc118_8h_1a89fa865687f9600cea9b639b7e9a507c"><span class="std std-ref">STATUS_HW_OVERRUN</span></a>: The device scan buffer was not read fast enough and data was lost.</li>
+<li><a class="reference internal" href="#mcc118_8h_1a25928537fb73983bca9c65d869e2cdaf"><span class="std std-ref">STATUS_BUFFER_OVERRUN</span></a>: The thread scan buffer was not read by the user fast enough and data was lost.</li>
+<li><a class="reference internal" href="#mcc118_8h_1a48966b880c7694b5ff8828b02e3b4eb9"><span class="std std-ref">STATUS_TRIGGERED</span></a>: The trigger conditions have been met.</li>
+<li><a class="reference internal" href="#mcc118_8h_1a799b04d03f49612e3e636b56c3972b80"><span class="std std-ref">STATUS_RUNNING</span></a>: The scan is running. </li>
+</ul>
+</li>
+<li><code class="docutils literal notranslate"><span class="pre">samples_per_channel</span></code>: Receives the number of samples per channel available in the scan thread buffer. </li>
 </ul>
 </dd>
 </dl>
@@ -844,22 +915,22 @@ type of board.  The library may be used with C and C++.</p>
 <p>The scan is started with <a class="reference internal" href="#mcc118_8h_1a7bb6778d908b3513e7e64a1932bf7d38"><span class="std std-ref">mcc118_a_in_scan_start()</span></a> and runs in a background thread that reads the data from the board into an internal scan buffer. This function reads the data from the scan buffer, and returns the current scan status.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
-<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a64760672ed06a947256c161076afac6a"><span class="std std-ref">RESULT_RESOURCE_UNAVAIL</span></a> if a scan is not currently running under this instance of the device. </dd>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4a64760672ed06a947256c161076afac6a"><span class="std std-ref">RESULT_RESOURCE_UNAVAIL</span></a> if a scan is not active. </dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
-<li><code class="docutils literal notranslate"><span class="pre">status</span></code>: Receives the scan status, an ORed combination of the following flags:<ul>
+<li><code class="docutils literal notranslate"><span class="pre">status</span></code>: Receives the scan status, an ORed combination of the flags:<ul>
 <li><a class="reference internal" href="#mcc118_8h_1a89fa865687f9600cea9b639b7e9a507c"><span class="std std-ref">STATUS_HW_OVERRUN</span></a>: The device scan buffer was not read fast enough and data was lost.</li>
 <li><a class="reference internal" href="#mcc118_8h_1a25928537fb73983bca9c65d869e2cdaf"><span class="std std-ref">STATUS_BUFFER_OVERRUN</span></a>: The thread scan buffer was not read by the user fast enough and data was lost.</li>
 <li><a class="reference internal" href="#mcc118_8h_1a48966b880c7694b5ff8828b02e3b4eb9"><span class="std std-ref">STATUS_TRIGGERED</span></a>: The trigger conditions have been met.</li>
 <li><a class="reference internal" href="#mcc118_8h_1a799b04d03f49612e3e636b56c3972b80"><span class="std std-ref">STATUS_RUNNING</span></a>: The scan is running. </li>
 </ul>
 </li>
-<li><code class="docutils literal notranslate"><span class="pre">samples_per_channel</span></code>: The number of samples per channel to read. Specify <strong>-1</strong> to read all available samples, or <strong>0</strong> to only read the scan status and not return data. If buffer does not contain enough space then the function will read as many samples per channel as will fit in buffer. </li>
-<li><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: The amount of time in seconds to wait for the samples to be read. Specify a negative number to wait indefinitely or <strong>0</strong> to return immediately with whatever samples are available. </li>
-<li><code class="docutils literal notranslate"><span class="pre">buffer</span></code>: The buffer to read samples into. May be NULL if samples_per_channel is <strong>0</strong>. </li>
+<li><code class="docutils literal notranslate"><span class="pre">samples_per_channel</span></code>: The number of samples per channel to read. Specify <strong>-1</strong> to read all available samples in the scan thread buffer, ignoring <strong>timeout</strong>. If <strong>buffer</strong> does not contain enough space then the function will read as many samples per channel as will fit in <strong>buffer</strong>. </li>
+<li><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: The amount of time in seconds to wait for the samples to be read. Specify a negative number to wait indefinitely or <strong>0</strong> to return immediately with whatever samples are available (up to the value of <strong>samples_per_channel</strong> or <strong>buffer_size_samples</strong>.) </li>
+<li><code class="docutils literal notranslate"><span class="pre">buffer</span></code>: The user data buffer that receives the samples. </li>
 <li><code class="docutils literal notranslate"><span class="pre">buffer_size_samples</span></code>: The size of the buffer in samples. Each sample is a <strong>double</strong>. </li>
-<li><code class="docutils literal notranslate"><span class="pre">samples_read_per_channel</span></code>: Returns the actual number of samples read from each channel. May be <strong>NULL</strong> if samples_per_channel is <strong>0</strong>. </li>
+<li><code class="docutils literal notranslate"><span class="pre">samples_read_per_channel</span></code>: Returns the actual number of samples read from each channel. </li>
 </ul>
 </dd>
 </dl>
@@ -870,6 +941,7 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.mcc118_a_in_scan_channel_count">
 <span class="target" id="mcc118_8h_1a35206710d53af68e1526314c33851cd1"></span>int <code class="descname">mcc118_a_in_scan_channel_count</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_a_in_scan_channel_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of channels in the current analog input scan. </p>
+<p>This function returns 0 if no scan is active.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd>The number of channels, 0 - 8. </dd>
@@ -928,25 +1000,25 @@ type of board.  The library may be used with C and C++.</p>
 <dl class="enumvalue">
 <dt id="c.TRIG_RISING_EDGE">
 <span class="target" id="mcc118_8h_1aa534ed76b07c3983382a53e00e53e94aa1df95eae49cc686aa6b9f91fa13c220b"></span><code class="descname">TRIG_RISING_EDGE</code> = 0<a class="headerlink" href="#c.TRIG_RISING_EDGE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Trigger on a rising edge. </p>
+<dd><p>Start the scan on a rising edge of TRIG. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TRIG_FALLING_EDGE">
 <span class="target" id="mcc118_8h_1aa534ed76b07c3983382a53e00e53e94aaa008e9300e76a51f4c60fd9bf2ae5546"></span><code class="descname">TRIG_FALLING_EDGE</code> = 1<a class="headerlink" href="#c.TRIG_FALLING_EDGE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Trigger on a falling edge. </p>
+<dd><p>Start the scan on a falling edge of TRIG. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TRIG_ACTIVE_HIGH">
 <span class="target" id="mcc118_8h_1aa534ed76b07c3983382a53e00e53e94aa3f701a26940df0c263d230b753f61274"></span><code class="descname">TRIG_ACTIVE_HIGH</code> = 2<a class="headerlink" href="#c.TRIG_ACTIVE_HIGH" title="Permalink to this definition">¶</a></dt>
-<dd><p>Trigger any time the signal is high. </p>
+<dd><p>Start the scan any time TRIG is high. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TRIG_ACTIVE_LOW">
 <span class="target" id="mcc118_8h_1aa534ed76b07c3983382a53e00e53e94aa95176a26d99fad97d400764990a71c0b"></span><code class="descname">TRIG_ACTIVE_LOW</code> = 3<a class="headerlink" href="#c.TRIG_ACTIVE_LOW" title="Permalink to this definition">¶</a></dt>
-<dd><p>Trigger any time the signal is low. </p>
+<dd><p>Start the scan any time TRIG is low. </p>
 </dd></dl>
 
 </dd></dl>
@@ -975,7 +1047,7 @@ type of board.  The library may be used with C and C++.</p>
 <dl class="define">
 <dt id="c.STATUS_RUNNING">
 <span class="target" id="mcc118_8h_1a799b04d03f49612e3e636b56c3972b80"></span><code class="descname">STATUS_RUNNING</code> (0x0008)<a class="headerlink" href="#c.STATUS_RUNNING" title="Permalink to this definition">¶</a></dt>
-<dd><p>The scan is running. </p>
+<dd><p>The scan is running (actively acquiring data.) </p>
 </dd></dl>
 
 </div>
@@ -1198,8 +1270,14 @@ type of board.  The library may be used with C and C++.</p>
 <dl class="function">
 <dt id="c.mcc134_a_in_read">
 <span class="target" id="mcc134_8h_1a26c4472d7301c0dca000e91db7c5be6b"></span>int <code class="descname">mcc134_a_in_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint32_t<em>&nbsp;options</em>, double *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc134_a_in_read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read an analog input channel. </p>
-<p>Reads the specified channel and returns the value as voltage or ADC code. ADC code will be returned if the <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> option is specified; otherwise, voltage will be returned.</p>
+<dd><p>Read an analog input channel and return the value. </p>
+<p>The valid options are:<ul class="simple">
+<li><a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a>: Return ADC code (a value between -8,388,608 and 8,388,607) rather than voltage.</li>
+<li><a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a>: Return data without the calibration factors applied.</li>
+</ul>
+</p>
+<p>The options parameter is set to 0 or <a class="reference internal" href="#daqhats_8h_1ac3262ea2b2658ce9d272e6b1246edd35"><span class="std std-ref">OPTS_DEFAULT</span></a> for default operation, which is scaled and calibrated data.</p>
+<p>Multiple options may be specified by ORing the flags. For instance, specifying <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> | <a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a> will return the value read from the ADC without calibration or converting to voltage.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
@@ -1207,7 +1285,7 @@ type of board.  The library may be used with C and C++.</p>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
 <li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The analog input channel number (0 - 3). </li>
-<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask (only <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> and <a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a> are used) </li>
+<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask </li>
 <li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the analog input value. </li>
 </ul>
 </dd>
@@ -1219,7 +1297,7 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.mcc134_tc_type_write">
 <span class="target" id="mcc134_8h_1a3175534a5379ca5e47488e0d635f9367"></span>int <code class="descname">mcc134_tc_type_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;type</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc134_tc_type_write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the thermocouple type for a channel. </p>
-<p>Tells the MCC 134 library what thermocouple type is connected to the specified channel. This is needed for correct temperature calculations. The type is one of <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8"><span class="std std-ref">tcTypes</span></a> and the board will default to all channels set to <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8a0041036811e8022abae0eea50b9ef75f"><span class="std std-ref">TC_TYPE_J</span></a> when it is first opened.</p>
+<p>Tells the MCC 134 library what thermocouple type is connected to the specified channel. This is needed for correct temperature calculations. The type is one of <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7"><span class="std std-ref">TcTypes</span></a> and the board will default to all channels set to <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7a0041036811e8022abae0eea50b9ef75f"><span class="std std-ref">TC_TYPE_J</span></a> when it is first opened.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
@@ -1227,7 +1305,7 @@ type of board.  The library may be used with C and C++.</p>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
 <li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The analog input channel number (0 - 3). </li>
-<li><code class="docutils literal notranslate"><span class="pre">type</span></code>: The thermocouple type, one of <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8"><span class="std std-ref">tcTypes</span></a>. </li>
+<li><code class="docutils literal notranslate"><span class="pre">type</span></code>: The thermocouple type, one of <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7"><span class="std std-ref">TcTypes</span></a>. </li>
 </ul>
 </dd>
 </dl>
@@ -1238,7 +1316,7 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.mcc134_tc_type_read">
 <span class="target" id="mcc134_8h_1a47c4803f6b8fedb34c9b6455e43265bf"></span>int <code class="descname">mcc134_tc_type_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;type</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc134_tc_type_read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the thermocouple type for a channel. </p>
-<p>Reads the current thermocouple type for the specified channel. The type is one of <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8"><span class="std std-ref">tcTypes</span></a> and the board will default to all channels set to <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8a0041036811e8022abae0eea50b9ef75f"><span class="std std-ref">TC_TYPE_J</span></a> when it is first opened.</p>
+<p>Reads the current thermocouple type for the specified channel. The type is one of <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7"><span class="std std-ref">TcTypes</span></a> and the board will default to all channels set to <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7a0041036811e8022abae0eea50b9ef75f"><span class="std std-ref">TC_TYPE_J</span></a> when it is first opened.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
@@ -1246,7 +1324,7 @@ type of board.  The library may be used with C and C++.</p>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
 <li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The analog input channel number (0 - 3). </li>
-<li><code class="docutils literal notranslate"><span class="pre">type</span></code>: Receives the thermocouple type, one of <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8"><span class="std std-ref">tcTypes</span></a>. </li>
+<li><code class="docutils literal notranslate"><span class="pre">type</span></code>: Receives the thermocouple type, one of <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7"><span class="std std-ref">TcTypes</span></a>. </li>
 </ul>
 </dd>
 </dl>
@@ -1313,55 +1391,55 @@ type of board.  The library may be used with C and C++.</p>
 <div class="section" id="thermocouple-types">
 <h4>Thermocouple Types<a class="headerlink" href="#thermocouple-types" title="Permalink to this headline">¶</a></h4>
 <dl class="enum">
-<dt id="c.tcTypes">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8"></span><em class="property">enum </em><code class="descname">tcTypes</code><a class="headerlink" href="#c.tcTypes" title="Permalink to this definition">¶</a></dt>
+<dt id="c.TcTypes">
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7"></span><em class="property">enum </em><code class="descname">TcTypes</code><a class="headerlink" href="#c.TcTypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Thermocouple type constants. </p>
 <p><em>Values:</em></p>
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_J">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8a0041036811e8022abae0eea50b9ef75f"></span><code class="descname">TC_TYPE_J</code> = 0<a class="headerlink" href="#c.TC_TYPE_J" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7a0041036811e8022abae0eea50b9ef75f"></span><code class="descname">TC_TYPE_J</code> = 0<a class="headerlink" href="#c.TC_TYPE_J" title="Permalink to this definition">¶</a></dt>
 <dd><p>J type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_K">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8abb4e06bcac96719b0df58db42a4a4c6a"></span><code class="descname">TC_TYPE_K</code><a class="headerlink" href="#c.TC_TYPE_K" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7abb4e06bcac96719b0df58db42a4a4c6a"></span><code class="descname">TC_TYPE_K</code><a class="headerlink" href="#c.TC_TYPE_K" title="Permalink to this definition">¶</a></dt>
 <dd><p>K type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_T">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8a480f2a759e0e2418b8b1a42cda654ac7"></span><code class="descname">TC_TYPE_T</code><a class="headerlink" href="#c.TC_TYPE_T" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7a480f2a759e0e2418b8b1a42cda654ac7"></span><code class="descname">TC_TYPE_T</code><a class="headerlink" href="#c.TC_TYPE_T" title="Permalink to this definition">¶</a></dt>
 <dd><p>T type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_E">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8ad69693c3b754e823067262daf8ec24f9"></span><code class="descname">TC_TYPE_E</code><a class="headerlink" href="#c.TC_TYPE_E" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7ad69693c3b754e823067262daf8ec24f9"></span><code class="descname">TC_TYPE_E</code><a class="headerlink" href="#c.TC_TYPE_E" title="Permalink to this definition">¶</a></dt>
 <dd><p>E type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_R">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8ac66bdd0ac9c7225e54a3777accd8937f"></span><code class="descname">TC_TYPE_R</code><a class="headerlink" href="#c.TC_TYPE_R" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7ac66bdd0ac9c7225e54a3777accd8937f"></span><code class="descname">TC_TYPE_R</code><a class="headerlink" href="#c.TC_TYPE_R" title="Permalink to this definition">¶</a></dt>
 <dd><p>R type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_S">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8aae88c34e2c93e18b046668cbd00b177b"></span><code class="descname">TC_TYPE_S</code><a class="headerlink" href="#c.TC_TYPE_S" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7aae88c34e2c93e18b046668cbd00b177b"></span><code class="descname">TC_TYPE_S</code><a class="headerlink" href="#c.TC_TYPE_S" title="Permalink to this definition">¶</a></dt>
 <dd><p>S type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_B">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8ae52b6238d7482aa6db7e5e7f174c49b0"></span><code class="descname">TC_TYPE_B</code><a class="headerlink" href="#c.TC_TYPE_B" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7ae52b6238d7482aa6db7e5e7f174c49b0"></span><code class="descname">TC_TYPE_B</code><a class="headerlink" href="#c.TC_TYPE_B" title="Permalink to this definition">¶</a></dt>
 <dd><p>B type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_N">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8ab055f8716e28b8f991ef969c8c8cc203"></span><code class="descname">TC_TYPE_N</code><a class="headerlink" href="#c.TC_TYPE_N" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7ab055f8716e28b8f991ef969c8c8cc203"></span><code class="descname">TC_TYPE_N</code><a class="headerlink" href="#c.TC_TYPE_N" title="Permalink to this definition">¶</a></dt>
 <dd><p>N type. </p>
 </dd></dl>
 
@@ -1554,7 +1632,7 @@ type of board.  The library may be used with C and C++.</p>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
 <li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The analog output channel number, 0 - 1. </li>
-<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask (only <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> is used) </li>
+<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask </li>
 <li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The analog output value. </li>
 </ul>
 </dd>
@@ -1566,15 +1644,15 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.mcc152_a_out_write_all">
 <span class="target" id="mcc152_8h_1ada34c9f0fd3eb8368cf65423d5f65a37"></span>int <code class="descname">mcc152_a_out_write_all</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint32_t<em>&nbsp;options</em>, double *<em>&nbsp;values</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_a_out_write_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a write to all analog output channels simultaneously. </p>
-<p>Update all analog output channels in either volts or DAC code (set the <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> option to use DAC code.) The outputs will update at the same time</p>
+<p>Update all analog output channels in either volts or DAC code (set the <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> option to use DAC code.) The outputs will update at the same time.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
-<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask (only <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> is used) </li>
-<li><code class="docutils literal notranslate"><span class="pre">values</span></code>: The array of analog output values; there must be at least 2 values. </li>
+<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask </li>
+<li><code class="docutils literal notranslate"><span class="pre">values</span></code>: The array of analog output values; there must be at least 2 values, but only the first two values will be used. </li>
 </ul>
 </dd>
 </dl>
@@ -1622,7 +1700,7 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.mcc152_dio_input_read">
 <span class="target" id="mcc152_8h_1a8d2c1fa537ca347341cfc4fa4fd3cbb1"></span>int <code class="descname">mcc152_dio_input_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_input_read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the DIO input(s). </p>
-<p>Read a single digital channel input value or all inputs at once. Will return 0 or 1 in value if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p>Read a single digital channel input value or all inputs at once. Will return 0 or 1 in <strong>value</strong> if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
 <p>If the specified channel is configured as an output this will return the value present at the terminal.</p>
 <p>This function reads the entire input register even if a single channel is specified, so care must be taken when latched inputs are enabled. If a latched input changes between input reads then changes back to its original value, the next input read will report the change to the first value then the following read will show the original value. If another input is read then this input change could be missed so it is best to use <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> when using latched inputs.</p>
 <p><dl class="docutils">
@@ -1718,7 +1796,7 @@ type of board.  The library may be used with C and C++.</p>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
-<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or DIO_CHANNEL_ALL to read all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to read all channels at once. </li>
 <li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the direction value(s). </li>
 </ul>
 </dd>
@@ -1731,7 +1809,7 @@ type of board.  The library may be used with C and C++.</p>
 <span class="target" id="mcc152_8h_1adfdf3a51bbacf87d9e66681a6bcb5677"></span>int <code class="descname">mcc152_dio_pull_config_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_pull_config_write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure the DIO pull-up / pull-down resistor(s). </p>
 <p>Configure the pull-up / pull-down resistor for a single digital channel or all channels at once. A 0 sets the resistor to pull-down, a 1 sets it to pull-up. Pass 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
-<p>The pull resistor is enabled or disabled with <a class="reference internal" href="#mcc152_8h_1a610313c3cca035b3242db0a99663c219"><span class="std std-ref">mcc152_dio_pull_enable_write()</span></a>;</p>
+<p>The pull resistor is enabled or disabled with <a class="reference internal" href="#mcc152_8h_1a610313c3cca035b3242db0a99663c219"><span class="std std-ref">mcc152_dio_pull_enable_write()</span></a>.</p>
 <p>For example, to configure and enable pull-down resistors on all channels call: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mcc152_dio_pull_config_write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">DIO_CHANNEL_ALL</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">);</span>
 <span class="n">mcc152_dio_pull_enable_write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">DIO_CHANNEL_ALL</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">);</span>
 </pre></div>
@@ -1775,7 +1853,7 @@ type of board.  The library may be used with C and C++.</p>
 <span class="target" id="mcc152_8h_1a610313c3cca035b3242db0a99663c219"></span>int <code class="descname">mcc152_dio_pull_enable_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_pull_enable_write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable the DIO pull-up / pull-down resistor(s). </p>
 <p>Enable or disable the pull-up / pull-down resistor for a single digital channel or all channels at once. A 0 disables the resistor, a 1 enables it. Pass 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
-<p>The pull resistor is configured as pull-up or pull-down with <a class="reference internal" href="#mcc152_8h_1adfdf3a51bbacf87d9e66681a6bcb5677"><span class="std std-ref">mcc152_dio_pull_config_write()</span></a>;</p>
+<p>The pull resistor is configured as pull-up or pull-down with <a class="reference internal" href="#mcc152_8h_1adfdf3a51bbacf87d9e66681a6bcb5677"><span class="std std-ref">mcc152_dio_pull_config_write()</span></a>.</p>
 <p>For example, to configure and enable pull-down resistors on all channels call: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mcc152_dio_pull_config_write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">DIO_CHANNEL_ALL</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">);</span>
 <span class="n">mcc152_dio_pull_enable_write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">DIO_CHANNEL_ALL</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">);</span>
 </pre></div>
@@ -1934,7 +2012,7 @@ type of board.  The library may be used with C and C++.</p>
 <span class="target" id="mcc152_8h_1adb490ee68bad7d4efbfc24070d674e19"></span>int <code class="descname">mcc152_dio_interrupt_mask_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_interrupt_mask_write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the DIO interrupt mask. </p>
 <p>Configures the interrupt mask. A 1 disables (masks) the interrupt for the specified channel, a 0 enables it. Pass 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
-<p>The current interrupt state may be read with <a class="reference internal" href="#daqhats_8h_1af64c909084e71f0e0bf513d7cc806148"><span class="std std-ref">hat_interrupt_active()</span></a>. A user program may wait for the interrupt to become active with <a class="reference internal" href="#daqhats_8h_1a310c568b97d4e34e9534858b5b85602c"><span class="std std-ref">hat_wait_for_interrupt()</span></a>. This allows the user to wait for a change on one or more inputs without constantly reading the inputs. The interrupt is cleared by reading the input(s) with <a class="reference internal" href="#mcc152_8h_1a8d2c1fa537ca347341cfc4fa4fd3cbb1"><span class="std std-ref">mcc152_dio_input_read()</span></a>. Multiple MCC 152s will share a single interrupt signal, so the source of the interrupt may be determined by reading the interrupt status of each board with mcc152_dio_interrupt_status() and all active interrupt sources must be cleared before the interrupt will become inactive.</p>
+<p>The current interrupt state may be read with <a class="reference internal" href="#daqhats_8h_1a275955f80b2e8e67a896ac61bbca54a6"><span class="std std-ref">hat_interrupt_state()</span></a>. A user program may wait for the interrupt to become active with <a class="reference internal" href="#daqhats_8h_1a310c568b97d4e34e9534858b5b85602c"><span class="std std-ref">hat_wait_for_interrupt()</span></a>. This allows the user to wait for a change on one or more inputs without constantly reading the inputs. The interrupt is cleared by reading the input(s) with <a class="reference internal" href="#mcc152_8h_1a8d2c1fa537ca347341cfc4fa4fd3cbb1"><span class="std std-ref">mcc152_dio_input_read()</span></a>. Multiple MCC 152s will share a single interrupt signal, so the source of the interrupt may be determined by reading the interrupt status of each board with mcc152_dio_interrupt_status() and all active interrupt sources must be cleared before the interrupt will become inactive.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
@@ -1960,7 +2038,7 @@ type of board.  The library may be used with C and C++.</p>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
-<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or DIO_CHANNEL_ALL to read all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to read all channels at once. </li>
 <li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the interrupt mask value. </li>
 </ul>
 </dd>

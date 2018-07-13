@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; MCC HAT Library 0.4.0 documentation</title>
+  <title>Index &mdash; MCC DAQ HAT Library 0.4.0 documentation</title>
   
 
   
@@ -50,7 +50,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> MCC HAT Library
+            <a href="index.html" class="icon icon-home"> MCC DAQ HAT Library
           
 
           
@@ -86,7 +86,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Hardware Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the HAT board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Installing the DAQ HAT board</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing and Using the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c.html">C Library Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="python.html">Python Library Reference</a></li>
@@ -104,7 +104,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">MCC HAT Library</a>
+          <a href="index.html">MCC DAQ HAT Library</a>
         
       </nav>
 
@@ -159,9 +159,12 @@
  <a href="#A"><strong>A</strong></a>
  | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
@@ -191,13 +194,15 @@
 </li>
       <li><a href="python.html#daqhats.mcc118.a_in_scan_cleanup">a_in_scan_cleanup() (daqhats.mcc118 method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python.html#daqhats.mcc118.a_in_scan_read">a_in_scan_read() (daqhats.mcc118 method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python.html#daqhats.mcc118.a_in_scan_read_numpy">a_in_scan_read_numpy() (daqhats.mcc118 method)</a>
 </li>
       <li><a href="python.html#daqhats.mcc118.a_in_scan_start">a_in_scan_start() (daqhats.mcc118 method)</a>
+</li>
+      <li><a href="python.html#daqhats.mcc118.a_in_scan_status">a_in_scan_status() (daqhats.mcc118 method)</a>
 </li>
       <li><a href="python.html#daqhats.mcc118.a_in_scan_stop">a_in_scan_stop() (daqhats.mcc118 method)</a>
 </li>
@@ -249,6 +254,28 @@
       </ul></li>
       <li><a href="python.html#daqhats.mcc134.cjc_read">cjc_read() (daqhats.mcc134 method)</a>
 </li>
+      <li><a href="python.html#daqhats.OptionFlags.CONTINUOUS">CONTINUOUS (daqhats.OptionFlags attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="python.html#daqhats.OptionFlags.DEFAULT">DEFAULT (daqhats.OptionFlags attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="python.html#daqhats.OptionFlags.EXTCLOCK">EXTCLOCK (daqhats.OptionFlags attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="python.html#daqhats.OptionFlags.EXTTRIGGER">EXTTRIGGER (daqhats.OptionFlags attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -267,14 +294,16 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="c.html#c.hat_interrupt_active">hat_interrupt_active (C function)</a>
+      <li><a href="c.html#c.hat_error_message">hat_error_message (C function)</a>
+</li>
+      <li><a href="c.html#c.hat_interrupt_state">hat_interrupt_state (C function)</a>
 </li>
       <li><a href="c.html#c.hat_list">hat_list (C function)</a>
 </li>
-      <li><a href="python.html#daqhats.hat_list">hat_list() (in module daqhats)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="python.html#daqhats.hat_list">hat_list() (in module daqhats)</a>
+</li>
       <li><a href="c.html#c.hat_wait_for_interrupt">hat_wait_for_interrupt (C function)</a>
 </li>
       <li><a href="python.html#daqhats.HatError">HatError</a>
@@ -304,6 +333,8 @@
       <li><a href="c.html#c.mcc118_a_in_scan_read">mcc118_a_in_scan_read (C function)</a>
 </li>
       <li><a href="c.html#c.mcc118_a_in_scan_start">mcc118_a_in_scan_start (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc118_a_in_scan_status">mcc118_a_in_scan_status (C function)</a>
 </li>
       <li><a href="c.html#c.mcc118_a_in_scan_stop">mcc118_a_in_scan_stop (C function)</a>
 </li>
@@ -421,6 +452,20 @@
 </li>
       <li><a href="python.html#daqhats.HatIDs.MCC_134">MCC_134 (daqhats.HatIDs attribute)</a>
 </li>
+      <li><a href="python.html#daqhats.HatIDs.MCC_152">MCC_152 (daqhats.HatIDs attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="python.html#daqhats.OptionFlags.NOCALIBRATEDATA">NOCALIBRATEDATA (daqhats.OptionFlags attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="python.html#daqhats.OptionFlags.NOSCALEDATA">NOSCALEDATA (daqhats.OptionFlags attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -431,6 +476,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="python.html#daqhats.OptionFlags">OptionFlags (class in daqhats)</a>
+</li>
       <li><a href="python.html#daqhats.mcc134.OVERRANGE_TC_VALUE">OVERRANGE_TC_VALUE (daqhats.mcc134 attribute)</a>
 </li>
   </ul></td>
@@ -469,29 +516,29 @@
 </li>
       <li><a href="python.html#daqhats.mcc134.tc_type_write">tc_type_write() (daqhats.mcc134 method)</a>
 </li>
-      <li><a href="python.html#daqhats.tcTypes">tcTypes (class in daqhats)</a>
+      <li><a href="python.html#daqhats.TcTypes">TcTypes (class in daqhats)</a>
 </li>
       <li><a href="python.html#daqhats.mcc118.trigger_mode">trigger_mode() (daqhats.mcc118 method)</a>
 </li>
       <li><a href="python.html#daqhats.TriggerModes">TriggerModes (class in daqhats)</a>
 </li>
-      <li><a href="python.html#daqhats.tcTypes.TYPE_B">TYPE_B (daqhats.tcTypes attribute)</a>
+      <li><a href="python.html#daqhats.TcTypes.TYPE_B">TYPE_B (daqhats.TcTypes attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="python.html#daqhats.tcTypes.TYPE_E">TYPE_E (daqhats.tcTypes attribute)</a>
+      <li><a href="python.html#daqhats.TcTypes.TYPE_E">TYPE_E (daqhats.TcTypes attribute)</a>
 </li>
-      <li><a href="python.html#daqhats.tcTypes.TYPE_J">TYPE_J (daqhats.tcTypes attribute)</a>
+      <li><a href="python.html#daqhats.TcTypes.TYPE_J">TYPE_J (daqhats.TcTypes attribute)</a>
 </li>
-      <li><a href="python.html#daqhats.tcTypes.TYPE_K">TYPE_K (daqhats.tcTypes attribute)</a>
+      <li><a href="python.html#daqhats.TcTypes.TYPE_K">TYPE_K (daqhats.TcTypes attribute)</a>
 </li>
-      <li><a href="python.html#daqhats.tcTypes.TYPE_N">TYPE_N (daqhats.tcTypes attribute)</a>
+      <li><a href="python.html#daqhats.TcTypes.TYPE_N">TYPE_N (daqhats.TcTypes attribute)</a>
 </li>
-      <li><a href="python.html#daqhats.tcTypes.TYPE_R">TYPE_R (daqhats.tcTypes attribute)</a>
+      <li><a href="python.html#daqhats.TcTypes.TYPE_R">TYPE_R (daqhats.TcTypes attribute)</a>
 </li>
-      <li><a href="python.html#daqhats.tcTypes.TYPE_S">TYPE_S (daqhats.tcTypes attribute)</a>
+      <li><a href="python.html#daqhats.TcTypes.TYPE_S">TYPE_S (daqhats.TcTypes attribute)</a>
 </li>
-      <li><a href="python.html#daqhats.tcTypes.TYPE_T">TYPE_T (daqhats.tcTypes attribute)</a>
+      <li><a href="python.html#daqhats.TcTypes.TYPE_T">TYPE_T (daqhats.TcTypes attribute)</a>
 </li>
   </ul></td>
 </tr></table>

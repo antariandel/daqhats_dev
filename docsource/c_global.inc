@@ -10,13 +10,13 @@ Function                          Description
 :c:func:`hat_list`                Return a list of detected DAQ HAT boards.
 :c:func:`hat_error_message`       Return a text description for a DAQ HAT result.
 :c:func:`hat_wait_for_interrupt`  Wait for an interrupt to occur.
-:c:func:`hat_interrupt_active`    Read the current interrupt status.
+:c:func:`hat_interrupt_state`     Read the current interrupt status.
 ================================  =======================================================
 
 .. doxygenfunction:: hat_list
 .. doxygenfunction:: hat_error_message
 .. doxygenfunction:: hat_wait_for_interrupt
-.. doxygenfunction:: hat_interrupt_active
+.. doxygenfunction:: hat_interrupt_state
 
 Data types and definitions
 --------------------------
