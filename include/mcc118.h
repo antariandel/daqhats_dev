@@ -310,7 +310,8 @@ int mcc118_a_in_scan_actual_rate(uint8_t channel_count,
 *   @param channel_mask  A bit mask of the channels to be scanned. Set each bit 
 *       to enable the associated channel (0x01 - 0xFF.)
 *   @param samples_per_channel  The number of samples to acquire for each 
-*       channel in the scan.
+*       channel in the scan (finite mode,) or can be used to set a larger scan 
+*       buffer size than the default value (continuous mode.) 
 *   @param sample_rate_per_channel   The sampling rate in samples per second per 
 *       channel, max 100,000. When using an external sample clock set this value 
 *       to the maximum expected rate of the clock.
