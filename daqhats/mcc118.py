@@ -469,7 +469,7 @@ class mcc118(Hat): # pylint: disable=invalid-name
                 0xFF).
             samples_per_channel (int): The number of samples to acquire per
                 channel (finite mode,) or or can be used to set a larger scan 
-                buffer size than the default value (continuous mode.).
+                buffer size than the default value (continuous mode.)
             sample_rate_per_channel (float): The per-channel rate of the
                 internal scan clock, or the expected maximum rate of an external
                 scan clock, max 100,000.0.
