@@ -1,34 +1,50 @@
 # Python IFTTT Example
 
 ## About
-IFTTT (If This Than That) is a free web-based service that interacts with apps and hardware to 
-automate various functions.
+IFTTT (If This Than That) is a free web-based service that interacts with apps 
+and hardware. The IFTTT service is used to automate tasks via applets that 
+define services, events, and actions.
 
-The Python IFTTT example reads DAQ HAT channels 0 and 1 every 5 minutes, and logs the time and data 
-to a Google Sheets spreadsheet. Users can remotely monitor the spreadsheet from Google Drive. 
+The Python IFTTT example reads two MCC 118 channels every 5 minutes, and writes
+the data to a Google Sheets spreadsheet. Users can remotely monitor the 
+spreadsheet with Google Drive.
+
+Perform the procedures below to configure a new applet and run the IFTTT example.
 
 ## Prerequisites
-
 - IFTTT account
 - Google Drive account
 
 ## Create the IFTTT applet
-1. At IFTTT.com go to My Applets, then click **New Applet**.
-2. Click "this" then search for Webhooks. Click Webhooks when found.
-3. Click "Receive a web request" on the Choose trigger screen.
-4. Enter your event name in the "Event Name" field (**voltage_data** for this example), then click "Create trigger".
-5. Click "that" then search for Google Sheets.  Click Google Sheets when found.
-6. Click "Add row to spreadsheet" on the Choose action screen.
-7. Enter your desired spreadsheet name, then change the formatted row to only contain "{{OccurredAt}} ||| {{Value1}} |||{{Value2}}".
-   Change the Drive folder path, if desired, then click "Create action".
-8. Review the details, then click "Finish".
 
-Enter your key from IFTTT Webhooks documentation for the variable "key".  You can find this key by:
-1. At IFTTT.com go to My Applets, then click the "Services" heading.
-2. Enter Webhooks in the Filter services field, then click on "Webhooks".
-3. Click on "Documentation" and copy the key listed.  
-4. Open the "ifttt_log.py" file and look for the "IFTTT values" section. 
-5. In the key = "<my_key>" line, replace "<my_key>" with the value copied in step 3, taking care to retain the quotes.
+1. Go to [https://ifttt.com](https://ifttt.com), select "My Applets", and click
+the **New Applet** button.
+2. On the "Choose a service" screen, enter "Webhooks" in the search field, and 
+select the **Webhooks** icon.
+3. On the "Choose a trigger" screen, select **Receive a web request**.
+4. On the "Complete trigger fields" screen, enter an event name ("voltage_data" 
+for this example) and click the **Create trigger** button.
+5. On the "Choose action service" screen, click "that", enter "Google Sheets" in the 
+search field, and select the **Google Sheets** icon.
+6. On the "Choose action" screen, select **Add row to spreadsheet**.
+7. On the "Complete action fields" screen, enter a spreadsheet name, modify the
+"Formatted row" field so it contains "{{OccurredAt}} ||| {{Value1}} |||{{Value2}}"
+(without quotes), and change the Google Drive folder path, if desired, then 
+click the **Create action** button.
+8. Review the summary statement, and click the **Finish** button.
+
+## Obtain the IFTTT WebHooks Documentation key 
+Update the variable "key" in the example program with the key from the IFTTT Webhooks documentation 
+for the variable "key".  You can find 
+this key by:
+1. At [https://ifttt.com](https://ifttt.com) click **My Applets** and then **Services**.
+2. Enter "Webhooks" in the search field, and select the **Webhooks** icon.
+3. Click the **Documentation** button and copy the key listed at the top of the page.
+4. Open "ifttt_log.py", locate the "IFTTT values" section, and replace <my_key> with
+the key copied in step 3; take care to retain the quotes around the key value.
+    > IFTTT values\
+     event_name = "voltage_data"\
+     key = "<my_key>"
 
 ## Start the IFTTT web service
 1. Open ifttt_log.py from an IDE, or execute in a terminal window:  
@@ -38,14 +54,12 @@ Enter your key from IFTTT Webhooks documentation for the variable "key".  You ca
    $ ./ifttt_log.py
    ```   
 2. Launch Google Drive on the web; log into your account if you are not already signed in.
-3. Open the Google Sheets file named **voltage_data** in the path specified when you created the applet. 
-The spreadsheet dynamically updates with data as it is acquired.
-
-Stop the web server example
-- Press Ctrl+C in the terminal window where the server was started.
+3. Open the Google Sheets file named **voltage_data** in the path specified when you 
+created the applet. The spreadsheet dynamically updates with data as it is acquired.
 
 ## Support/Feedback
-Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx). 
+Contact technical support through our 
+[support page](https://www.mccdaq.com/support/support_form.aspx). 
 
 ## More Information
 - IFTTT: https://ifttt.com/discover
