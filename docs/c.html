@@ -810,7 +810,7 @@ type of board.  The library may be used with C and C++.</p>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
 <li><code class="docutils literal notranslate"><span class="pre">channel_mask</span></code>: A bit mask of the channels to be scanned. Set each bit to enable the associated channel (0x01 - 0xFF.) </li>
-<li><code class="docutils literal notranslate"><span class="pre">samples_per_channel</span></code>: The number of samples to acquire for each channel in the scan. </li>
+<li><code class="docutils literal notranslate"><span class="pre">samples_per_channel</span></code>: The number of samples to acquire for each channel in the scan (finite mode,) or can be used to set a larger scan buffer size than the default value (continuous mode.) </li>
 <li><code class="docutils literal notranslate"><span class="pre">sample_rate_per_channel</span></code>: The sampling rate in samples per second per channel, max 100,000. When using an external sample clock set this value to the maximum expected rate of the clock. </li>
 <li><code class="docutils literal notranslate"><span class="pre">options</span></code>: The options bitmask. </li>
 </ul>
@@ -1224,8 +1224,14 @@ type of board.  The library may be used with C and C++.</p>
 <dl class="function">
 <dt id="c.mcc134_a_in_read">
 <span class="target" id="mcc134_8h_1a26c4472d7301c0dca000e91db7c5be6b"></span>int <code class="descname">mcc134_a_in_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint32_t<em>&nbsp;options</em>, double *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc134_a_in_read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read an analog input channel. </p>
-<p>Reads the specified channel and returns the value as voltage or ADC code. ADC code will be returned if the <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> option is specified; otherwise, voltage will be returned.</p>
+<dd><p>Read an analog input channel and return the value. </p>
+<p>The valid options are:<ul class="simple">
+<li><a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a>: Return ADC code (a value between -8,388,608 and 8,388,607) rather than voltage.</li>
+<li><a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a>: Return data without the calibration factors applied.</li>
+</ul>
+</p>
+<p>The options parameter is set to 0 or <a class="reference internal" href="#daqhats_8h_1ac3262ea2b2658ce9d272e6b1246edd35"><span class="std std-ref">OPTS_DEFAULT</span></a> for default operation, which is scaled and calibrated data.</p>
+<p>Multiple options may be specified by ORing the flags. For instance, specifying <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> | <a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a> will return the value read from the ADC without calibration or converting to voltage.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
@@ -1233,7 +1239,7 @@ type of board.  The library may be used with C and C++.</p>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
 <li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The analog input channel number (0 - 3). </li>
-<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask (only <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> and <a class="reference internal" href="#daqhats_8h_1af25a40101f44bd0ea3a5e77d525832e0"><span class="std std-ref">OPTS_NOCALIBRATEDATA</span></a> are used) </li>
+<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask </li>
 <li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the analog input value. </li>
 </ul>
 </dd>
@@ -1245,7 +1251,7 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.mcc134_tc_type_write">
 <span class="target" id="mcc134_8h_1a3175534a5379ca5e47488e0d635f9367"></span>int <code class="descname">mcc134_tc_type_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;type</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc134_tc_type_write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the thermocouple type for a channel. </p>
-<p>Tells the MCC 134 library what thermocouple type is connected to the specified channel. This is needed for correct temperature calculations. The type is one of <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8"><span class="std std-ref">tcTypes</span></a> and the board will default to all channels set to <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8a0041036811e8022abae0eea50b9ef75f"><span class="std std-ref">TC_TYPE_J</span></a> when it is first opened.</p>
+<p>Tells the MCC 134 library what thermocouple type is connected to the specified channel. This is needed for correct temperature calculations. The type is one of <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7"><span class="std std-ref">TcTypes</span></a> and the board will default to all channels set to <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7a0041036811e8022abae0eea50b9ef75f"><span class="std std-ref">TC_TYPE_J</span></a> when it is first opened.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
@@ -1253,7 +1259,7 @@ type of board.  The library may be used with C and C++.</p>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
 <li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The analog input channel number (0 - 3). </li>
-<li><code class="docutils literal notranslate"><span class="pre">type</span></code>: The thermocouple type, one of <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8"><span class="std std-ref">tcTypes</span></a>. </li>
+<li><code class="docutils literal notranslate"><span class="pre">type</span></code>: The thermocouple type, one of <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7"><span class="std std-ref">TcTypes</span></a>. </li>
 </ul>
 </dd>
 </dl>
@@ -1264,7 +1270,7 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.mcc134_tc_type_read">
 <span class="target" id="mcc134_8h_1a47c4803f6b8fedb34c9b6455e43265bf"></span>int <code class="descname">mcc134_tc_type_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;type</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc134_tc_type_read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the thermocouple type for a channel. </p>
-<p>Reads the current thermocouple type for the specified channel. The type is one of <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8"><span class="std std-ref">tcTypes</span></a> and the board will default to all channels set to <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8a0041036811e8022abae0eea50b9ef75f"><span class="std std-ref">TC_TYPE_J</span></a> when it is first opened.</p>
+<p>Reads the current thermocouple type for the specified channel. The type is one of <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7"><span class="std std-ref">TcTypes</span></a> and the board will default to all channels set to <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7a0041036811e8022abae0eea50b9ef75f"><span class="std std-ref">TC_TYPE_J</span></a> when it is first opened.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
@@ -1272,7 +1278,7 @@ type of board.  The library may be used with C and C++.</p>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
 <li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The analog input channel number (0 - 3). </li>
-<li><code class="docutils literal notranslate"><span class="pre">type</span></code>: Receives the thermocouple type, one of <a class="reference internal" href="#mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8"><span class="std std-ref">tcTypes</span></a>. </li>
+<li><code class="docutils literal notranslate"><span class="pre">type</span></code>: Receives the thermocouple type, one of <a class="reference internal" href="#mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7"><span class="std std-ref">TcTypes</span></a>. </li>
 </ul>
 </dd>
 </dl>
@@ -1339,55 +1345,55 @@ type of board.  The library may be used with C and C++.</p>
 <div class="section" id="thermocouple-types">
 <h4>Thermocouple Types<a class="headerlink" href="#thermocouple-types" title="Permalink to this headline">¶</a></h4>
 <dl class="enum">
-<dt id="c.tcTypes">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8"></span><em class="property">enum </em><code class="descname">tcTypes</code><a class="headerlink" href="#c.tcTypes" title="Permalink to this definition">¶</a></dt>
+<dt id="c.TcTypes">
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7"></span><em class="property">enum </em><code class="descname">TcTypes</code><a class="headerlink" href="#c.TcTypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Thermocouple type constants. </p>
 <p><em>Values:</em></p>
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_J">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8a0041036811e8022abae0eea50b9ef75f"></span><code class="descname">TC_TYPE_J</code> = 0<a class="headerlink" href="#c.TC_TYPE_J" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7a0041036811e8022abae0eea50b9ef75f"></span><code class="descname">TC_TYPE_J</code> = 0<a class="headerlink" href="#c.TC_TYPE_J" title="Permalink to this definition">¶</a></dt>
 <dd><p>J type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_K">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8abb4e06bcac96719b0df58db42a4a4c6a"></span><code class="descname">TC_TYPE_K</code><a class="headerlink" href="#c.TC_TYPE_K" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7abb4e06bcac96719b0df58db42a4a4c6a"></span><code class="descname">TC_TYPE_K</code><a class="headerlink" href="#c.TC_TYPE_K" title="Permalink to this definition">¶</a></dt>
 <dd><p>K type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_T">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8a480f2a759e0e2418b8b1a42cda654ac7"></span><code class="descname">TC_TYPE_T</code><a class="headerlink" href="#c.TC_TYPE_T" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7a480f2a759e0e2418b8b1a42cda654ac7"></span><code class="descname">TC_TYPE_T</code><a class="headerlink" href="#c.TC_TYPE_T" title="Permalink to this definition">¶</a></dt>
 <dd><p>T type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_E">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8ad69693c3b754e823067262daf8ec24f9"></span><code class="descname">TC_TYPE_E</code><a class="headerlink" href="#c.TC_TYPE_E" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7ad69693c3b754e823067262daf8ec24f9"></span><code class="descname">TC_TYPE_E</code><a class="headerlink" href="#c.TC_TYPE_E" title="Permalink to this definition">¶</a></dt>
 <dd><p>E type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_R">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8ac66bdd0ac9c7225e54a3777accd8937f"></span><code class="descname">TC_TYPE_R</code><a class="headerlink" href="#c.TC_TYPE_R" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7ac66bdd0ac9c7225e54a3777accd8937f"></span><code class="descname">TC_TYPE_R</code><a class="headerlink" href="#c.TC_TYPE_R" title="Permalink to this definition">¶</a></dt>
 <dd><p>R type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_S">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8aae88c34e2c93e18b046668cbd00b177b"></span><code class="descname">TC_TYPE_S</code><a class="headerlink" href="#c.TC_TYPE_S" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7aae88c34e2c93e18b046668cbd00b177b"></span><code class="descname">TC_TYPE_S</code><a class="headerlink" href="#c.TC_TYPE_S" title="Permalink to this definition">¶</a></dt>
 <dd><p>S type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_B">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8ae52b6238d7482aa6db7e5e7f174c49b0"></span><code class="descname">TC_TYPE_B</code><a class="headerlink" href="#c.TC_TYPE_B" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7ae52b6238d7482aa6db7e5e7f174c49b0"></span><code class="descname">TC_TYPE_B</code><a class="headerlink" href="#c.TC_TYPE_B" title="Permalink to this definition">¶</a></dt>
 <dd><p>B type. </p>
 </dd></dl>
 
 <dl class="enumvalue">
 <dt id="c.TC_TYPE_N">
-<span class="target" id="mcc134_8h_1a3ca5ea00d96ffa3d897e717be38cbfa8ab055f8716e28b8f991ef969c8c8cc203"></span><code class="descname">TC_TYPE_N</code><a class="headerlink" href="#c.TC_TYPE_N" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc134_8h_1a7af55e89d2a4390c9a69ecea583ce1c7ab055f8716e28b8f991ef969c8c8cc203"></span><code class="descname">TC_TYPE_N</code><a class="headerlink" href="#c.TC_TYPE_N" title="Permalink to this definition">¶</a></dt>
 <dd><p>N type. </p>
 </dd></dl>
 
