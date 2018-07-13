@@ -9,7 +9,7 @@ dependencies for this example, run:
    $ pip install plotly
 
 Running this example:
-1. Start the server by running this module in a terminal.
+1. Start the server by running the web_server.py module in a terminal.
    $ ./web_server.py
 2. Open a web browser on a device on the same network as the host device and
    enter http://<host>:8080 in the address bar,
@@ -25,7 +25,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State, Event
 import plotly.graph_objs as go
 import json
-from socket import gethostbyname, gethostname
+import socket
 import daqhats as hats
 
 app = dash.Dash(__name__)
@@ -48,9 +48,9 @@ def create_hat_selector():
     hat_selection_options = []
     for hat in hat_list:
         # Create the label from the address and product name
-        label = '{0}: {1}'.format(hat['address'], hat['product_name'])
+        label = '{0}: {1}'.format(hat.address, hat.product_name)
         # Create the value by converting the descriptor to a JSON object
-        option = {'label': label, 'value': json.dumps(hat)}
+        option = {'label': label, 'value': json.dumps(hat._asdict())}
         hat_selection_options.append(option)
 
     selection = None
@@ -215,7 +215,7 @@ def start_stop_click(n_clicks, button_label, hat_descriptor_json_str,
                 channel_mask |= 1 << channel
             hat = g_hat
             hat.a_in_scan_start(channel_mask, 10000,
-                                sample_rate, continuous=True)
+                                sample_rate, hats.OptionFlags.CONTINUOUS)
             output = 'running'
         elif button_label == 'Stop':
             # If stopping, call the a_in_scan_stop and a_in_scan_cleanup
@@ -374,18 +374,18 @@ def update_strip_chart_data(acq_state, chart_data_json_str,
             chart_data = json.loads(chart_data_json_str)
             current_sample_count = int(chart_data['sample_count'])
 
-            # Read all of the data that is currently available.
-            buffer_size = hat.a_in_scan_buffer_size()
-            data = hat.a_in_scan_read(buffer_size, 0)
-            num_samples_read = int(len(data['data']) / num_channels)
+            # By specifying -1 for the samples_per_channel parameter, the
+            # timeout is ignored and all available data is read.
+            read_result = hat.a_in_scan_read(-1, 0)
+            num_samples_read = int(len(read_result.data) / num_channels)
             total_sample_count = current_sample_count + num_samples_read
 
             if ('hardware_overrun' not in chart_data.keys()
                     or not chart_data['hardware_overrun']):
-                chart_data['hardware_overrun'] = data['hardware_overrun']
+                chart_data['hardware_overrun'] = read_result.hardware_overrun
             if ('buffer_overrun' not in chart_data.keys()
                     or not chart_data['buffer_overrun']):
-                chart_data['buffer_overrun'] = data['buffer_overrun']
+                chart_data['buffer_overrun'] = read_result.buffer_overrun
 
             start_sample = current_sample_count
             if total_sample_count < samples_to_display:
@@ -395,7 +395,7 @@ def update_strip_chart_data(acq_state, chart_data_json_str,
                     for channel in range(num_channels):
                         sample = start_sample + i
                         data_index = i * num_channels + channel
-                        value = data['data'][data_index]
+                        value = read_result.data[data_index]
                         chart_data['data'][channel][sample] = value
             else:
                 samples_to_append = num_samples_read
@@ -421,7 +421,7 @@ def update_strip_chart_data(acq_state, chart_data_json_str,
                     chart_data['samples'].append(start_sample + sample)
                     for channel in range(num_channels):
                         data_index = sample * num_channels + channel
-                        value = data['data'][data_index]
+                        value = read_result.data[data_index]
                         chart_data['data'][channel].append(value)
 
             # Update the total sample count.
@@ -546,6 +546,19 @@ def update_error_message(chart_data_json_str, acq_state, hat_selection,
     return error_message
 
 
+def get_ip_address():
+    """ Utility function to get the IP address of the device. """
+    ip_address = '127.0.0.1'  # Default to localhost
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    try:
+        s.connect(('1.1.1.1', 1))  # Does not have to be reachable
+        ip_address = s.getsockname()[0]
+    finally:
+        s.close()
+
+    return ip_address
+
+
 if __name__ == '__main__':
-    ip_address = gethostbyname(gethostname())
-    app.run_server(host=ip_address, port=8080)
+    app.run_server(host=get_ip_address(), port=8080)
