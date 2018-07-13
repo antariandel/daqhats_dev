@@ -57,9 +57,6 @@ the key copied in step 3; take care to retain the quotes around the key value.
 3. Open the Google Sheets file named **voltage_data** in the path specified when you 
 created the applet. The spreadsheet dynamically updates with data as it is acquired.
 
-Stop the web server example
-- Press **Ctrl+C** in the terminal window where the server was started.
-
 ## Support/Feedback
 Contact technical support through our 
 [support page](https://www.mccdaq.com/support/support_form.aspx). 
