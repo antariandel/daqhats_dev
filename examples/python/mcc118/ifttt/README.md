@@ -58,7 +58,7 @@ the key copied in step 3; take care to retain the quotes around the key value.
 created the applet. The spreadsheet dynamically updates with data as it is acquired.
 
 Stop the web server example
-- Press Ctrl+C in the terminal window where the server was started.
+- Press **Ctrl+C** in the terminal window where the server was started.
 
 ## Support/Feedback
 Contact technical support through our 
