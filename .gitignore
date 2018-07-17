@@ -1,5 +1,2 @@
-mcchats.egg-info
-build
-dist
-python2_files.txt
-python3_files.txt
+python2_installed
+python3_installed
