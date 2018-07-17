@@ -35,7 +35,8 @@ if [ $(which python | wc -l) -ne 0 ]; then
       if [ "$?" != "0" ]; then
          apt-get -qy install python-pip
       fi
-      python setup.py install --record python2_files.txt clean --all
+      pip -q install . --upgrade
+      touch ./python2_installed
    fi
 fi
 
@@ -50,7 +51,8 @@ if [ $(which python3 | wc -l) -ne 0 ]; then
       if [ "$?" != "0" ]; then
          apt-get -qy install python3-pip
       fi
-      python3 setup.py install --record python3_files.txt clean --all
+      pip3 -q install . --upgrade
+      touch ./python3_installed
    fi
 fi
 

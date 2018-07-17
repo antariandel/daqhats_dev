@@ -29,17 +29,17 @@ rm -rf /etc/mcc/hats
 echo
 
 # Remove the Python packages
-if [ -e "python2_files.txt" ]; then
+if [ -e "python2_installed" ]; then
    echo "Removing Python 2 package"
-   cat python2_files.txt | xargs rm -rf
-   rm python2_files.txt
+   pip uninstall daqhats -y
+   rm ./python2_installed
    echo
 fi
 
-if [ -e "python3_files.txt" ]; then
+if [ -e "python3_installed" ]; then
    echo "Removing Python 3 package"
-   cat python3_files.txt | xargs rm -rf
-   rm python3_files.txt
+   pip3 uninstall daqhats -y
+   rm ./python3_installed
    echo
 fi
 
