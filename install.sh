@@ -6,21 +6,33 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Build / install the C library and headers
-echo "Buiding and installing library"
+echo "Building and installing library"
 echo
 make -C lib all
 make -C lib install
 make -C lib clean
 
+echo
+
 # Build / install tools
+echo "Building and installing tools"
+echo
 make -C tools all
 make -C tools install
 make -C tools clean
 
+echo
+
 # Build examples
+echo "Building examples"
+echo
 make -C examples/c all
 
+echo
+
 # Read HAT EEPROMs to /etc/mcc/hats
+echo "Reading DAQ HAT EEPROMs"
+echo
 daqhats_read_eeproms
 
 echo
@@ -35,7 +47,7 @@ if [ $(which python | wc -l) -ne 0 ]; then
       if [ "$?" != "0" ]; then
          apt-get -qy install python-pip
       fi
-      python setup.py install --record python2_files.txt clean --all
+      pip2 install . --upgrade
    fi
 fi
 
@@ -50,7 +62,7 @@ if [ $(which python3 | wc -l) -ne 0 ]; then
       if [ "$?" != "0" ]; then
          apt-get -qy install python3-pip
       fi
-      python3 setup.py install --record python3_files.txt clean --all
+      pip3 install . --upgrade
    fi
 fi
 
