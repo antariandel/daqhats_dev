@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; MCC DAQ HAT Library 0.2.0 documentation</title>
+  <title>Index &mdash; MCC DAQ HAT Library 0.3.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.2
+                0.3
               </div>
             
           
@@ -270,11 +270,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="c.html#c.hat_error_message">hat_error_message (C function)</a>
 </li>
+      <li><a href="c.html#c.hat_interrupt_state">hat_interrupt_state (C function)</a>
+</li>
       <li><a href="c.html#c.hat_list">hat_list (C function)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python.html#daqhats.hat_list">hat_list() (in module daqhats)</a>
+</li>
+      <li><a href="c.html#c.hat_wait_for_interrupt">hat_wait_for_interrupt (C function)</a>
 </li>
       <li><a href="python.html#daqhats.HatError">HatError</a>
 </li>
@@ -310,8 +314,6 @@
 </li>
       <li><a href="c.html#c.mcc118_blink_led">mcc118_blink_led (C function)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="c.html#c.mcc118_calibration_coefficient_read">mcc118_calibration_coefficient_read (C function)</a>
 </li>
       <li><a href="c.html#c.mcc118_calibration_coefficient_write">mcc118_calibration_coefficient_write (C function)</a>
@@ -334,7 +336,67 @@
 </li>
       <li><a href="c.html#c.mcc118_trigger_mode">mcc118_trigger_mode (C function)</a>
 </li>
+      <li><a href="c.html#c.mcc152_a_out_num_channels">mcc152_a_out_num_channels (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_a_out_write">mcc152_a_out_write (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_a_out_write_all">mcc152_a_out_write_all (C function)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="c.html#c.mcc152_close">mcc152_close (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_direction_read">mcc152_dio_direction_read (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_direction_write">mcc152_dio_direction_write (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_input_invert_read">mcc152_dio_input_invert_read (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_input_invert_write">mcc152_dio_input_invert_write (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_input_latch_read">mcc152_dio_input_latch_read (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_input_latch_write">mcc152_dio_input_latch_write (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_input_read">mcc152_dio_input_read (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_interrupt_mask_read">mcc152_dio_interrupt_mask_read (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_interrupt_mask_write">mcc152_dio_interrupt_mask_write (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_interrupt_status_read">mcc152_dio_interrupt_status_read (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_num_channels">mcc152_dio_num_channels (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_output_read">mcc152_dio_output_read (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_output_type_read">mcc152_dio_output_type_read (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_output_type_write">mcc152_dio_output_type_write (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_output_write">mcc152_dio_output_write (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_pull_config_read">mcc152_dio_pull_config_read (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_pull_config_write">mcc152_dio_pull_config_write (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_pull_enable_read">mcc152_dio_pull_enable_read (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_pull_enable_write">mcc152_dio_pull_enable_write (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_dio_reset">mcc152_dio_reset (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_is_open">mcc152_is_open (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_open">mcc152_open (C function)</a>
+</li>
+      <li><a href="c.html#c.mcc152_serial">mcc152_serial (C function)</a>
+</li>
       <li><a href="python.html#daqhats.HatIDs.MCC_118">MCC_118 (daqhats.HatIDs attribute)</a>
+</li>
+      <li><a href="python.html#daqhats.HatIDs.MCC_134">MCC_134 (daqhats.HatIDs attribute)</a>
+</li>
+      <li><a href="python.html#daqhats.HatIDs.MCC_152">MCC_152 (daqhats.HatIDs attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -421,7 +483,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0',
+            VERSION:'0.3.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

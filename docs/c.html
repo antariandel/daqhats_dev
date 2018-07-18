@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>C Library Reference &mdash; MCC DAQ HAT Library 0.2.0 documentation</title>
+  <title>C Library Reference &mdash; MCC DAQ HAT Library 0.3.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.2
+                0.3
               </div>
             
           
@@ -108,6 +108,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#scan-status-flags">Scan Status Flags</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mcc-152-functions-and-data">MCC 152 functions and data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Data definitions</a></li>
 </ul>
 </li>
 </ul>
@@ -188,8 +193,8 @@ type of board.  The library may be used with C and C++.</p>
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
 <colgroup>
-<col width="35%" />
-<col width="65%" />
+<col width="37%" />
+<col width="63%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>Function</td>
@@ -200,6 +205,12 @@ type of board.  The library may be used with C and C++.</p>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#c.hat_error_message" title="hat_error_message"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_error_message()</span></code></a></td>
 <td>Return a text description for a DAQ HAT result.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.hat_wait_for_interrupt" title="hat_wait_for_interrupt"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code></a></td>
+<td>Wait for an interrupt to occur.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.hat_interrupt_state" title="hat_interrupt_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code></a></td>
+<td>Read the current interrupt status.</td>
 </tr>
 </tbody>
 </table>
@@ -252,6 +263,35 @@ type of board.  The library may be used with C and C++.</p>
 </p>
 </dd></dl>
 
+<dl class="function">
+<dt id="c.hat_wait_for_interrupt">
+<span class="target" id="daqhats_8h_1a310c568b97d4e34e9534858b5b85602c"></span>int <code class="descname">hat_wait_for_interrupt</code><span class="sig-paren">(</span>int<em>&nbsp;timeout</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hat_wait_for_interrupt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for an interrupt to occur.</p>
+<p>It waits for the interrupt signal to become active, with a timeout parameter.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>RESULT_TIMEOUT, RESULT_SUCCESS, or RESULT_UNDEFINED. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: Wait timeout in milliseconds. -1 to wait forever, 0 to return immediately. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.hat_interrupt_state">
+<span class="target" id="daqhats_8h_1a275955f80b2e8e67a896ac61bbca54a6"></span>int <code class="descname">hat_interrupt_state</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.hat_interrupt_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the current interrupt status.</p>
+<p>It returns the status of the interrupt signal. This signal can be shared by multiple boards so the status of each board that may generate must be read and the interrupt source(s) cleared before the interrupt will become inactive.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>1 if interrupt is active, 0 if inactive. </dd>
+</dl>
+</p>
+</dd></dl>
+
 </div>
 <div class="section" id="data-types-and-definitions">
 <h3>Data types and definitions<a class="headerlink" href="#data-types-and-definitions" title="Permalink to this headline">¶</a></h3>
@@ -284,6 +324,12 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.HAT_ID_MCC_118_BOOTLOADER">
 <span class="target" id="daqhats_8h_1a30cd29e26738a6f6d11746f3ccfa06e8a37746a1d99f0112b16de95479eef7e19"></span><code class="descname">HAT_ID_MCC_118_BOOTLOADER</code> = 0x8142<a class="headerlink" href="#c.HAT_ID_MCC_118_BOOTLOADER" title="Permalink to this definition">¶</a></dt>
 <dd><p>MCC 118 in firmware update mode ID. </p>
+</dd></dl>
+
+<dl class="enumvalue">
+<dt id="c.HAT_ID_MCC_152">
+<span class="target" id="daqhats_8h_1a30cd29e26738a6f6d11746f3ccfa06e8a5c9a7ce837356d2960a0eb274a9e647f"></span><code class="descname">HAT_ID_MCC_152</code> = 0x0144<a class="headerlink" href="#c.HAT_ID_MCC_152" title="Permalink to this definition">¶</a></dt>
+<dd><p>MCC 152 ID. </p>
 </dd></dl>
 
 </dd></dl>
@@ -993,6 +1039,634 @@ type of board.  The library may be used with C and C++.</p>
 </div>
 </div>
 </div>
+<div class="section" id="mcc-152-functions-and-data">
+<h2>MCC 152 functions and data<a class="headerlink" href="#mcc-152-functions-and-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>Functions<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="43%" />
+<col width="57%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Function</td>
+<td>Description</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_open" title="mcc152_open"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_open()</span></code></a></td>
+<td>Open an MCC 152 for use.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_is_open" title="mcc152_is_open"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_is_open()</span></code></a></td>
+<td>Check if an MCC 152 is open.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_close" title="mcc152_close"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_close()</span></code></a></td>
+<td>Close an MCC 152.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_serial" title="mcc152_serial"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_serial()</span></code></a></td>
+<td>Read the serial number.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_a_out_num_channels" title="mcc152_a_out_num_channels"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_a_out_num_channels()</span></code></a></td>
+<td>Get the number of analog output channels.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_a_out_write" title="mcc152_a_out_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_a_out_write()</span></code></a></td>
+<td>Write an analog output channel value.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_a_out_write_all" title="mcc152_a_out_write_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_a_out_write_all()</span></code></a></td>
+<td>Write all analog output channels simultaneously.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_num_channels" title="mcc152_dio_num_channels"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_num_channels()</span></code></a></td>
+<td>Get the number of digital I/O channels.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_reset" title="mcc152_dio_reset"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_reset()</span></code></a></td>
+<td>Reset the DIO to the default configuration.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_input_read" title="mcc152_dio_input_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_input_read()</span></code></a></td>
+<td>Read the DIO input(s).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_output_write" title="mcc152_dio_output_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_write()</span></code></a></td>
+<td>Write the DIO output(s).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_output_read" title="mcc152_dio_output_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_read()</span></code></a></td>
+<td>Read the DIO output state(s).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_direction_write" title="mcc152_dio_direction_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_direction_write()</span></code></a></td>
+<td>Set the DIO channel direction(s).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_direction_read" title="mcc152_dio_direction_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_direction_read()</span></code></a></td>
+<td>Read the DIO channel direction(s).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_pull_config_write" title="mcc152_dio_pull_config_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_pull_config_write()</span></code></a></td>
+<td>Configure the DIO pull-up / pull-down resistor(s).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_pull_config_read" title="mcc152_dio_pull_config_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_pull_config_read()</span></code></a></td>
+<td>Read the DIO pull-up / pull-down resistor configuration.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_pull_enable_write" title="mcc152_dio_pull_enable_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_pull_enable_write()</span></code></a></td>
+<td>Enable the DIO pull-up / pull-down resistor(s).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_pull_enable_read" title="mcc152_dio_pull_enable_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_pull_enable_read()</span></code></a></td>
+<td>Read the DIO pull-up / pull-down resistor enable value.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_input_invert_write" title="mcc152_dio_input_invert_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_input_invert_write()</span></code></a></td>
+<td>Configure the DIO input polarity inversion.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_input_invert_read" title="mcc152_dio_input_invert_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_input_invert_read()</span></code></a></td>
+<td>Read the DIO input polarity inversion configuration.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_input_latch_write" title="mcc152_dio_input_latch_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_input_latch_write()</span></code></a></td>
+<td>Configure the DIO input latching.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_input_latch_read" title="mcc152_dio_input_latch_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_input_latch_read()</span></code></a></td>
+<td>Read the DIO input latching configuration.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_output_type_write" title="mcc152_dio_output_type_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_type_write()</span></code></a></td>
+<td>Configure the DIO output type.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_output_type_read" title="mcc152_dio_output_type_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_type_read()</span></code></a></td>
+<td>Read the DIO output type configuration.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_interrupt_mask_write" title="mcc152_dio_interrupt_mask_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_interrupt_mask_write()</span></code></a></td>
+<td>Write the DIO interrupt mask.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_interrupt_mask_read" title="mcc152_dio_interrupt_mask_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_interrupt_mask_read()</span></code></a></td>
+<td>Read the DIO interrupt mask.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_interrupt_status_read" title="mcc152_dio_interrupt_status_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_interrupt_status_read()</span></code></a></td>
+<td>Read the DIO interrupt status.</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="c.mcc152_open">
+<span class="target" id="mcc152_8h_1a9beb81281964a9dfbaa98733d47fb55f"></span>int <code class="descname">mcc152_open</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a connection to the MCC 152 device at the specified address. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_is_open">
+<span class="target" id="mcc152_8h_1a1b5668b0c88ec78d51798c5aec4ce523"></span>int <code class="descname">mcc152_is_open</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_is_open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if an MCC 152 is open. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>1 if open, 0 if not open. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_close">
+<span class="target" id="mcc152_8h_1abc84c533e2f4e10c09bb39458d02d088"></span>int <code class="descname">mcc152_close</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close a connection to an MCC 152 device and free allocated resources. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_serial">
+<span class="target" id="mcc152_8h_1a53694430a26d207821867d6f9b6f96db"></span>int <code class="descname">mcc152_serial</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, char *<em>&nbsp;buffer</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_serial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the MCC 152 serial number. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">buffer</span></code>: Pass a user-allocated buffer pointer to receive the serial number as a string. The buffer must be at least 9 characters in length. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_a_out_num_channels">
+<span class="target" id="mcc152_8h_1ac3251641cec39d7a859474c20dd80329"></span>int <code class="descname">mcc152_a_out_num_channels</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_a_out_num_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of analog output channels on the MCC 152. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The number of channels. </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_a_out_write">
+<span class="target" id="mcc152_8h_1a148b13185ab2b14827f21b4a02aa72a9"></span>int <code class="descname">mcc152_a_out_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint32_t<em>&nbsp;options</em>, double<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_a_out_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a write to an analog output channel. </p>
+<p>Updates the analog output channel in either volts or DAC code (set the <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> option to use DAC code.) The voltage must be 0.0 - 5.0 and DAC code 0.0 - 4095.0.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The analog output channel number, 0 - 1. </li>
+<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The analog output value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_a_out_write_all">
+<span class="target" id="mcc152_8h_1ada34c9f0fd3eb8368cf65423d5f65a37"></span>int <code class="descname">mcc152_a_out_write_all</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint32_t<em>&nbsp;options</em>, double *<em>&nbsp;values</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_a_out_write_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a write to all analog output channels simultaneously. </p>
+<p>Update all analog output channels in either volts or DAC code (set the <a class="reference internal" href="#daqhats_8h_1aca7ce40604d112dff98e0ce6f1194cbd"><span class="std std-ref">OPTS_NOSCALEDATA</span></a> option to use DAC code.) The outputs will update at the same time.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">options</span></code>: Options bitmask </li>
+<li><code class="docutils literal notranslate"><span class="pre">values</span></code>: The array of analog output values; there must be at least 2 values, but only the first two values will be used. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_num_channels">
+<span class="target" id="mcc152_8h_1ac156de592e11c41917c3194fb4e02029"></span>int <code class="descname">mcc152_dio_num_channels</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_num_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of digital I/O on the MCC 152. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The number of I/O. </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_reset">
+<span class="target" id="mcc152_8h_1a92d0150691f052f60d5a31152da21b2f"></span>int <code class="descname">mcc152_dio_reset</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the DIO to the default configuration. </p>
+<p>Resets the DIO interface to the power on defaults:<ul class="simple">
+<li>All channels input</li>
+<li>Output registers set to 1</li>
+<li>Input inversion disabled</li>
+<li>No input latching</li>
+<li>Pull-up resistors enabled</li>
+<li>All interrupts disabled</li>
+<li>Push-pull output type</li>
+</ul>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_input_read">
+<span class="target" id="mcc152_8h_1a8d2c1fa537ca347341cfc4fa4fd3cbb1"></span>int <code class="descname">mcc152_dio_input_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_input_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the DIO input(s). </p>
+<p>Read a single digital channel input value or all inputs at once. Will return 0 or 1 in <strong>value</strong> if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p>If the specified channel is configured as an output this will return the value present at the terminal.</p>
+<p>This function reads the entire input register even if a single channel is specified, so care must be taken when latched inputs are enabled. If a latched input changes between input reads then changes back to its original value, the next input read will report the change to the first value then the following read will show the original value. If another input is read then this input change could be missed so it is best to use <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> when using latched inputs.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to read all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the input value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_output_write">
+<span class="target" id="mcc152_8h_1ae11917a4acc35ab229cecddcdc1f4c5a"></span>int <code class="descname">mcc152_dio_output_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the DIO output(s). </p>
+<p>Write a single digital channel output value or all outputs at once. Pass 0 or 1 if a single channel is specified, or an 8-bit value representing the desired output for all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p>If the specified channel is configured as an input this will not have any effect at the terminal, but allows the output register to be loaded before configuring the channel as an output.</p>
+<p>For example, to set channels 0 - 3 to 0 and channels 4 - 7 to 1 call: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mcc152_dio_output_write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">DIO_CHANNEL_ALL</span><span class="p">,</span> <span class="mh">0xF0</span><span class="p">);</span>
+</pre></div>
+</div>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to write all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The output value(s). </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_output_read">
+<span class="target" id="mcc152_8h_1ad8e8228e9aafb1a31c5d31f33b11865e"></span>int <code class="descname">mcc152_dio_output_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the DIO output register(s). </p>
+<p>Read the value of a single digital channel output or all outputs at once. Returns 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p>This function returns the value stored in the output register. It may not represent the value at the terminal if the channel is configured as input or open-drain output.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to read all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the output value(s). </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_direction_write">
+<span class="target" id="mcc152_8h_1ae74b9b72068a422c41c77c9d0169b15a"></span>int <code class="descname">mcc152_dio_direction_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_direction_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the DIO channel direction(s). </p>
+<p>Set the direction of a single digital channel or all channels at once. A 0 sets the channel to output, a 1 sets it to input. Pass 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p>For example, to set channels 0 - 3 to output and channels 4 - 7 to input call: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mcc152_dio_direction_write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">DIO_CHANNEL_ALL</span><span class="p">,</span> <span class="mh">0xF0</span><span class="p">);</span>
+</pre></div>
+</div>
+</p>
+<p>When switching a channel from input to output the value that is in the channel output register will be driven onto the terminal. This is set with <a class="reference internal" href="#mcc152_8h_1ae11917a4acc35ab229cecddcdc1f4c5a"><span class="std std-ref">mcc152_dio_output_write()</span></a>.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to write all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The direction value(s). </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_direction_read">
+<span class="target" id="mcc152_8h_1ad6631e08b4b1ee0e0f1e98bdd78621c4"></span>int <code class="descname">mcc152_dio_direction_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_direction_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the DIO channel direction(s). </p>
+<p>Reads the direction of a single digital channel or all channels at once. A 0 indicates the channel is set to output, a 1 indicates input. Returns 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to read all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the direction value(s). </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_pull_config_write">
+<span class="target" id="mcc152_8h_1adfdf3a51bbacf87d9e66681a6bcb5677"></span>int <code class="descname">mcc152_dio_pull_config_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_pull_config_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the DIO pull-up / pull-down resistor(s). </p>
+<p>Configure the pull-up / pull-down resistor for a single digital channel or all channels at once. A 0 sets the resistor to pull-down, a 1 sets it to pull-up. Pass 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p>The pull resistor is enabled or disabled with <a class="reference internal" href="#mcc152_8h_1a610313c3cca035b3242db0a99663c219"><span class="std std-ref">mcc152_dio_pull_enable_write()</span></a>.</p>
+<p>For example, to configure and enable pull-down resistors on all channels call: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mcc152_dio_pull_config_write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">DIO_CHANNEL_ALL</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">);</span>
+<span class="n">mcc152_dio_pull_enable_write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">DIO_CHANNEL_ALL</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">);</span>
+</pre></div>
+</div>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to write all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The pull-up/pull-down configuration. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_pull_config_read">
+<span class="target" id="mcc152_8h_1a6dab2c4cee1f1300a80bde99e19277af"></span>int <code class="descname">mcc152_dio_pull_config_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_pull_config_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the DIO pull-up / pull-down resistor configuration. </p>
+<p>Reads the pull-up / pull-down resistor configuration for a single digital channel or all channels at once. A 0 indicates pull-down, a 1 indicates pull-up. Returns 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to read all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the pull-up/pull-down configuration. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_pull_enable_write">
+<span class="target" id="mcc152_8h_1a610313c3cca035b3242db0a99663c219"></span>int <code class="descname">mcc152_dio_pull_enable_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_pull_enable_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the DIO pull-up / pull-down resistor(s). </p>
+<p>Enable or disable the pull-up / pull-down resistor for a single digital channel or all channels at once. A 0 disables the resistor, a 1 enables it. Pass 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p>The pull resistor is configured as pull-up or pull-down with <a class="reference internal" href="#mcc152_8h_1adfdf3a51bbacf87d9e66681a6bcb5677"><span class="std std-ref">mcc152_dio_pull_config_write()</span></a>.</p>
+<p>For example, to configure and enable pull-down resistors on all channels call: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mcc152_dio_pull_config_write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">DIO_CHANNEL_ALL</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">);</span>
+<span class="n">mcc152_dio_pull_enable_write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">DIO_CHANNEL_ALL</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">);</span>
+</pre></div>
+</div>
+</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to write all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The pull enable value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_pull_enable_read">
+<span class="target" id="mcc152_8h_1a5f97a57d4cf318ab09d020796a908b57"></span>int <code class="descname">mcc152_dio_pull_enable_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_pull_enable_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the DIO pull-up / pull-down resistor enable value. </p>
+<p>Reads the pull-up / pull-down resistor enable value for a single digital channel or all channels at once. A 0 indicates the resistor is disabled, a 1 indicates enabled. Returns 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to read all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the pull-up/pull-down enable value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_input_invert_write">
+<span class="target" id="mcc152_8h_1aa540ffe4c58a7b5cd44122a48e5923cd"></span>int <code class="descname">mcc152_dio_input_invert_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_input_invert_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the DIO input polarity inversion. </p>
+<p>Configure input polarity inversion for a single digital channel or all channels at once. A 0 sets the input to normal polarity, a 1 sets it to inverted. Pass 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to write all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The polarity inversion value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_input_invert_read">
+<span class="target" id="mcc152_8h_1abcc1b4443041456e03a3c63edea8b8d0"></span>int <code class="descname">mcc152_dio_input_invert_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_input_invert_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the DIO input polarity inversion configuration. </p>
+<p>Reads the current input polarity inversion configuration for a single digital channel or all channels at once. A 0 represents normal polarity, 1 represents inverted. Returns 0 or 1 if a single channel is specified, or an 8-bit value representing all channels in a single value if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to read all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the polarity inversion value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_input_latch_write">
+<span class="target" id="mcc152_8h_1ae3dc83134874e9ef56b02638f02fdad9"></span>int <code class="descname">mcc152_dio_input_latch_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_input_latch_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the DIO input latching. </p>
+<p>Configure input latching for a single digital channel or all channels at once. When input latching is set to 0 the corresponding input state is not latched, so reads show the current status of the input. A state change in the corresponding input generates an interrupt (if it is not masked). A read of the input clears the interrupt. If the input goes back to its initial logic state before the input is read, then the interrupt is cleared.</p>
+<p>When it is set to 1, the corresponding input state is latched. A change of state of the input generates an interrupt and the input logic value is loaded into the input port register. A read of the input will clear the interrupt. If the input returns to its initial logic state before the input is read, then the interrupt is not cleared and the input register keeps the logic value that initiated the interrupt. The next read of the input will show the initial state.</p>
+<p>If the input terminal is changed from latched to non-latched input, a read from the input reflects the current terminal logic level. If the input terminal is changed from non-latched to latched input, the read from the input represents the latched logic level.</p>
+<p>Pass 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to write all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The input latch value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_input_latch_read">
+<span class="target" id="mcc152_8h_1a90b913f703241945363ba227c913812d"></span>int <code class="descname">mcc152_dio_input_latch_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_input_latch_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the DIO input latching configuration. </p>
+<p>Read the input latching configuration for a single digital channel or all channels at once. Returns 0 or 1 if a single channel is specified, or an 8-bit value representing all channels in a single value if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to read all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the input latch value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_output_type_write">
+<span class="target" id="mcc152_8h_1a8c8b0710ef26cf09b72dd05c205d567e"></span>int <code class="descname">mcc152_dio_output_type_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_type_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the DIO output type. </p>
+<p>Configure digital outputs as push-pull or open-drain. This is a single value that affects all of the digital outputs on the MCC 152. Pass a 0 for push-pull or a 1 for open-drain.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The output type value, 0 or 1. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_output_type_read">
+<span class="target" id="mcc152_8h_1a378e24db7726111e82fc79963d9273e5"></span>int <code class="descname">mcc152_dio_output_type_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_type_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the DIO output type configuration. </p>
+<p>Read the digital output type configuration. Returns 0 for push-pull, 1 for open-drain.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the output type value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_interrupt_mask_write">
+<span class="target" id="mcc152_8h_1adb490ee68bad7d4efbfc24070d674e19"></span>int <code class="descname">mcc152_dio_interrupt_mask_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_interrupt_mask_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the DIO interrupt mask. </p>
+<p>Configures the interrupt mask. A 1 disables (masks) the interrupt for the specified channel, a 0 enables it. Pass 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p>The current interrupt state may be read with <a class="reference internal" href="#daqhats_8h_1a275955f80b2e8e67a896ac61bbca54a6"><span class="std std-ref">hat_interrupt_state()</span></a>. A user program may wait for the interrupt to become active with <a class="reference internal" href="#daqhats_8h_1a310c568b97d4e34e9534858b5b85602c"><span class="std std-ref">hat_wait_for_interrupt()</span></a>. This allows the user to wait for a change on one or more inputs without constantly reading the inputs. The interrupt is cleared by reading the input(s) with <a class="reference internal" href="#mcc152_8h_1a8d2c1fa537ca347341cfc4fa4fd3cbb1"><span class="std std-ref">mcc152_dio_input_read()</span></a>. Multiple MCC 152s will share a single interrupt signal, so the source of the interrupt may be determined by reading the interrupt status of each board with <a class="reference internal" href="#mcc152_8h_1ab80526340ff62a64f3f22e9fc5587e7a"><span class="std std-ref">mcc152_dio_interrupt_status_read()</span></a> and all active interrupt sources must be cleared before the interrupt will become inactive.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to write all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The interrupt mask value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_interrupt_mask_read">
+<span class="target" id="mcc152_8h_1ac6726cfe98cf6d1fb01599566a503a78"></span>int <code class="descname">mcc152_dio_interrupt_mask_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_interrupt_mask_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the DIO interrupt mask. </p>
+<p>Reads the interrupt mask for a single digital channel or all channels at once. A 0 indicates the interrupt is enabled, 1 indicates interrupt is disabled. Returns 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to read all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the interrupt mask value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc152_dio_interrupt_status_read">
+<span class="target" id="mcc152_8h_1ab80526340ff62a64f3f22e9fc5587e7a"></span>int <code class="descname">mcc152_dio_interrupt_status_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_interrupt_status_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the DIO interrupt status. </p>
+<p>Reads the interrupt status for a single digital channel or all channels at once. A 0 indicates the channel is not the source of the interrupt, 1 indicates the channel was a source of the interrupt. Returns 0 or 1 if a single channel is specified, or an 8-bit value representing all channels if <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> is specified.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). Board must already be opened. </li>
+<li><code class="docutils literal notranslate"><span class="pre">channel</span></code>: The DIO channel number, 0 - 7 or <a class="reference internal" href="#mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"><span class="std std-ref">DIO_CHANNEL_ALL</span></a> to read all channels at once. </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: Receives the interrupt status value. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="section" id="id3">
+<h3>Data definitions<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<dl class="define">
+<dt id="c.DIO_CHANNEL_ALL">
+<span class="target" id="mcc152_8h_1a24d917178692d0d222a5bdd48104a0f0"></span><code class="descname">DIO_CHANNEL_ALL</code> (0xFF)<a class="headerlink" href="#c.DIO_CHANNEL_ALL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write or read a value for all channels. </p>
+</dd></dl>
+
+</div>
+</div>
 </div>
 
 
@@ -1037,7 +1711,7 @@ type of board.  The library may be used with C and C++.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0',
+            VERSION:'0.3.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
