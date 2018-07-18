@@ -73,7 +73,7 @@ int mcc152_dio_num_channels(void);
 *
 *   Updates the analog output channel in either volts or DAC code (set the
 *   [OPTS_NOSCALEDATA](@ref OPTS_NOSCALEDATA) option to use DAC code.) The
-*   voltage must be 0.0-5.0 and DAC code 0.0-4095.0.
+*   voltage must be 0.0 - 5.0 and DAC code 0.0 - 4095.0.
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
 *   @param channel  The analog output channel number, 0 - 1.

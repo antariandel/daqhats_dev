@@ -12,7 +12,7 @@ LDFLAGS = -L/opt/vc/lib -shared -pthread -lm -lbcm_host -Wl,-soname,lib$(NAME).s
 RM = rm -f  
 TARGET_LIB = lib$(NAME).so.$(VERSION)
 
-SRCS = util.c mcc118.c mcc134.c mcc134_adc.c mcc134_cjc.c mcc152.c gpio.c cJSON.c nist.c
+SRCS = util.c mcc118.c mcc134.c mcc134_adc.c mcc134_cjc.c mcc152.c mcc152_dac.c mcc152_dio.c gpio.c cJSON.c nist.c
 OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
 DEPS = $(OBJS:%.o=%.d)
 
