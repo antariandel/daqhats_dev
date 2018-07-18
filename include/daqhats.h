@@ -10,6 +10,7 @@
 
 // include files for DAQ HAT boards
 #include "mcc118.h"
+#include "mcc152.h"
 
 /// Known DAQ HAT IDs.
 enum HatIDs
@@ -19,7 +20,9 @@ enum HatIDs
     /// MCC 118 ID
     HAT_ID_MCC_118 = 0x0142,
     /// MCC 118 in firmware update mode ID
-    HAT_ID_MCC_118_BOOTLOADER = 0x8142
+    HAT_ID_MCC_118_BOOTLOADER = 0x8142,
+    /// MCC 152 ID
+    HAT_ID_MCC_152 = 0x0144
 };
 
 /// Return values from the library functions.
@@ -48,7 +51,7 @@ enum ResultCode
 /// The maximum number of DAQ HATs that may be connected.
 #define MAX_NUMBER_HATS         8   
 
-// Scan / read flags
+// Scan / read / write flags
 /// Default behavior.
 #define OPTS_DEFAULT            (0x0000)
 /// Read / write unscaled data.
@@ -126,6 +129,29 @@ int hat_list(uint16_t filter_id, struct HatInfo* list);
 *   @return The error message.
 */
 const char* hat_error_message(int result);
+
+/**
+*   Read the current interrupt status.
+*
+*   It returns the status of the interrupt signal.  This signal can be shared by
+*   multiple boards so the status of each board that may generate must be read
+*   and the interrupt source(s) cleared before the interrupt will become
+*   inactive.
+*
+*   @return 1 if interrupt is active, 0 if inactive.
+*/
+int hat_interrupt_state(void);
+
+/**
+*   Wait for an interrupt to occur.
+*
+*   It waits for the interrupt signal to become active, with a timeout parameter.
+*
+*   @param timeout  Wait timeout in milliseconds. -1 to wait forever, 0 to
+*       return immediately.
+*   @return RESULT_TIMEOUT, RESULT_SUCCESS, or RESULT_UNDEFINED.
+*/
+int hat_wait_for_interrupt(int timeout);
 
 #ifdef __cplusplus
 }

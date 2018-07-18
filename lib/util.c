@@ -55,6 +55,7 @@
 #define ADDR1_GPIO              13
 #define ADDR2_GPIO              26
 
+#define IRQ_GPIO                21
 
 // EEPROM header structure
 struct _Header
@@ -807,5 +808,37 @@ const char* hat_error_message(int result)
     case RESULT_UNDEFINED:
     default:
         return HAT_ERROR_MESSAGES[7];
+    }
+}
+
+/******************************************************************************
+  Return the interrupt status.
+ *****************************************************************************/
+int hat_interrupt_state(void)
+{
+    if (gpio_status(IRQ_GPIO) == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/******************************************************************************
+  Wait for an interrupt to occur, with timeout.
+ *****************************************************************************/
+int hat_wait_for_interrupt(int timeout)
+{
+    // wait for IRQ_GPIO to go low, with timeout
+    switch (gpio_wait_for_low(IRQ_GPIO, timeout))
+    {
+    case -1:    // error
+        return RESULT_UNDEFINED;
+    case 0:     // timeout
+        return RESULT_TIMEOUT;
+    default:    // success
+        return RESULT_SUCCESS;
     }
 }
