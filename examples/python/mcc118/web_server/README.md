@@ -13,8 +13,8 @@ Enter the following commands to install the dependencies.
 Install pip first if it is not already installed, then install Dash and Plotly.
 
    ```
-   $ apt-get install python-pip
-   $ pip install dash dash-renderer dash-html-components dash-core-components plotly  
+   apt-get install python-pip
+   pip install dash dash-renderer dash-html-components dash-core-components plotly  
    ```
 
 >   **Note**: Installation may need to be run with sudo.
@@ -24,8 +24,8 @@ Install pip first if it is not already installed, then install Dash and Plotly.
 following commands: 
 
    ```
-   $ CD ~/daqhats/examples/python/mcc118/web_server
-   $ ./web_server.py
+   CD ~/daqhats/examples/python/mcc118/web_server
+   ./web_server.py
    ```   
 2. Open a web browser on a device on the same network as the host device and
    enter http://\<host\>:8080 in the address bar, replacing \<host\> with either 
