@@ -50,8 +50,8 @@ the key copied in step 3; take care to retain the quotes around the key value.
 1. Open ifttt_log.py from an IDE, or execute in a terminal window:  
 
    ```
-   $ CD ~/daqhats/examples/python/mcc118/ifttt
-   $ ./ifttt_log.py
+   CD ~/daqhats/examples/python/mcc118/ifttt
+   ./ifttt_log.py
    ```   
 2. Launch Google Drive on the web; log into your account if you are not already signed in.
 3. Open the Google Sheets file named **voltage_data** in the path specified when you 

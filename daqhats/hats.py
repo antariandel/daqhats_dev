@@ -2,22 +2,23 @@
 Wraps the global methods from the MCC Hat library for use in Python.
 """
 from collections import namedtuple
+from enum import IntEnum
 from ctypes import cdll, Structure, c_ubyte, c_ushort, c_char, c_int, POINTER
 
-class HatIDs(object):   # pylint: disable=too-few-public-methods
+class HatIDs(IntEnum):
     """Known MCC HAT IDs."""
     ANY = 0             #: Match any MCC ID in :py:func:`hat_list`
     MCC_118 = 0x0142    #: MCC 118 ID
     MCC_134 = 0x0143    #: MCC 134 ID
 
-class TriggerModes(object): # pylint: disable=too-few-public-methods
+class TriggerModes(IntEnum):
     """Scan trigger input modes."""
     RISING_EDGE = 0     #: Start the scan on a rising edge of TRIG.
     FALLING_EDGE = 1    #: Start the scan on a falling edge of TRIG.
     ACTIVE_HIGH = 2     #: Start the scan any time TRIG is high.
     ACTIVE_LOW = 3      #: Start the scan any time TRIG is low.
 
-class OptionFlags(object): # pylint: disable=too-few-public-methods
+class OptionFlags(IntEnum):
     """Scan / read option flags. See individual methods for detailed
     descriptions."""
     DEFAULT = 0x0000         #: Use default behavior.
