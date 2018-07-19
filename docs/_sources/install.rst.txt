@@ -40,6 +40,9 @@ If you change your board stackup and have more than one HAT board attached you m
 
     sudo daqhats_read_eeproms
     
+You may display a list of the detected boards at any time with::
+
+    daqhats_list_boards
 
 Creating a C program
 ********************
