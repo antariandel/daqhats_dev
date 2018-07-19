@@ -45,6 +45,9 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
    ```
 You can now run the example programs under ~/daqhats/examples and create your own programs. Refer to the [Examples](#examples) section below for more information.
 
+#### List the installed boards
+You can use the tool daqhats_list_boards at any time to display a list of the detected MCC DAQ HATs.  This list is generated from the EEPROM images so it will not be correct if you change the board stack without updating the EEPROM images (see below.)
+
 #### Update the EEPROM images
 If you change your board stack, you must update the saved EEPROM images so that the library has the correct board information:
 
