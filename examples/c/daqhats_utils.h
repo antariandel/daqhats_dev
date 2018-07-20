@@ -1,7 +1,7 @@
 /*
-	This file contains functions used in the MCC DAQ HAT C examples
-	to assist in displaying information, reading user inputs and
-	handling errors.
+    This file contains functions used in the MCC DAQ HAT C examples
+    to assist in displaying information, reading user inputs and
+    handling errors.
  */
 
 #ifndef UTILITY_H_
@@ -17,10 +17,10 @@
 // Macros to handle error checking
 #define STOP_ON_ERROR(result)\
 {\
- 	if (result != RESULT_SUCCESS ){\
+    if (result != RESULT_SUCCESS ){\
         print_error(result);\
-		goto stop;\
-	}\
+        goto stop;\
+    }\
 }
 
 // Channel definitions
@@ -160,10 +160,10 @@ int convert_chan_mask_to_array(uint32_t channel_mask, int chans[])
    result code is not RESULT_SUCCESS, the error message is sent to stderr. */
 void print_error(int result)
 {
-	if (result != RESULT_SUCCESS)
+    if (result != RESULT_SUCCESS)
     {
-		fprintf(stderr, "\nError: %s\n", hat_error_message(result));
-	}
+        fprintf(stderr, "\nError: %s\n", hat_error_message(result));
+    }
 }
 
 /****************************************************************************
@@ -181,7 +181,7 @@ void flush_stdin(void)
 
 int enter_press()
 {
-	int stdin_value = 0;
+    int stdin_value = 0;
     struct timeval tv;
     fd_set fds;
     
@@ -193,7 +193,7 @@ int enter_press()
     stdin_value = FD_ISSET(STDIN_FILENO, &fds);
     if (stdin_value != 0)
     {
-    	flush_stdin();
+        flush_stdin();
     }
     
     return stdin_value;
