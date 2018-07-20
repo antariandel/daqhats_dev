@@ -47,7 +47,7 @@ master device.
   * Set the **EXTCLOCK** scan option on each MCC 118 HAT except the master device.
   * Set the **EXTTRIGGER** scan option on the MCC 118 master.
 
-    When triggered, the master device outputs the sample clock to the other MCC 118
+   When triggered, the master device outputs the sample clock to the other MCC 118
 HATs. The acquisition begins when the MCC 118 HATs receive the clock signal.
 
 > Refer to 
