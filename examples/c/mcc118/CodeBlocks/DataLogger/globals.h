@@ -37,7 +37,8 @@ EXTERN GtkWidget *box;
 EXTERN GtkWidget *table;
 
 
-EXTERN GtkWidget *rbContinuous, *rbFinite;//,*chkBurstMode, *chkExtTrig, *chkExtClock;
+EXTERN GtkWidget *rbContinuous, *rbFinite;
+    //,*chkBurstMode, *chkExtTrig, *chkExtClock;
 EXTERN GtkWidget *spinRate;
 EXTERN GtkWidget *spinNumSamples;
 EXTERN GtkWidget *btnSelectLogFile;
@@ -48,7 +49,7 @@ EXTERN GtkWidget *btnStart_Stop;
 EXTERN GraphChannelInfo graphChannelInfo[MAX_118_CHANNELS];
 EXTERN GdkRGBA legendColor[MAX_118_CHANNELS];
 
-//EXTERN char* application_name;// = "MCC188 Data Logger";
+//EXTERN char* application_name;// = "MCC 118 Data Logger";
 //EXTERN char *filename;// = "/home/pi/Desktop/csv_test.csv";
 
 EXTERN uint8_t address;
@@ -72,7 +73,7 @@ EXTERN struct thread_info *tinfo;
 //EXTERN double iRatePerChannel;//  = 0.0;
 //
 //
-EXTERN char application_name[512];//  = "MCC188 Data Logger";
+EXTERN char application_name[512];//  = "MCC 118 Data Logger";
 EXTERN char csv_filename[512];//  = "/home/pi/Desktop/csv_test.csv";
 //
 EXTERN GMutex data_mutex;

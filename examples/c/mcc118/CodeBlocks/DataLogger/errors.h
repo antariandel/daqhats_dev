@@ -5,7 +5,7 @@
 #define NO_HAT_DEVICES_FOUND        -100
 #define UNABLE_TO_OPEN_FILE         -101
 #define MAXIMUM_FILE_SIZE_EXCEEDED  -102
-#define UNKNOWN_ERROR				-999
+#define UNKNOWN_ERROR               -999
 
 
 // Status errors
