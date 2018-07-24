@@ -15,18 +15,18 @@ int main(int argc, char* argv[])
     // get device list
     info_count = hat_list(HAT_ID_ANY, NULL);
 
-    if (info_count > 0)
+    if (info_count ==  0)
     {
-        info_list = (struct HatInfo*)malloc(info_count * sizeof(struct HatInfo));
-        hat_list(HAT_ID_ANY, info_list);
-    }
-    else
-    {
-        printf("hat_list returned %d\n", info_count);
+        printf("0 boards found\n");
         return 1;
     }
 
+    info_list = (struct HatInfo*)malloc(info_count * sizeof(struct HatInfo));
+    hat_list(HAT_ID_ANY, info_list);
+
     // display the list
+    printf("Found %d board(s):\n\n", info_count);
+    
     for (index = 0; index < info_count; index++)
     {
         address = info_list[index].address;
@@ -51,8 +51,10 @@ int main(int argc, char* argv[])
             printf("Bootloader version: %X.%02X\n", (uint8_t)(boot_version >> 8), (uint8_t)boot_version);
             mcc118_close(address);
         }
-
-        printf("\n");
+        if (index < (info_count - 1))
+        {
+            printf("\n");
+        }
     }
 
     free(info_list);

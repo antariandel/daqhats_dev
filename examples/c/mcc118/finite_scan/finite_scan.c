@@ -1,118 +1,151 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <unistd.h>
-#include <daqhats/daqhats.h>
+/*****************************************************************************
 
-const char* filename = "test.csv";
+    MCC 118 Functions Demonstrated:
+        mcc118_a_in_scan_start
+        mcc118_a_in_scan_read
 
-int main(int argc, char* argv[])
+    Purpose:
+        Perform a finite acquisition on 1 or more channels.
+
+    Description:
+        Acquires blocks of analog input data for a user-specified group
+        of channels.  The last sample of data for each channel is
+        displayed for each block of data received from the device.  The
+        acquisition is stopped when the specified number of samples is
+        acquired for each channel.
+
+*****************************************************************************/
+#include "../../daqhats_utils.h"
+
+int main(void)
 {
-    uint32_t samples_per_channel;
-    uint32_t samples_read_per_channel;
-    int num_channels;
-    uint8_t address;
-    uint8_t channels;
-    uint8_t options;
-    uint16_t status;
-    double* data;
-    double sample_rate_per_channel = 1000;
-    FILE* logfile;
-    int index;
-    int channel;
-    int info_count;
-    struct HatInfo* info_list;
+    int result = RESULT_SUCCESS;
+    uint8_t address = 0;
+    char channel_string[512];
+    char options_str[512];
+    char c;
+    char display_header[512];
+    int i;
 
-    // get device list
-    info_count = hat_list(HAT_ID_MCC_118, NULL);
+    // Set the channel mask which is used by the library function
+    // mcc118_a_in_scan_start to specify the channels to acquire.
+    // The functions below, will parse the channel mask into a
+    // character string for display purposes.
+    uint8_t channel_mask = {CHAN0 | CHAN1 | CHAN2 | CHAN3};
+    convert_chan_mask_to_string(channel_mask, channel_string);
 
-    if (info_count > 0)
+    int max_channel_array_length = mcc118_a_in_num_channels();
+    int channel_array[max_channel_array_length];
+    uint8_t num_channels = convert_chan_mask_to_array(channel_mask,
+        channel_array);
+
+    uint32_t samples_per_channel = 10000;
+    uint32_t buffer_size = samples_per_channel * num_channels;
+    double read_buf[buffer_size];
+    int total_samples_read = 0;
+
+    int32_t read_request_size = 500;
+    double timeout = 5.0;
+
+    double scan_rate = 1000.0;
+    double actual_scan_rate = 0.0;
+    mcc118_a_in_scan_actual_rate(num_channels, scan_rate, &actual_scan_rate);
+
+    uint32_t options = OPTS_DEFAULT;
+
+    uint16_t read_status = 0;
+    uint32_t samples_read_per_channel = 0;
+
+    // Select an MCC118 HAT device to use.
+    if (select_hat_device(HAT_ID_MCC_118, &address))
     {
-        info_list = (struct HatInfo*)malloc(info_count * sizeof(struct HatInfo));
-        hat_list(HAT_ID_MCC_118, info_list);
-    }
-    else
-    {
-        printf("No MCC 118s found\n");
-        return 1;
-    }
-
-    // Use the first MCC 118 found
-    address = info_list[0].address;
-    free(info_list);
-    printf("Using MCC 118 at address %d\n", address);
-    
-    // Read channels 0 and 1
-    num_channels = 2;
-    channels = (1 << 0) | (1 << 1);
-    samples_per_channel = 1000;
-    options = 0;
-
-    if (mcc118_open(address) != RESULT_SUCCESS)
-    {
-        printf("mcc118_open failed\n");
-        mcc118_close(address);
-        return 1;
+        // Error getting device.
+        return -1;
     }
 
-    printf("Scanning %d samples...\n", samples_per_channel);
-    if (mcc118_a_in_scan_start(address, channels, samples_per_channel, sample_rate_per_channel, options)
-        != RESULT_SUCCESS)
+    printf ("\nSelected MCC 118 device at address %d\n", address);
+
+    // Open a connection to the device.
+    result = mcc118_open(address);
+    STOP_ON_ERROR(result);
+
+    convert_options_to_string(options, options_str);
+
+    printf("\nMCC 118 finite scan example\n");
+    printf("    Functions demonstrated:\n");
+    printf("        mcc118_a_in_scan_start\n");
+    printf("        mcc118_a_in_scan_read\n");
+    printf("    Channels: %s\n", channel_string);
+    printf("    Samples per channel: %d\n", samples_per_channel);
+    printf("    Requested scan rate: %-10.2f\n", scan_rate);
+    printf("    Actual scan rate: %-10.2f\n", actual_scan_rate);
+    printf("    Options: %s\n", options_str);
+
+    printf("\nPress ENTER to continue\n");
+    scanf("%c", &c);
+
+    // Configure and start the scan.
+    result = mcc118_a_in_scan_start(address, channel_mask, samples_per_channel,
+        scan_rate, options);
+    STOP_ON_ERROR(result);
+
+    printf("Starting scan ... Press ENTER to stop\n\n");
+
+    // Create the header containing the column names.
+    strcpy(display_header, "Samples Read    Scan Count    ");
+    for (i = 0; i < num_channels; i++)
     {
-        printf("mcc118_a_in_scan_start failed\n");
-        mcc118_close(address);
-        return 1;
-    }    
-    
-    // wait for scan to complete
+        sprintf(channel_string, "Channel %d   ", channel_array[i]);
+        strcat(display_header, channel_string);
+    }
+    strcat(display_header, "\n");
+    printf("%s", display_header);
+
+    // Continuously update the display value until enter key is pressed
+    // or the number of samples requested has been read.
     do
     {
-        if (mcc118_a_in_scan_status(address, &status, NULL)
-            != RESULT_SUCCESS)
+        // Read the specified number of samples.
+        result = mcc118_a_in_scan_read(address, &read_status, read_request_size,
+            timeout, read_buf, buffer_size, &samples_read_per_channel);
+        STOP_ON_ERROR(result);
+        if (read_status & STATUS_HW_OVERRUN)
         {
-            printf("mcc118_a_in_scan_status failed\n");
-            mcc118_a_in_scan_stop(address);
-            mcc118_a_in_scan_cleanup(address);
-            mcc118_close(address);
-            return 1;
+            printf("\n\nHardware overrun\n");
+            break;
         }
-        usleep(1000);
-    } while ((status & STATUS_RUNNING) == STATUS_RUNNING);
-
-    // read all the data at once
-    data = (double*)malloc(samples_per_channel * num_channels * sizeof(double));
-    if (mcc118_a_in_scan_read(address, &status, samples_per_channel, 0.0, data, samples_per_channel * num_channels, &samples_read_per_channel)
-        != RESULT_SUCCESS)
-    {
-        printf("mcc118_a_in_scan_read failed\n");
-        mcc118_a_in_scan_stop(address);
-        mcc118_a_in_scan_cleanup(address);
-        mcc118_close(address);
-        return 1;
-    }
-    printf("Read %d samples\n", samples_read_per_channel);
-    mcc118_a_in_scan_stop(address);
-    mcc118_a_in_scan_cleanup(address);
-    mcc118_close(address);
-
-    printf("Saving data to %s\n", filename);
-    logfile = fopen(filename, "wt");
-    if (logfile == NULL)
-    {
-        printf("Can't open %s\n", filename);
-        free(data);
-        return 1;
-    }
-    for (index = 0; index < samples_read_per_channel; index++)
-    {
-        for (channel = 0; channel < num_channels; channel++)
+        else if (read_status & STATUS_BUFFER_OVERRUN)
         {
-            fprintf(logfile, "%f,", data[(index * num_channels) + channel]);
+            printf("\n\nBuffer overrun\n");
+            break;
         }
-        fprintf(logfile, "\n");
+
+        total_samples_read += samples_read_per_channel;
+
+        // Display the last sample for each channel.
+        printf("\r%12.0d    %10.0d ", samples_read_per_channel,
+            total_samples_read);
+        if (samples_read_per_channel > 0)
+        {
+            int index = samples_read_per_channel * num_channels - num_channels;
+
+            for (i = 0; i < num_channels; i++)
+            {
+                printf("%10.5f V", read_buf[index + i]);
+            }
+            fflush(stdout);
+        }
     }
-    
-    fclose(logfile);
-    free(data);
+    while ((result == RESULT_SUCCESS) && 
+           ((read_status & STATUS_RUNNING) == STATUS_RUNNING) && 
+           !enter_press());
+
+    printf ("\n");
+
+stop:
+    print_error(mcc118_a_in_scan_stop(address));
+    print_error(mcc118_a_in_scan_cleanup(address));
+    print_error(mcc118_close(address));
+
     return 0;
 }

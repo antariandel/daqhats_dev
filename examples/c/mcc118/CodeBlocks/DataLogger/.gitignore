@@ -1,0 +1,6 @@
+bin
+LogFiles
+obj
+*.o
+*.depend
+*.layout
