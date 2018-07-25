@@ -41,7 +41,6 @@ int main(int argc, char* argv[])
     {
         mcc152_dio_output_write(address, channel, value);
         value = ~value;
-        usleep(200000);
     }
 
     clock_gettime(CLOCK_MONOTONIC, &end_time);
