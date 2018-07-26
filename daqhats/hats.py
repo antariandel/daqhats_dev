@@ -3,6 +3,7 @@ Wraps the global methods from the MCC Hat library for use in Python.
 """
 from collections import namedtuple
 from ctypes import cdll, Structure, c_ubyte, c_ushort, c_char, c_int, POINTER
+from enum import IntEnum
 
 class HatIDs(object):   # pylint: disable=too-few-public-methods
     """Known MCC HAT IDs."""
