@@ -277,50 +277,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
 
         return
 
-    def dio_input_read(self, channel):
-        """
-        Read a single DIO input channel value.
-
-        Returns 0 if the input is low, 1 if it is high.
-
-        If the specified channel is configured as an output this will return the
-        value present at the terminal.
-
-        This method reads the entire input register even though a single channel
-        is specified, so care must be taken when latched inputs are enabled. If
-        a latched input changes between input reads then changes back to its
-        original value, the next input read will report the change to the first
-        value then the following read will show the original value. If another
-        input is read then this input change could be missed so it is best to
-        use dio_input_read_all() when using latched inputs.
-
-        Args:
-            channel (int): The DIO channel number, 0-7.
-
-        Returns:
-            int: The input value.
-
-        Raises:
-            HatError: the board is not initialized, does not respond, or
-                responds incorrectly.
-            ValueError: the channel argument is invalid.
-        """
-        if not self._initialized:
-            raise HatError(self._address, "Not initialized.")
-
-        if channel not in range(self._DIO_NUM_CHANNELS):
-            raise ValueError("Invalid channel {}.".format(channel))
-
-        value = c_ubyte()
-        result = self._lib.mcc152_dio_input_read(
-            self._address, channel, byref(value))
-
-        if result != self._RESULT_SUCCESS:
-            raise HatError(self._address, "Incorrect response.")
-
-        return value.value()
-
-    def dio_input_read_all(self):
+    def dio_input_read(self):
         """
         Read all DIO inputs at once.
 
@@ -359,6 +316,89 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             mylist[i] = (reg & (1<<i)) >> i
 
         return mylist
+
+#    def dio_input_read(self, channel):
+#        """
+#        Read a single DIO input channel value.
+#
+#        Returns 0 if the input is low, 1 if it is high.
+#
+#        If the specified channel is configured as an output this will return the
+#        value present at the terminal.
+#
+#        This method reads the entire input register even though a single channel
+#        is specified, so care must be taken when latched inputs are enabled. If
+#        a latched input changes between input reads then changes back to its
+#        original value, the next input read will report the change to the first
+#        value then the following read will show the original value. If another
+#        input is read then this input change could be missed so it is best to
+#        use dio_input_read_all() when using latched inputs.
+#
+#        Args:
+#            channel (int): The DIO channel number, 0-7.
+#
+#        Returns:
+#            int: The input value.
+#
+#        Raises:
+#            HatError: the board is not initialized, does not respond, or
+#                responds incorrectly.
+#            ValueError: the channel argument is invalid.
+#        """
+#        if not self._initialized:
+#            raise HatError(self._address, "Not initialized.")
+#
+#        if channel not in range(self._DIO_NUM_CHANNELS):
+#            raise ValueError("Invalid channel {}.".format(channel))
+#
+#        value = c_ubyte()
+#        result = self._lib.mcc152_dio_input_read(
+#            self._address, channel, byref(value))
+#
+#        if result != self._RESULT_SUCCESS:
+#            raise HatError(self._address, "Incorrect response.")
+#
+#        return value.value()
+#
+#    def dio_input_read_all(self):
+#        """
+#        Read all DIO inputs at once.
+#
+#        Returns a list of all input values in channel order.
+#
+#        If a channel is configured as an output this will return the value
+#        present at the terminal.
+#
+#        Care must be taken when latched inputs are enabled. If a latched input
+#        changes between input reads then changes back to its original value, the
+#        next input read will report the change to the first value then the
+#        following read will show the original value.
+#
+#        Returns
+#            list of int: The input values.
+#
+#        Raises:
+#            HatError: the board is not initialized, does not respond, or
+#                responds incorrectly.
+#        """
+#        if not self._initialized:
+#            raise HatError(self._address, "Not initialized.")
+#
+#        value = c_ubyte()
+#        result = self._lib.mcc152_dio_input_read(
+#            self._address, self._DIO_CHANNEL_ALL, byref(value))
+#
+#        if result != self._RESULT_SUCCESS:
+#            raise HatError(self._address, "Incorrect response.")
+#
+#        # convert byte to list of bits
+#        mylist = [0]*self._DIO_NUM_CHANNELS
+#
+#        reg = value.value()
+#        for i in range(self._DIO_NUM_CHANNELS):
+#            mylist[i] = (reg & (1<<i)) >> i
+#
+#        return mylist
 
     def dio_output_write(self, channel, value):
         """

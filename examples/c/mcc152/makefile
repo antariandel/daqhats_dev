@@ -1,6 +1,6 @@
 TOPTARGETS := all clean
 
-SUBDIRS := input_wait input_wait_multiple read_rate toggle_output
+SUBDIRS := $(wildcard */.)
 
 $(TOPTARGETS): $(SUBDIRS)
 $(SUBDIRS):

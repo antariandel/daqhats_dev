@@ -28,7 +28,8 @@
 #define NUM_DIO_CHANNELS    8       // The number of digital I/O channels.
 
 #define MAX_CODE            4095
-#define VOLTAGE_RANGE       5.0
+#define LSB_SIZE            (5.0 / 4096.0)
+#define MAX_VOLTAGE         (MAX_CODE * LSB_SIZE)
 
 // The maximum size of the serial number string, plus NULL.
 #define SERIAL_SIZE         (8+1)   
@@ -312,6 +313,26 @@ int mcc152_a_out_num_channels(void)
     return NUM_AO_CHANNELS;
 }
 
+int mcc152_a_out_code_max(void)
+{
+    return MAX_CODE;
+}
+
+int mcc152_a_out_code_min(void)
+{
+    return 0;
+}
+
+double mcc152_a_out_voltage_max(void)
+{
+    return MAX_VOLTAGE;
+}
+
+double mcc152_a_out_voltage_min(void)
+{
+    return 0.0;
+}
+
 /******************************************************************************
   Return the number of digital I/O channels on the board.
  *****************************************************************************/
@@ -353,32 +374,28 @@ int mcc152_a_out_write(uint8_t address, uint8_t channel, uint32_t options,
     if ((options & OPTS_NOSCALEDATA) == 0)
     {
         // user passed voltage
-        if ((value >= 0.0) && (value <= VOLTAGE_RANGE))
+        if (value < 0.0)
         {
-            // valid
-            code = (uint16_t)((value * (MAX_CODE + 1) / VOLTAGE_RANGE) + 0.5);
-            if (code > MAX_CODE)
-            {
-                code = MAX_CODE;
-            }
+            value = 0.0;
         }
-        else
+        else if (value > MAX_VOLTAGE)
         {
-            return RESULT_BAD_PARAMETER;
+            value = MAX_VOLTAGE;
         }
+        code = (uint16_t)((value / LSB_SIZE) + 0.5);
     }
     else
     {
         // user passed code
-        if ((value >= 0.0) && (value <= MAX_CODE))
+        if (value < 0.0)
         {
-            // valid
-            code = (uint16_t)(value + 0.5);
+            value = 0.0;
         }
-        else
+        else if (value > MAX_CODE)
         {
-            return RESULT_BAD_PARAMETER;
+            value = MAX_CODE;
         }
+        code = (uint16_t)(value + 0.5);
     }
     
     return _mcc152_dac_write(address, channel, code);
@@ -403,33 +420,28 @@ int mcc152_a_out_write_all(uint8_t address, uint32_t options, double* values)
         if ((options & OPTS_NOSCALEDATA) == 0)
         {
             // user passed voltages
-            if ((values[i] >= 0.0) && (values[i] <= VOLTAGE_RANGE))
+            if (values[i] < 0.0)
             {
-                // valid
-                codes[i] = (uint16_t)((values[i] * (MAX_CODE + 1) / 
-                    VOLTAGE_RANGE) + 0.5);
-                if (codes[i] > MAX_CODE)
-                {
-                    codes[i] = MAX_CODE;
-                }
+                values[i] = 0.0;
             }
-            else
+            else if (values[i] > MAX_VOLTAGE)
             {
-                return RESULT_BAD_PARAMETER;
+                values[i] = MAX_VOLTAGE;
             }
+            codes[i] = (uint16_t)((values[i] / LSB_SIZE) + 0.5);
         }
         else
         {
             // user passed codes
-            if ((values[i] >= 0.0) && (values[i] <= MAX_CODE))
+            if (values[i] < 0.0)
             {
-                // valid
-                codes[i] = (uint16_t)(values[i] + 0.5);
+                values[i] = 0.0;
             }
-            else
+            else if (values[i] > MAX_CODE)
             {
-                return RESULT_BAD_PARAMETER;
+                values[i] = MAX_CODE;
             }
+            codes[i] = (uint16_t)(values[i] + 0.5);
         }
     }
     

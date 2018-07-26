@@ -62,6 +62,34 @@ int mcc152_serial(uint8_t address, char* buffer);
 int mcc152_a_out_num_channels(void);
 
 /**
+*   @brief Return the maximum DAC code value for the MCC 152 analog output.
+*
+*   @return The maximum code.
+*/
+int mcc152_a_out_code_max(void);
+
+/**
+*   @brief Return the minimum DAC code value for the MCC 152 analog output.
+*
+*   @return The minimum code.
+*/
+int mcc152_a_out_code_min(void);
+
+/**
+*   @brief Return the maximum voltage value for the MCC 152 analog output.
+*
+*   @return The maximum voltage.
+*/
+double mcc152_a_out_voltage_max(void);
+
+/**
+*   @brief Return the minimum voltage value for the MCC 152 analog output.
+*
+*   @return The minimum code.
+*/
+double mcc152_a_out_voltage_min(void);
+
+/**
 *   @brief Return the number of digital I/O on the MCC 152.
 *
 *   @return The number of I/O.
