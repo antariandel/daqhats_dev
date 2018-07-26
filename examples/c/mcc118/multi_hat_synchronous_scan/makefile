@@ -1,4 +1,4 @@
-NAME = multi-hat_synchronous_scan
+NAME = multi_hat_synchronous_scan
 OBJ = $(NAME).o
 LIBS = -ldaqhats
 CFLAGS = -Wall -I/usr/local/include -I./ -g
