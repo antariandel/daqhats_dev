@@ -2,8 +2,8 @@
 Wraps the global methods from the MCC Hat library for use in Python.
 """
 from collections import namedtuple
-from enum import IntEnum
 from ctypes import cdll, Structure, c_ubyte, c_ushort, c_char, c_int, POINTER
+from enum import IntEnum
 
 class HatIDs(IntEnum):
     """Known MCC HAT IDs."""
