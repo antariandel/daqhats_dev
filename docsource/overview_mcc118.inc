@@ -12,14 +12,14 @@ The MCC 118 is an 8-channel analog voltage input board with the following featur
 
 .. only:: html
 
-    .. image:: images/mcc_118.jpg
+    .. image:: images/mcc118.jpg
         :align: center
         :alt: MCC 118 circuit board
 	:scale: 50%
 
 .. only:: latex
 
-    .. image:: images/mcc_118.jpg
+    .. image:: images/mcc118.jpg
         :align: center
         :alt: MCC 118 circuit board
 	:scale: 50%
@@ -78,14 +78,14 @@ The clock input / output (terminal CLK) is used to output the internal scan cloc
 
 .. only:: html
 
-    .. image:: images/mcc118_clock.png
+    .. image:: images/mcc118-clock.png
 	:align: center
 	:alt: MCC 118 clock mode
 	:scale: 40%
 
 .. only:: latex
 
-    .. image:: images/mcc118_clock.png
+    .. image:: images/mcc118-clock.png
 	:align: center
 	:alt: MCC 118 clock mode
 
