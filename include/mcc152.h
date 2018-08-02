@@ -10,12 +10,42 @@
 
 #include <stdint.h>
 
-/// Write or read a value for all channels.
-#define DIO_CHANNEL_ALL    (0xFF)   
+/// DIO Configuration Items
+enum DIOConfigItem
+{
+    /// Configure channel direction
+    DIO_DIRECTION       = 0,
+    /// Configure pull-up/down resistor
+    DIO_PULL_CONFIG     = 1,
+    /// Enable pull-up/down resistor
+    DIO_PULL_ENABLE     = 2,
+    /// Configure input inversion
+    DIO_INPUT_INVERT    = 3,
+    /// Configure input latching
+    DIO_INPUT_LATCH     = 4,
+    /// Configure output type
+    DIO_OUTPUT_TYPE     = 5,
+    /// Configure interrupt mask
+    DIO_INT_MASK        = 6
+};
+
+struct mcc152_device_info_struct
+{
+    uint8_t NUM_AO_CHANNELS;
+    uint8_t NUM_DIO_CHANNELS;
+    uint16_t AO_MIN_CODE;
+    uint16_t AO_MAX_CODE;
+    double AO_MIN_VOLTAGE;
+    double AO_MAX_VOLTAGE;
+    double AO_MIN_RANGE;
+    double AO_MAX_RANGE;
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+const struct mcc152_device_info_struct* mcc152_info(void);
 
 /**
 *   @brief Open a connection to the MCC 152 device at the specified address.
@@ -55,42 +85,59 @@ int mcc152_close(uint8_t address);
 int mcc152_serial(uint8_t address, char* buffer);
 
 /**
-*   @brief Return the number of analog output channels on the MCC 152.
+*   @brief Return the number of analog output channels (2) on the MCC 152.
 *
 *   @return The number of channels.
 */
 int mcc152_a_out_num_channels(void);
 
 /**
-*   @brief Return the maximum DAC code value for the MCC 152 analog output.
+*   @brief Return the maximum DAC code value (4095) for the MCC 152 analog
+*   output.
 *
 *   @return The maximum code.
 */
 int mcc152_a_out_code_max(void);
 
 /**
-*   @brief Return the minimum DAC code value for the MCC 152 analog output.
+*   @brief Return the minimum DAC code value (0) for the MCC 152 analog output.
 *
 *   @return The minimum code.
 */
 int mcc152_a_out_code_min(void);
 
 /**
-*   @brief Return the maximum voltage value for the MCC 152 analog output.
+*   @brief Return the maximum voltage value (4.999) for the MCC 152 analog
+*   output. This is equivalent to the maximum range voltage (5.0) - 1 LSB.
 *
 *   @return The maximum voltage.
 */
 double mcc152_a_out_voltage_max(void);
 
 /**
-*   @brief Return the minimum voltage value for the MCC 152 analog output.
+*   @brief Return the minimum voltage value (0.000) for the MCC 152 analog
+*   output.
 *
-*   @return The minimum code.
+*   @return The minimum voltage.
 */
 double mcc152_a_out_voltage_min(void);
 
 /**
-*   @brief Return the number of digital I/O on the MCC 152.
+*   @brief Return the maximum range voltage (5.0) for the MCC 152 analog output.
+*
+*   @return The maximum voltage.
+*/
+double mcc152_a_out_range_max(void);
+
+/**
+*   @brief Return the minimum range voltage (0.0) for the MCC 152 analog output.
+*
+*   @return The minimum voltage.
+*/
+double mcc152_a_out_range_min(void);
+
+/**
+*   @brief Return the number of digital I/O (8) on the MCC 152.
 *
 *   @return The number of I/O.
 */
@@ -129,11 +176,9 @@ int mcc152_a_out_write(uint8_t address, uint8_t channel, uint32_t options,
 */
 int mcc152_a_out_write_all(uint8_t address, uint32_t options, double* values);
 
-
 /**
-*   @brief Reset the DIO to the default configuration.
+*   @brief Reset the digital I/O to the default configuration.
 *
-*   Resets the DIO interface to the power on defaults:
 *   - All channels input
 *   - Output registers set to 1
 *   - Input inversion disabled
@@ -142,7 +187,6 @@ int mcc152_a_out_write_all(uint8_t address, uint32_t options, double* values);
 *   - All interrupts disabled
 *   - Push-pull output type
 *
-*
 *   @param address  The board address (0 - 7). Board must already be opened.
 *   @return [Result code](@ref ResultCode),
 *       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
@@ -150,40 +194,66 @@ int mcc152_a_out_write_all(uint8_t address, uint32_t options, double* values);
 int mcc152_dio_reset(uint8_t address);
 
 /**
-*   @brief Read the DIO input(s).
+*   @brief Read a single digital input channel.
 *
-*   Read a single digital channel input value or all inputs at once.  Will
-*   return 0 or 1 in \b value if a single channel is specified, or an 8-bit
-*   value representing all channels if [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL)
-*   is specified.
+*   Returns 0 or 1 in \b value. If the specified channel is configured as an
+*   output this will return the value present at the terminal.
 *
-*   If the specified channel is configured as an output this will return the
-*   value present at the terminal.
-*
-*   This function reads the entire input register even if a single channel is
-*   specified, so care must be taken when latched inputs are enabled. If a
-*   latched input changes between input reads then changes back to its original
-*   value, the next input read will report the change to the first value then
-*   the following read will show the original value. If another input is read
-*   then this input change could be missed so it is best to use
-*   [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) when using latched inputs.
+*   This function reads the entire input register, so care must be taken when
+*   latched inputs are enabled. If a latched input changes between input reads
+*   then changes back to its original value, the next input read will report the
+*   change to the first value then the following read will show the original
+*   value. If another input is read then this input change could be missed so it
+*   is best to use mcc152_dio_input_read_port() when using latched inputs.
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to read all channels at once.
+*   @param channel  The DIO channel number, 0 - 7.
 *   @param value    Receives the input value.
 *   @return [Result code](@ref ResultCode),
 *       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
 */
-int mcc152_dio_input_read(uint8_t address, uint8_t channel, uint8_t* value);
+int mcc152_dio_input_read_bit(uint8_t address, uint8_t channel, uint8_t* value);
 
 /**
-*   @brief Write the DIO output(s).
+*   @brief Read all digital input channels simultaneously.
 *
-*   Write a single digital channel output value or all outputs at once. Pass 0
-*   or 1 if a single channel is specified, or an 8-bit value representing the
-*   desired output for all channels if [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL)
-*   is specified.
+*   Returns an 8-bit value in \b value representing all channels in channel
+*   order (bit 0 is channel 0, etc.) If a channel is configured as an output
+*   this will return the value present at the terminal.
+*
+*   Care must be taken when latched inputs are enabled. If a latched input
+*   changes between input reads then changes back to its original value, the
+*   next input read will report the change to the first value then the following
+*   read will show the original value.
+*
+*   @param address  The board address (0 - 7). Board must already be opened.
+*   @param value    Receives the input values.
+*   @return [Result code](@ref ResultCode),
+*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
+*/
+int mcc152_dio_input_read_port(uint8_t address, uint8_t* value);
+
+/**
+*   @brief Write a single digital output channel.
+*
+*   If the specified channel is configured as an input this will not have any
+*   effect at the terminal, but allows the output register to be loaded before
+*   configuring the channel as an output.
+*
+*   @param address  The board address (0 - 7). Board must already be opened.
+*   @param channel  The DIO channel number, 0 - 7.
+*   @param value    The output value (0 or 1)
+*   @return [Result code](@ref ResultCode),
+*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
+*/
+int mcc152_dio_output_write_bit(uint8_t address, uint8_t channel,
+    uint8_t value);
+
+/**
+*   @brief Write all digital output channels simultaneously.
+*
+*   Pass an 8-bit value in \b value representing the desired output for all
+*   channels in channel order (bit 0 is channel 0, etc.)
 *
 *   If the specified channel is configured as an input this will not have any
 *   effect at the terminal, but allows the output register to be loaded before
@@ -191,358 +261,289 @@ int mcc152_dio_input_read(uint8_t address, uint8_t channel, uint8_t* value);
 *
 *   For example, to set channels 0 - 3 to 0 and channels 4 - 7 to 1 call:
 *
-*       mcc152_dio_output_write(address, DIO_CHANNEL_ALL, 0xF0);
+*       mcc152_dio_output_write(address, 0xF0);
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to write all channels at once.
-*   @param value    The output value(s).
+*   @param value    The output values.
 *   @return [Result code](@ref ResultCode),
 *       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
 */
-int mcc152_dio_output_write(uint8_t address, uint8_t channel, uint8_t value);
+int mcc152_dio_output_write_port(uint8_t address, uint8_t value);
 
 /**
-*   @brief Read the DIO output register(s).
+*   @brief Read a single digital output register.
 *
-*   Read the value of a single digital channel output or all outputs at once.
-*   Returns 0 or 1 if a single channel is specified, or an 8-bit value
-*   representing all channels if [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is
-*   specified.
+*   Returns 0 or 1 in \b value.
 *
 *   This function returns the value stored in the output register. It may not
 *   represent the value at the terminal if the channel is configured as input or
 *   open-drain output.
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to read all channels at once.
-*   @param value    Receives the output value(s).
+*   @param channel  The DIO channel number, 0 - 7.
+*   @param value    Receives the output value.
 *   @return [Result code](@ref ResultCode),
 *       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
 */
-int mcc152_dio_output_read(uint8_t address, uint8_t channel, uint8_t* value);
-
-/**
-*   @brief Set the DIO channel direction(s).
-*
-*   Set the direction of a single digital channel or all channels at once. A 0
-*   sets the channel to output, a 1 sets it to input. Pass 0 or 1 if a single
-*   channel is specified, or an 8-bit value representing all channels if
-*   [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is specified.
-*
-*   For example, to set channels 0 - 3 to output and channels 4 - 7 to input
-*   call:
-*
-*       mcc152_dio_direction_write(address, DIO_CHANNEL_ALL, 0xF0);
-*
-*   When switching a channel from input to output the value that is in the
-*   channel output register will be driven onto the terminal. This is set with
-*   mcc152_dio_output_write().
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to write all channels at once.
-*   @param value    The direction value(s).
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_direction_write(uint8_t address, uint8_t channel, uint8_t value);
-
-/**
-*   @brief Read the DIO channel direction(s).
-*
-*   Reads the direction of a single digital channel or all channels at once. A 0
-*   indicates the channel is set to output, a 1 indicates input. Returns 0 or 1
-*   if a single channel is specified, or an 8-bit value representing all
-*   channels if [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is specified.
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to read all channels at once.
-*   @param value    Receives the direction value(s).
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_direction_read(uint8_t address, uint8_t channel, uint8_t* value);
-
-/**
-*   @brief Configure the DIO pull-up / pull-down resistor(s).
-*
-*   Configure the pull-up / pull-down resistor for a single digital channel or
-*   all channels at once. A 0 sets the resistor to pull-down, a 1 sets it to
-*   pull-up. Pass 0 or 1 if a single channel is specified, or an 8-bit value
-*   representing all channels if [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is
-*   specified.
-*
-*   The pull resistor is enabled or disabled with
-*   mcc152_dio_pull_enable_write().
-*
-*   For example, to configure and enable pull-down resistors on all channels
-*   call:
-*
-*       mcc152_dio_pull_config_write(address, DIO_CHANNEL_ALL, 0x00);
-*       mcc152_dio_pull_enable_write(address, DIO_CHANNEL_ALL, 0xFF);
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to write all channels at once.
-*   @param value    The pull-up/pull-down configuration.
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_pull_config_write(uint8_t address, uint8_t channel,
-    uint8_t value);
-
-/**
-*   @brief Read the DIO pull-up / pull-down resistor configuration.
-*
-*   Reads the pull-up / pull-down resistor configuration for a single digital
-*   channel or all channels at once. A 0 indicates pull-down, a 1 indicates
-*   pull-up. Returns 0 or 1 if a single channel is specified, or an 8-bit value
-*   representing all channels if [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is
-*   specified.
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to read all channels at once.
-*   @param value    Receives the pull-up/pull-down configuration.
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_pull_config_read(uint8_t address, uint8_t channel,
+int mcc152_dio_output_read_bit(uint8_t address, uint8_t channel,
     uint8_t* value);
 
 /**
-*   @brief Enable the DIO pull-up / pull-down resistor(s).
+*   @brief Read all digital output registers simultaneously.
 *
-*   Enable or disable the pull-up / pull-down resistor for a single digital
-*   channel or all channels at once. A 0 disables the resistor, a 1 enables it.
-*   Pass 0 or 1 if a single channel is specified, or an 8-bit value representing
-*   all channels if [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is specified.
+*   Returns an 8-bit value in \b value representing all channels in channel
+*   order (bit 0 is channel 0, etc.)
 *
-*   The pull resistor is configured as pull-up or pull-down with
-*   mcc152_dio_pull_config_write().
-*
-*   For example, to configure and enable pull-down resistors on all channels
-*   call:
-*
-*       mcc152_dio_pull_config_write(address, DIO_CHANNEL_ALL, 0x00);
-*       mcc152_dio_pull_enable_write(address, DIO_CHANNEL_ALL, 0xFF);
+*   This function returns the value stored in the output register. It may not
+*   represent the value at the terminal if the channel is configured as input or
+*   open-drain output.
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to write all channels at once.
-*   @param value    The pull enable value.
+*   @param value    Receives the output values.
 *   @return [Result code](@ref ResultCode),
 *       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
 */
-int mcc152_dio_pull_enable_write(uint8_t address, uint8_t channel,
-    uint8_t value);
+int mcc152_dio_output_read_port(uint8_t address, uint8_t* value);
 
 /**
-*   @brief Read the DIO pull-up / pull-down resistor enable value.
+*   @brief Read the interrupt status for a single channel.
 *
-*   Reads the pull-up / pull-down resistor enable value for a single digital
-*   channel or all channels at once. A 0 indicates the resistor is disabled, a 1
-*   indicates enabled. Returns 0 or 1 if a single channel is specified, or an
-*   8-bit value representing all channels if
-*   [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is specified.
+*   Returns 0 when the channel is not generating an interrupt, 1 when the
+*   channel is generating an interrupt.
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to read all channels at once.
-*   @param value    Receives the pull-up/pull-down enable value.
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_pull_enable_read(uint8_t address, uint8_t channel,
-    uint8_t* value);
-
-/**
-*   @brief Configure the DIO input polarity inversion.
-*
-*   Configure input polarity inversion for a single digital channel or all
-*   channels at once. A 0 sets the input to normal polarity, a 1 sets it to
-*   inverted. Pass 0 or 1 if a single channel is specified, or an 8-bit value
-*   representing all channels if [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is
-*   specified.
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to write all channels at once.
-*   @param value    The polarity inversion value.
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_input_invert_write(uint8_t address, uint8_t channel,
-    uint8_t value);
-
-/**
-*   @brief Read the DIO input polarity inversion configuration.
-*
-*   Reads the current input polarity inversion configuration for a single
-*   digital channel or all channels at once. A 0 represents normal polarity, 1
-*   represents inverted.  Returns 0 or 1 if a single channel is specified, or an
-*   8-bit value representing all channels in a single value if 
-*   [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is specified.
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to read all channels at once.
-*   @param value    Receives the polarity inversion value.
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_input_invert_read(uint8_t address, uint8_t channel,
-    uint8_t* value);
-
-/**
-*   @brief Configure the DIO input latching.
-*
-*   Configure input latching for a single digital channel or all channels at
-*   once. When input latching is set to 0 the corresponding input state is not
-*   latched, so reads show the current status of the input. A state change in
-*   the corresponding input generates an interrupt (if it is not masked). A read
-*   of the input clears the interrupt. If the input goes back to its initial
-*   logic state before the input is read, then the interrupt is cleared.
-*
-*   When it is set to 1, the corresponding input state is latched. A change of
-*   state of the input generates an interrupt and the input logic value is
-*   loaded into the input port register. A read of the input will clear the
-*   interrupt. If the input returns to its initial logic state before the input
-*   is read, then the interrupt is not cleared and the input register keeps the
-*   logic value that initiated the interrupt. The next read of the input will
-*   show the initial state.
-*
-*   If the input terminal is changed from latched to non-latched input, a read
-*   from the input reflects the current terminal logic level. If the input
-*   terminal is changed from non-latched to latched input, the read from the
-*   input represents the latched logic level.
-*
-*   Pass 0 or 1 if a single channel is specified, or an 8-bit value representing
-*   all channels if [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is specified.
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to write all channels at once.
-*   @param value    The input latch value.
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_input_latch_write(uint8_t address, uint8_t channel,
-    uint8_t value);
-
-/**
-*   @brief Read the DIO input latching configuration.
-*
-*   Read the input latching configuration for a single digital channel or all
-*   channels at once. Returns 0 or 1 if a single channel is specified, or an
-*   8-bit value representing all channels in a single value if 
-*   [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is specified.
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to read all channels at once.
-*   @param value    Receives the input latch value.
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_input_latch_read(uint8_t address, uint8_t channel,
-    uint8_t* value);
-
-/**
-*   @brief Configure the DIO output type.
-*
-*   Configure digital outputs as push-pull or open-drain. This is a single value
-*   that affects all of the digital outputs on the MCC 152. Pass a 0 for
-*   push-pull or a 1 for open-drain.
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param value    The output type value, 0 or 1.
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_output_type_write(uint8_t address, uint8_t value);
-
-/**
-*   @brief Read the DIO output type configuration.
-*
-*   Read the digital output type configuration.  Returns 0 for push-pull, 1 for
-*   open-drain.
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param value    Receives the output type value.
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_output_type_read(uint8_t address, uint8_t* value);
-
-/**
-*   @brief Write the DIO interrupt mask.
-*
-*   Configures the interrupt mask. A 1 disables (masks) the interrupt for the
-*   specified channel, a 0 enables it. Pass 0 or 1 if a single channel is
-*   specified, or an 8-bit value representing all channels if 
-*   [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is specified.
-*
-*   The current interrupt state may be read with hat_interrupt_state(). A user
-*   program may wait for the interrupt to become active with
-*   hat_wait_for_interrupt().  This allows the user to wait for a change on
-*   one or more inputs without constantly reading the inputs. The interrupt is
-*   cleared by reading the input(s) with mcc152_dio_input_read(). Multiple
-*   MCC 152s will share a single interrupt signal, so the source of the 
-*   interrupt may be determined by reading the interrupt status of each board
-*   with mcc152_dio_interrupt_status_read() and all active interrupt sources
-*   must be cleared before the interrupt will become inactive.
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to write all channels at once.
-*   @param value    The interrupt mask value.
-*   @return [Result code](@ref ResultCode),
-*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_interrupt_mask_write(uint8_t address, uint8_t channel,
-    uint8_t value);
-
-/**
-*   @brief Read the DIO interrupt mask.
-*
-*   Reads the interrupt mask for a single digital channel or all channels at
-*   once. A 0 indicates the interrupt is enabled, 1 indicates interrupt is
-*   disabled. Returns 0 or 1 if a single channel is specified, or an 8-bit value
-*   representing all channels if [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is
-*   specified.
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to read all channels at once.
-*   @param value    Receives the interrupt mask value.
-*   @return [Result code](@ref ResultCode),
-*      [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
-*/
-int mcc152_dio_interrupt_mask_read(uint8_t address, uint8_t channel,
-    uint8_t* value);
-
-/**
-*   @brief Read the DIO interrupt status.
-*
-*   Reads the interrupt status for a single digital channel or all channels at
-*   once. A 0 indicates the channel is not the source of the interrupt, 1
-*   indicates the channel was a source of the interrupt. Returns 0 or 1 if a
-*   single channel is specified, or an 8-bit value representing all channels if
-*   [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) is specified.
-*
-*   @param address  The board address (0 - 7). Board must already be opened.
-*   @param channel  The DIO channel number, 0 - 7 or
-*       [DIO_CHANNEL_ALL](@ref DIO_CHANNEL_ALL) to read all channels at once.
+*   @param channel  The DIO channel number, 0 - 7.
 *   @param value    Receives the interrupt status value.
 *   @return [Result code](@ref ResultCode),
 *       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
 */
-int mcc152_dio_interrupt_status_read(uint8_t address, uint8_t channel,
+int mcc152_dio_int_status_read_bit(uint8_t address, uint8_t channel,
     uint8_t* value);
+
+/**
+*   @brief Read the interrupt status for all channels.
+*
+*   Returns an 8-bit value in \b value representing all channels in channel
+*   order (bit 0 is channel 0, etc.) A 0 in a bit indicates the corresponding
+*   channel is not generating an interrupt, a 1 indicates the channel is
+*   generating an interrupt.
+*
+*   @param address  The board address (0 - 7). Board must already be opened.
+*   @param value    Receives the interrupt status value.
+*   @return [Result code](@ref ResultCode),
+*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
+*/
+int mcc152_dio_int_status_read_port(uint8_t address, uint8_t* value);
+
+/**
+*   @brief Write a digital I/O configuration value for a single channel.
+*
+*   There are several configuration items that may be written for the digital
+*   I/O. The item is selected with the \b item argument, which may be one of
+*   the [DIOConfigItem](@ref DIOConfigItem) values:
+*   - [DIO_DIRECTION](@ref DIO_DIRECTION): Set the digital I/O channel direction
+*       by passing 0 for output and 1 for input.
+*   - [DIO_PULL_CONFIG](@ref DIO_PULL_CONFIG): Configure the pull-up/down
+*       resistor by passing 0 for pull-down or 1 for pull-up. The resistor may
+*       be enabled or disabled with the [DIO_PULL_ENABLE](@ref DIO_PULL_ENABLE)
+*       item.
+*   - [DIO_PULL_ENABLE](@ref DIO_PULL_ENABLE): Enable or disable the
+*       pull-up/down resistor by passing 0 for disabled or 1 for enabled. The
+*       resistor is configured for pull-up/down with the
+*       [DIO_PULL_CONFIG](@ref DIO_PULL_CONFIG) item.
+*   - [DIO_INPUT_INVERT](@ref DIO_INPUT_INVERT): Enable inverting the input by
+*       passing a 0 for normal input or 1 for inverted.
+*   - [DIO_INPUT_LATCH](@ref DIO_INPUT_LATCH): Enable input latching by passing
+*       0 for non-latched or 1 for latched.
+*
+*       When the input is non-latched, reads show the current status of the
+*       input. A state change in the input generates an interrupt (if it is not
+*       masked). A read of the input clears the interrupt. If the input goes
+*       back to its initial logic state before the input is read, then the
+*       interrupt is cleared. 
+*
+*       When the input is latched, a change of state of the input generates an
+*       interrupt and the input logic value is loaded into the input port
+*       register. A read of the input will clear the interrupt. If the input
+*       returns to its initial logic state before the input is read, then the
+*       interrupt is not cleared and the input register keeps the logic value
+*       that initiated the interrupt. The next read of the input will show the
+*       initial state.
+*
+*       If the input is changed from latched to non-latched, a read from the
+*       input reflects the current terminal logic level. If the input is changed
+*       from non-latched to latched input, the read from the input represents
+*       the latched logic level.
+*   - [DIO_OUTPUT_TYPE](@ref DIO_OUTPUT_TYPE): Set the output type by writing 0
+*       for push-pull or 1 for open-drain. This setting affects all outputs so
+*       is not a per-channel setting and the channel argument will be ignored.
+*       It should be set to the desired type before using the
+*       [DIO_DIRECTION](@ref DIO_DIRECTION) item to set channels as outputs.
+*   - [DIO_INT_MASK](@ref DIO_INT_MASK): Enable or disable interrupt generation
+*       for the input by masking the interrupt. Write 0 to enable the interrupt
+*       or 1 to disable it.
+*
+*       All MCC 152s share a single interrupt signal to the CPU, so when an
+*       interrupt occurs the user must determine the source, optionally act on
+*       the interrupt, then clear that source so that other interrupts may be
+*       detected. The current interrupt state may be read with
+*       hat_interrupt_state(). A user program may also wait for the interrupt to
+*       become active with hat_wait_for_interrupt().  This allows the user to
+*       wait for a change on one or more inputs without constantly reading the
+*       inputs. The source of the interrupt may be determined by reading the
+*       interrupt status of each MCC 152 with mcc152_dio_int_status_read_bit()
+*       or mcc152_dio_int_status_read_port(), and all active interrupt sources
+*       must be cleared before the interrupt will become inactive. The interrupt
+*       is cleared by reading the input(s) with mcc152_dio_input_read_bit() or
+*       mcc152_dio_input_read_port().
+*
+*   @param address  The board address (0 - 7). Board must already be opened.
+*   @param channel  The digital I/O channel, 0 - 7.
+*   @param item     The config item, one of [DIOConfigItem](@ref DIOConfigItem).
+*   @param value    The config value.
+*   @return [Result code](@ref ResultCode),
+*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
+*/
+int mcc152_dio_config_write_bit(uint8_t address, uint8_t channel, uint8_t item,
+    uint8_t value);
+
+/**
+*   @brief Write a digital I/O configuration value for all channels.
+*
+*   There are several configuration items that may be written for the digital
+*   I/O. They are written for all channels at once using the 8-bit value passed
+*   in \b value, where each bit corresponds to a channel (bit 0 is channel 0,
+*   etc.) The item is selected with the \b item argument, which may be one of
+*   the [DIOConfigItem](@ref DIOConfigItem) values:
+*   - [DIO_DIRECTION](@ref DIO_DIRECTION): Set the digital I/O channel
+*       directions by passing 0 in a bit for output and 1 for input.
+*   - [DIO_PULL_CONFIG](@ref DIO_PULL_CONFIG): Configure the pull-up/down
+*       resistors by passing 0 in a bit for pull-down or 1 for pull-up. The
+*       resistors may be enabled or disabled with the
+*       [DIO_PULL_ENABLE](@ref DIO_PULL_ENABLE) item.
+*   - [DIO_PULL_ENABLE](@ref DIO_PULL_ENABLE): Enable or disable pull-up/down
+*       resistors by passing 0 in a bit for disabled or 1 for enabled. The
+*       resistors are configured for pull-up/down with the
+*       [DIO_PULL_CONFIG](@ref DIO_PULL_CONFIG) item.
+*   - [DIO_INPUT_INVERT](@ref DIO_INPUT_INVERT): Enable inverting inputs by
+*       passing a 0 in a bit for normal input or 1 for inverted.
+*   - [DIO_INPUT_LATCH](@ref DIO_INPUT_LATCH): Enable input latching by passing
+*       0 in a bit for non-latched or 1 for latched.
+*
+*       When the input is non-latched, reads show the current status of the
+*       input. A state change in the corresponding input generates an interrupt
+*       (if it is not masked). A read of the input clears the interrupt. If the
+*       input goes back to its initial logic state before the input is read,
+*       then the interrupt is cleared.
+*
+*       When the input is latched, a change of state of the input generates an
+*       interrupt and the input logic value is loaded into the input port
+*       register. A read of the input will clear the interrupt. If the input
+*       returns to its initial logic state before the input is read, then the
+*       interrupt is not cleared and the input register keeps the logic value
+*       that initiated the interrupt. The next read of the input will show the
+*       initial state.
+*
+*       If the input is changed from latched to non-latched, a read from the
+*       input reflects the current terminal logic level. If the input is changed
+*       from non-latched to latched input, the read from the input represents
+*       the latched logic level.
+*   - [DIO_OUTPUT_TYPE](@ref DIO_OUTPUT_TYPE): Set the output type by writing 0
+*       for push-pull or 1 for open-drain. This setting affects all outputs so
+*       is not a per-channel setting. It should be set to the desired type
+*       before using [DIO_DIRECTION](@ref DIO_DIRECTION) to set channels as
+*       outputs.
+*   - [DIO_INT_MASK](@ref DIO_INT_MASK): Enable or disable interrupt generation
+*       for specific inputs by masking the interrupts. Write 0 in a bit to
+*       enable the interrupt from that channel or 1 to disable it.
+*
+*       All MCC 152s share a single interrupt signal to the CPU, so when an
+*       interrupt occurs the user must determine the source, optionally act on
+*       the interrupt, then clear that source so that other interrupts may be
+*       detected. The current interrupt state may be read with
+*       hat_interrupt_state(). A user program may also wait for the interrupt to
+*       become active with hat_wait_for_interrupt().  This allows the user to
+*       wait for a change on one or more inputs without constantly reading the
+*       inputs. The source of the interrupt may be determined by reading the
+*       interrupt status of each MCC 152 with mcc152_dio_int_status_read_bit()
+*       or mcc152_dio_int_status_read_port(), and all active interrupt sources
+*       must be cleared before the interrupt will become inactive. The interrupt
+*       is cleared by reading the input(s) with mcc152_dio_input_read_bit() or
+*       mcc152_dio_input_read_port().
+*
+*   @param address  The board address (0 - 7). Board must already be opened.
+*   @param item     The config item, one of [DIOConfigItem](@ref DIOConfigItem).
+*   @param value    The config value.
+*   @return [Result code](@ref ResultCode),
+*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
+*/
+int mcc152_dio_config_write_port(uint8_t address, uint8_t item, uint8_t value);
+
+/**
+*   @brief Read a digital I/O configuration value for a single channel.
+*
+*   There are several configuration items that may be read for the digital
+*   I/O. The item is selected with the \b item argument, which may be one of
+*   the [DIOConfigItem](@ref DIOConfigItem) values:
+*   - [DIO_DIRECTION](@ref DIO_DIRECTION): Read the digital I/O channel
+*       direction setting, where 0 is output and 1 is input.
+*   - [DIO_PULL_CONFIG](@ref DIO_PULL_CONFIG): Read the pull-up/down resistor
+*       configuration where 0 is pull-down and 1 is pull-up.
+*   - [DIO_PULL_ENABLE](@ref DIO_PULL_ENABLE): Read the pull-up/down resistor
+*       enable setting where 0 is disabled and 1 is enabled.
+*   - [DIO_INPUT_INVERT](@ref DIO_INPUT_INVERT): Read the input invert setting
+*       where 0 is normal input and 1 is inverted.
+*   - [DIO_INPUT_LATCH](@ref DIO_INPUT_LATCH): Read the input latching setting
+*       where 0 is non-latched and 1 is latched. 
+*   - [DIO_OUTPUT_TYPE](@ref DIO_OUTPUT_TYPE): Read the output type setting
+*       where 0 is push-pull and 1 is open-drain. This setting affects all
+*       outputs so is not a per-channel setting and the channel argument is
+*       ignored.
+*   - [DIO_INT_MASK](@ref DIO_INT_MASK): Read the interrupt mask setting where 0
+*       enables the interrupt and 1 disables it.
+*
+*   @param address  The board address (0 - 7). Board must already be opened.
+*   @param channel  The digital I/O channel, 0 - 7.
+*   @param item     The config item, one of [DIOConfigItem](@ref DIOConfigItem).
+*   @param value    Receives the config value.
+*   @return [Result code](@ref ResultCode),
+*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
+*/
+int mcc152_dio_config_read_bit(uint8_t address, uint8_t channel, uint8_t item,
+    uint8_t* value);
+
+/**
+*   @brief Read a digital I/O configuration value for all channels.
+*
+*   There are several configuration items that may be read for the digital
+*   I/O. They are read for all channels at once, returning an 8-bit value
+*   in \b value, where each bit corresponds to a channel (bit 0 is channel 0,
+*   etc.) The item is selected with the \b item argument, which may be one of
+*   the [DIOConfigItem](@ref DIOConfigItem) values:
+*   - [DIO_DIRECTION](@ref DIO_DIRECTION): Read the digital I/O channels
+*       direction settings, where 0 for a bit is output and 1 is input.
+*   - [DIO_PULL_CONFIG](@ref DIO_PULL_CONFIG): Read the pull-up/down resistor
+*       configurations where 0 for a bit is pull-down and 1 is pull-up.
+*   - [DIO_PULL_ENABLE](@ref DIO_PULL_ENABLE): Read the pull-up/down resistor
+*       enable settings where 0 for a bit is disabled and 1 is enabled.
+*   - [DIO_INPUT_INVERT](@ref DIO_INPUT_INVERT): Read the input invert settings
+*       where 0 for a bit is normal input and 1 is inverted.
+*   - [DIO_INPUT_LATCH](@ref DIO_INPUT_LATCH): Read the input latching settings
+*       where 0 for a bit is non-latched and 1 is latched. 
+*   - [DIO_OUTPUT_TYPE](@ref DIO_OUTPUT_TYPE): Read the output type setting
+*       where 0 is push-pull and 1 is open-drain. This setting affects all
+*       outputs so is not a per-channel setting.
+*   - [DIO_INT_MASK](@ref DIO_INT_MASK): Read the interrupt mask settings where
+*       0 enables the interrupt from the corresponding channel and 1 disables
+*       it.
+*
+*   @param address  The board address (0 - 7). Board must already be opened.
+*   @param item     The config item, one of [DIOConfigItem](@ref DIOConfigItem).
+*   @param value    Receives the config value.
+*   @return [Result code](@ref ResultCode),
+*       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
+*/
+int mcc152_dio_config_read_port(uint8_t address, uint8_t item, uint8_t* value);
 
 #ifdef __cplusplus
 }

@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define DIO_CHANNEL_ALL             0xFF
+
 #define DIO_CMD_INPUT_PORT          0x00
 #define DIO_CMD_OUTPUT_PORT         0x01
 #define DIO_CMD_POLARITY            0x02

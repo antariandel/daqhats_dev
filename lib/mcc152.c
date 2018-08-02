@@ -28,7 +28,8 @@
 #define NUM_DIO_CHANNELS    8       // The number of digital I/O channels.
 
 #define MAX_CODE            4095
-#define LSB_SIZE            (5.0 / 4096.0)
+#define MAX_RANGE           5.0
+#define LSB_SIZE            (MAX_RANGE / (MAX_CODE+1))
 #define MAX_VOLTAGE         (MAX_CODE * LSB_SIZE)
 
 // The maximum size of the serial number string, plus NULL.
@@ -49,9 +50,6 @@ struct mcc152FactoryData
 struct mcc152Device
 {
     uint16_t handle_count;        // the number of handles open to this device
-    //uint8_t last_command;
-    //uint8_t output_port;
-    //uint8_t direction;
     struct mcc152FactoryData factory_data;   // Factory data
 };
 /// \endcond
@@ -313,21 +311,49 @@ int mcc152_a_out_num_channels(void)
     return NUM_AO_CHANNELS;
 }
 
+/******************************************************************************
+  Return the max DAC code.
+ *****************************************************************************/
 int mcc152_a_out_code_max(void)
 {
     return MAX_CODE;
 }
 
+/******************************************************************************
+  Return the min DAC code.
+ *****************************************************************************/
 int mcc152_a_out_code_min(void)
 {
     return 0;
 }
 
+/******************************************************************************
+  Return the analog output range min voltage.
+ *****************************************************************************/
+double mcc152_a_out_range_min(void)
+{
+    return 0.0;
+}
+
+/******************************************************************************
+  Return the analog output range max voltage.
+ *****************************************************************************/
+double mcc152_a_out_range_max(void)
+{
+    return MAX_RANGE;
+}
+
+/******************************************************************************
+  Return the analog output max voltage.
+ *****************************************************************************/
 double mcc152_a_out_voltage_max(void)
 {
     return MAX_VOLTAGE;
 }
 
+/******************************************************************************
+  Return the analog output min voltage.
+ *****************************************************************************/
 double mcc152_a_out_voltage_min(void)
 {
     return 0.0;
@@ -530,161 +556,315 @@ int mcc152_dio_reset(uint8_t address)
 }
 
 /******************************************************************************
-  Read DIO input(s).
+  Read a single DIO input.
  *****************************************************************************/
-int mcc152_dio_input_read(uint8_t address, uint8_t channel, uint8_t* value)
+int mcc152_dio_input_read_bit(uint8_t address, uint8_t channel, uint8_t* value)
 {
+    if ((channel >= NUM_DIO_CHANNELS) ||
+        (value == NULL))
+    {
+        return RESULT_BAD_PARAMETER;
+    }
+    
     return _mcc152_dio_reg_read(address, DIO_CMD_INPUT_PORT, channel, value);
 }
 
 /******************************************************************************
-  Write DIO output(s).
+  Read all DIO inputs.
  *****************************************************************************/
-int mcc152_dio_output_write(uint8_t address, uint8_t channel, uint8_t value)
+int mcc152_dio_input_read_port(uint8_t address, uint8_t* values)
 {
+    if (values == NULL)
+    {
+        return RESULT_BAD_PARAMETER;
+    }
+    
+    return _mcc152_dio_reg_read(address, DIO_CMD_INPUT_PORT, DIO_CHANNEL_ALL,
+        values);
+}
+
+/******************************************************************************
+  Write a single DIO output.
+ *****************************************************************************/
+int mcc152_dio_output_write_bit(uint8_t address, uint8_t channel, uint8_t value)
+{
+    if (channel >= NUM_DIO_CHANNELS)
+    {
+        return RESULT_BAD_PARAMETER;
+    }
+    
     return _mcc152_dio_reg_write(address, DIO_CMD_OUTPUT_PORT, channel, value,
         true);
 }
 
 /******************************************************************************
-  Read DIO output(s).
+  Write all DIO outputs.
  *****************************************************************************/
-int mcc152_dio_output_read(uint8_t address, uint8_t channel, uint8_t* value)
+int mcc152_dio_output_write_port(uint8_t address, uint8_t values)
 {
+    return _mcc152_dio_reg_write(address, DIO_CMD_OUTPUT_PORT, DIO_CHANNEL_ALL,
+        values, true);
+}
+
+
+/******************************************************************************
+  Read a single DIO output.
+ *****************************************************************************/
+int mcc152_dio_output_read_bit(uint8_t address, uint8_t channel, uint8_t* value)
+{
+    if ((channel >= NUM_DIO_CHANNELS) ||
+        (value == NULL))
+    {
+        return RESULT_BAD_PARAMETER;
+    }
+    
     return _mcc152_dio_reg_read(address, DIO_CMD_OUTPUT_PORT, channel, value);
 }
 
 /******************************************************************************
-  Configure DIO direction.
+  Read all DIO outputs.
  *****************************************************************************/
-int mcc152_dio_direction_write(uint8_t address, uint8_t channel, uint8_t value)
+int mcc152_dio_output_read_port(uint8_t address, uint8_t* values)
 {
-    return _mcc152_dio_reg_write(address, DIO_CMD_CONFIG, channel, value, true);
+    if (values == NULL)
+    {
+        return RESULT_BAD_PARAMETER;
+    }
+    
+    return _mcc152_dio_reg_read(address, DIO_CMD_OUTPUT_PORT, DIO_CHANNEL_ALL,
+        values);
 }
 
 /******************************************************************************
-  Read DIO direction.
+  Read the interrupt status for a single channel.
  *****************************************************************************/
-int mcc152_dio_direction_read(uint8_t address, uint8_t channel, uint8_t* value)
-{
-    return _mcc152_dio_reg_read(address, DIO_CMD_CONFIG, channel, value);
-}
-
-/******************************************************************************
-  Configure DIO pull-up / pull-down resistor(s).
- *****************************************************************************/
-int mcc152_dio_pull_config_write(uint8_t address, uint8_t channel,
-    uint8_t value)
-{
-    return _mcc152_dio_reg_write(address, DIO_CMD_PULL_SELECT, channel, value,
-        false);
-}
-
-/******************************************************************************
-  Read DIO pull-up / pull-down configuration.
- *****************************************************************************/
-int mcc152_dio_pull_config_read(uint8_t address, uint8_t channel,
+int mcc152_dio_int_status_read_bit(uint8_t address, uint8_t channel,
     uint8_t* value)
 {
-    return _mcc152_dio_reg_read(address, DIO_CMD_PULL_SELECT, channel, value);
-}
+    if ((channel >= NUM_DIO_CHANNELS) ||
+        (value == NULL))
+    {
+        return RESULT_BAD_PARAMETER;
+    }
 
-/******************************************************************************
-  Enable DIO pull-up / pull-down resistor(s).
- *****************************************************************************/
-int mcc152_dio_pull_enable_write(uint8_t address, uint8_t channel,
-    uint8_t value)
-{
-    return _mcc152_dio_reg_write(address, DIO_CMD_PULL_ENABLE, channel, value, false);
-}
-
-/******************************************************************************
-  Read DIO pull-up / pull-down enable setting.
- *****************************************************************************/
-int mcc152_dio_pull_enable_read(uint8_t address, uint8_t channel,
-    uint8_t* value)
-{
-    return _mcc152_dio_reg_read(address, DIO_CMD_PULL_ENABLE, channel, value);
-}
-
-/******************************************************************************
-  Configure DIO input inversion.
- *****************************************************************************/
-int mcc152_dio_input_invert_write(uint8_t address, uint8_t channel,
-    uint8_t value)
-{
-    return _mcc152_dio_reg_write(address, DIO_CMD_POLARITY, channel, value, false);
-}
-
-/******************************************************************************
-  Read DIO input inversion configuration.
- *****************************************************************************/
-int mcc152_dio_input_invert_read(uint8_t address, uint8_t channel,
-    uint8_t* value)
-{
-    return _mcc152_dio_reg_read(address, DIO_CMD_POLARITY, channel, value);
-}
-
-/******************************************************************************
-  Configure DIO input latching.
- *****************************************************************************/
-int mcc152_dio_input_latch_write(uint8_t address, uint8_t channel,
-    uint8_t value)
-{
-    return _mcc152_dio_reg_write(address, DIO_CMD_INPUT_LATCH, channel, value,
-        false);
-}
-
-/******************************************************************************
-  Read DIO input latching configuration.
- *****************************************************************************/
-int mcc152_dio_input_latch_read(uint8_t address, uint8_t channel,
-    uint8_t* value)
-{
-    return _mcc152_dio_reg_read(address, DIO_CMD_INPUT_LATCH, channel, value);
-}
-
-/******************************************************************************
-  Configure DIO output type.
- *****************************************************************************/
-int mcc152_dio_output_type_write(uint8_t address, uint8_t value)
-{
-    return _mcc152_dio_reg_write(address, DIO_CMD_OUTPUT_CONFIG, DIO_CHANNEL_ALL,
-        value == 0 ? 0 : 1, false);
-}
-
-/******************************************************************************
-  Read DIO output type.
- *****************************************************************************/
-int mcc152_dio_output_type_read(uint8_t address, uint8_t* value)
-{
-    return _mcc152_dio_reg_read(address, DIO_CMD_OUTPUT_CONFIG, DIO_CHANNEL_ALL,
+    return _mcc152_dio_reg_read(address, DIO_CMD_INT_STATUS, channel,
         value);
 }
 
 /******************************************************************************
-  Write DIO interrupt mask.
+  Read the interrupt status for all channels.
  *****************************************************************************/
-int mcc152_dio_interrupt_mask_write(uint8_t address, uint8_t channel,
+int mcc152_dio_int_status_read_port(uint8_t address, uint8_t* value)
+{
+    if (value == NULL)
+    {
+        return RESULT_BAD_PARAMETER;
+    }
+
+    return _mcc152_dio_reg_read(address, DIO_CMD_INT_STATUS, DIO_CHANNEL_ALL,
+        value);
+}
+
+/******************************************************************************
+  Write a DIO configuration setting for a single channel.
+ *****************************************************************************/
+int mcc152_dio_config_write_bit(uint8_t address, uint8_t channel, uint8_t item,
     uint8_t value)
 {
-    return _mcc152_dio_reg_write(address, DIO_CMD_INT_MASK, channel, value, false);
+    uint8_t reg;
+    bool cache;
+    uint8_t chan;
+    
+    cache = false;
+    chan = channel;
+    
+    switch (item)
+    {
+    case DIO_DIRECTION:
+        reg = DIO_CMD_CONFIG;
+        cache = true;
+        break;
+    case DIO_PULL_CONFIG:
+        reg = DIO_CMD_PULL_SELECT;
+        break;
+    case DIO_PULL_ENABLE:
+        reg = DIO_CMD_PULL_ENABLE;
+        break;
+    case DIO_INPUT_INVERT:
+        reg = DIO_CMD_POLARITY;
+        break;
+    case DIO_INPUT_LATCH:
+        reg = DIO_CMD_INPUT_LATCH;
+        break;
+    case DIO_OUTPUT_TYPE:
+        reg = DIO_CMD_OUTPUT_CONFIG;
+        chan = DIO_CHANNEL_ALL;
+        // force to 0 or 1
+        if (value > 1)
+        {
+            value = 1;
+        }
+        break;
+    case DIO_INT_MASK:
+        reg = DIO_CMD_INT_MASK;
+        break;
+    default:
+        return RESULT_BAD_PARAMETER;
+    }
+
+    return _mcc152_dio_reg_write(address, reg, chan, value, cache);
 }
 
 /******************************************************************************
-  Read DIO interrupt mask.
+  Write a DIO configuration setting for all channels.
  *****************************************************************************/
-int mcc152_dio_interrupt_mask_read(uint8_t address, uint8_t channel,
-    uint8_t* value)
+int mcc152_dio_config_write_port(uint8_t address, uint8_t item, uint8_t value)
 {
-    return _mcc152_dio_reg_read(address, DIO_CMD_INT_MASK, channel, value);
+    uint8_t reg;
+    
+    switch (item)
+    {
+    case DIO_DIRECTION:
+        reg = DIO_CMD_CONFIG;
+        break;
+    case DIO_PULL_CONFIG:
+        reg = DIO_CMD_PULL_SELECT;
+        break;
+    case DIO_PULL_ENABLE:
+        reg = DIO_CMD_PULL_ENABLE;
+        break;
+    case DIO_INPUT_INVERT:
+        reg = DIO_CMD_POLARITY;
+        break;
+    case DIO_INPUT_LATCH:
+        reg = DIO_CMD_INPUT_LATCH;
+        break;
+    case DIO_OUTPUT_TYPE:
+        reg = DIO_CMD_OUTPUT_CONFIG;
+        // force to 0 or 1
+        if (value > 1)
+        {
+            value = 1;
+        }
+        break;
+    case DIO_INT_MASK:
+        reg = DIO_CMD_INT_MASK;
+        break;
+    default:
+        return RESULT_BAD_PARAMETER;
+    }
+
+    return _mcc152_dio_reg_write(address, reg, DIO_CHANNEL_ALL, value, true);
 }
 
 /******************************************************************************
-  Read DIO interrupt status.
+  Read a DIO configuration setting for a single channel.
  *****************************************************************************/
-int mcc152_dio_interrupt_status_read(uint8_t address, uint8_t channel,
+int mcc152_dio_config_read_bit(uint8_t address, uint8_t channel, uint8_t item,
     uint8_t* value)
 {
-    return _mcc152_dio_reg_read(address, DIO_CMD_INT_STATUS, channel, value);
+    uint8_t reg;
+    uint8_t chan;
+    
+    chan = channel;
+    
+    if (value == NULL)
+    {
+        return RESULT_BAD_PARAMETER;
+    }
+    
+    switch (item)
+    {
+    case DIO_DIRECTION:
+        reg = DIO_CMD_CONFIG;
+        break;
+    case DIO_PULL_CONFIG:
+        reg = DIO_CMD_PULL_SELECT;
+        break;
+    case DIO_PULL_ENABLE:
+        reg = DIO_CMD_PULL_ENABLE;
+        break;
+    case DIO_INPUT_INVERT:
+        reg = DIO_CMD_POLARITY;
+        break;
+    case DIO_INPUT_LATCH:
+        reg = DIO_CMD_INPUT_LATCH;
+        break;
+    case DIO_OUTPUT_TYPE:
+        reg = DIO_CMD_OUTPUT_CONFIG;
+        chan = DIO_CHANNEL_ALL;
+        break;
+    case DIO_INT_MASK:
+        reg = DIO_CMD_INT_MASK;
+        break;
+    default:
+        return RESULT_BAD_PARAMETER;
+    }
+
+    return _mcc152_dio_reg_read(address, reg, chan, value);
+}
+
+/******************************************************************************
+  Read a DIO configuration setting for all channels.
+ *****************************************************************************/
+int mcc152_dio_config_read_port(uint8_t address, uint8_t item, uint8_t* value)
+{
+    uint8_t reg;
+    uint8_t myval;
+    int result;
+    
+    if (value == NULL)
+    {
+        return RESULT_BAD_PARAMETER;
+    }
+    
+    switch (item)
+    {
+    case DIO_DIRECTION:
+        reg = DIO_CMD_CONFIG;
+        break;
+    case DIO_PULL_CONFIG:
+        reg = DIO_CMD_PULL_SELECT;
+        break;
+    case DIO_PULL_ENABLE:
+        reg = DIO_CMD_PULL_ENABLE;
+        break;
+    case DIO_INPUT_INVERT:
+        reg = DIO_CMD_POLARITY;
+        break;
+    case DIO_INPUT_LATCH:
+        reg = DIO_CMD_INPUT_LATCH;
+        break;
+    case DIO_OUTPUT_TYPE:
+        reg = DIO_CMD_OUTPUT_CONFIG;
+        break;
+    case DIO_INT_MASK:
+        reg = DIO_CMD_INT_MASK;
+        break;
+    default:
+        return RESULT_BAD_PARAMETER;
+    }
+
+    result = _mcc152_dio_reg_read(address, reg, DIO_CHANNEL_ALL, &myval);
+    if (result != RESULT_SUCCESS)
+    {
+        return result;
+    }
+    
+    if (item == DIO_OUTPUT_TYPE)
+    {
+        if (myval == 0x00)
+        {
+            *value = 0x00;
+        }
+        else
+        {
+            *value = 0xFF;
+        }
+    }
+    else
+    {
+        *value = myval;
+    }
+    return RESULT_SUCCESS;
 }
