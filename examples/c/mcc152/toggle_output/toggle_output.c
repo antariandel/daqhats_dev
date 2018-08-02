@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 
     // Use MCC 152 at address 0
     address = 0;
-    channel = DIO_CHANNEL_ALL;
+    channel = 0;
     write_count = 50;
 
     if (mcc152_open(address) != RESULT_SUCCESS)
@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     mcc152_dio_reset(address);
 
     // set the channel to output
-    mcc152_dio_direction_write(address, channel, 0);
+    mcc152_dio_config_write_bit(address, channel, DIO_DIRECTION, 0);
 
     printf("Toggling %d times...\n", write_count);
 
@@ -39,16 +39,18 @@ int main(int argc, char* argv[])
     value = 0;
     for (count = 0; count < write_count; count++)
     {
-        mcc152_dio_output_write(address, channel, value);
+        mcc152_dio_output_write_bit(address, channel, value);
         value = ~value;
     }
 
     clock_gettime(CLOCK_MONOTONIC, &end_time);
-    elapsed_time = ((double)end_time.tv_sec + (double)end_time.tv_nsec / 1e9) -
-                   ((double)start_time.tv_sec + (double)start_time.tv_nsec / 1e9);
+    elapsed_time = ((double)end_time.tv_sec + (double)end_time.tv_nsec/1e9) -
+                   ((double)start_time.tv_sec + (double)start_time.tv_nsec/1e9);
     rate = (double)write_count / elapsed_time;
     printf("Rate: %f\n", rate);
 
+    // return to default settings
+    mcc152_dio_reset(address);
     mcc152_close(address);
     return 0;
 }

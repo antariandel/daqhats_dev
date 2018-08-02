@@ -3,11 +3,11 @@
 #include <time.h>
 #include <daqhats/daqhats.h>
 
-// Use MCC 152 boards at addresses 0-3
-#define NUM_BOARDS  4
+// Use MCC 152 boards at addresses 0-1
+#define NUM_BOARDS  2
 const uint8_t addresses[NUM_BOARDS] =
 {
-    0, 1, 2, 3
+    0, 1
 };
 
 int main(int argc, char* argv[])
@@ -31,10 +31,10 @@ int main(int argc, char* argv[])
 
         // reset to default DIO settings
         mcc152_dio_reset(address);
-        // read initial value
-        mcc152_dio_input_read(address, DIO_CHANNEL_ALL, &value);
+        // read initial values
+        mcc152_dio_input_read_port(address, &value);
         // enable interrupts on all inputs
-        mcc152_dio_interrupt_mask_write(address, DIO_CHANNEL_ALL, 0x00);
+        mcc152_dio_config_write_port(address, DIO_INT_MASK, 0x00);
     }
 
     printf("Waiting for change\n");
@@ -49,22 +49,24 @@ int main(int argc, char* argv[])
         {
             address = addresses[i];
             
-            mcc152_dio_interrupt_status_read(address, DIO_CHANNEL_ALL, &status);
+            mcc152_dio_int_status_read_port(address, &status);
             if (status != 0)
             {
-                mcc152_dio_input_read(address, DIO_CHANNEL_ALL, &value);
+                mcc152_dio_input_read_port(address, &value);
                 for (channel = 0; channel < 8; channel++)
                 {
                     mask = (1 << channel);
                     if ((status & mask) != 0)
                     {
-                        printf("Address %d channel %d changed to %d\n", address, channel, (value & mask) != 0);
+                        printf("Address %d channel %d changed to %d\n", address,
+                            channel, (value & mask) != 0);
                     }
                 }
             }
         }
     }
     
+    mcc152_dio_reset(address);
     mcc152_close(address);
     return 0;
 }

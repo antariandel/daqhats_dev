@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 
     // Use MCC 152 at address 0
     address = 0;
-    channel = DIO_CHANNEL_ALL;
+    channel = 0;
     read_count = 10000;
 
     if (mcc152_open(address) != RESULT_SUCCESS)
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 
     for (count = 0; count < read_count; count++)
     {
-        mcc152_dio_input_read(address, channel, &value);
+        mcc152_dio_input_read_bit(address, channel, &value);
     }
 
     clock_gettime(CLOCK_MONOTONIC, &end_time);
