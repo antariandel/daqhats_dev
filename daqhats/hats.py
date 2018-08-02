@@ -118,6 +118,59 @@ def hat_list(filter_by_id=0):
 
     return my_list
 
+def hat_interrupt_state():
+    """
+    Read the current interrupt status
+
+    Returns the status of the interrupt signal, True if active or False if
+    inactive. The signal can be shared by multiple DAQ HATs so the status of
+    each board that may generate an interrupt must be read and the interrupt
+    source(s) cleared before the interrupt will become inactive.
+
+    Returns:
+        bool: The interrupt status.
+    """
+    _libc = _load_daqhats_library()
+    if _libc == 0:
+        return []
+
+    _libc.hat_interrupt_state.argtypes = []
+    _libc.hat_interrupt_state.restype = c_int
+
+    # get the info
+    state = _libc.hat_interrupt_state()
+
+    return state == 1
+
+def hat_wait_for_interrupt(timeout):
+    """
+    Wait for an interrupt to occur.
+
+    Pass a timeout in seconds. Pass -1 to wait forever or 0 to return
+    immediately. If the interrupt has not occurred before the timeout elapses
+    the function will return 0.
+
+    Returns:
+        bool: The interrupt status - True = interrupt active, False = interrupt
+        inactive.
+    """
+    _libc = _load_daqhats_library()
+    if _libc == 0:
+        return []
+
+    _libc.hat_wait_for_interrupt.argtypes = [c_int]
+    _libc.hat_wait_for_interrupt.restype = c_int
+
+    if timeout == -1:
+        timeout_ms = -1
+    elif timeout == 0:
+        timeout_ms = 0
+    else:
+        timeout_ms = timeout * 1000
+
+    state = _libc.hat_wait_for_interrupt(timeout_ms)
+    return state == 1
+
 class Hat(object): # pylint: disable=too-few-public-methods
     """
     DAQ HAT base class.
