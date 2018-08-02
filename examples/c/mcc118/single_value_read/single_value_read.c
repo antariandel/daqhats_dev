@@ -31,7 +31,7 @@ int main()
     int result = RESULT_SUCCESS;
     int samples_per_channel = 0;
     int sample_interval = 500;  // ms
-    int mcc118_num_channels = mcc118_a_in_num_channels();
+    int mcc118_num_channels = mcc118_info()->NUM_AI_CHANNELS;
 
     // Ensure low_chan and high_chan are valid
     if ((low_chan >= mcc118_num_channels) || 

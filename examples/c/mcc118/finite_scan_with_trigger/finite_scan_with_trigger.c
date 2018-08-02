@@ -37,7 +37,7 @@ int main(void)
     uint8_t channel_mask = {CHAN0 | CHAN1 | CHAN2 | CHAN3};
     convert_chan_mask_to_string(channel_mask, channel_string) ;
 
-    int max_channel_array_length = mcc118_a_in_num_channels();
+    int max_channel_array_length = mcc118_info()->NUM_AI_CHANNELS;
     int channel_array[max_channel_array_length];
     uint8_t num_channels = convert_chan_mask_to_array(channel_mask,
         channel_array);

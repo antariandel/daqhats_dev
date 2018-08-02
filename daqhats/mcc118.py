@@ -118,6 +118,41 @@ class mcc118(Hat): # pylint: disable=invalid-name
             self._lib.mcc118_close(self._address)
         return
 
+    @staticmethod
+    def info():
+        """
+        Return constant information about this type of device.
+
+        Returns:
+            namedtuple: a namedtuple containing the following field names
+
+            * **NUM_AI_CHANNELS** (int): The number of analog input channels
+              (8.)
+            * **AI_MIN_CODE** (int): The minimum ADC code (0.)
+            * **AI_MAX_CODE** (int): The maximum ADC code (4095.)
+            * **AI_MIN_VOLTAGE** (float): The voltage corresponding to the
+              minimum ADC code (-10.0.)
+            * **AI_MAX_VOLTAGE** (float): The voltage corresponding to the
+              maximum ADC code (+10.0 - 1 LSB)
+            * **AI_MIN_RANGE** (float): The minimum voltage of the input range
+              (-10.0.)
+            * **AI_MAX_RANGE** (float): The maximum voltage of the input range
+              (+10.0.)
+        """
+        dev_info = namedtuple(
+            'MCC118DeviceInfo', [
+                'NUM_AI_CHANNELS', 'AI_MIN_CODE', 'AI_MAX_CODE',
+                'AI_MIN_VOLTAGE', 'AI_MAX_VOLTAGE', 'AI_MIN_RANGE',
+                'AI_MAX_RANGE'])
+        return dev_info(
+            NUM_AI_CHANNELS=8,
+            AI_MIN_CODE=0,
+            AI_MAX_CODE=4095,
+            AI_MIN_VOLTAGE=-10.0,
+            AI_MAX_VOLTAGE=(10.0 - (20.0/4096)),
+            AI_MIN_RANGE=-10.0,
+            AI_MAX_RANGE=+10.0)
+
     def firmware_version(self):
         """
         Read the board firmware and bootloader versions.
@@ -302,16 +337,6 @@ class mcc118(Hat): # pylint: disable=invalid-name
                 self._RESULT_SUCCESS):
             raise HatError(self._address, "Incorrect response.")
         return
-
-    @staticmethod
-    def a_in_num_channels():
-        """
-        Return the number of analog input channels.
-
-        Returns:
-            int: the number of channels.
-        """
-        return mcc118._AIN_NUM_CHANNELS
 
     def a_in_read(self, channel, options=OptionFlags.DEFAULT):
         """

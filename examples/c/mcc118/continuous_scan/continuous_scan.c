@@ -36,7 +36,7 @@ int main(void)
     
     uint32_t samples_per_channel = 0;
 
-    int max_channel_array_length = mcc118_a_in_num_channels();
+    int max_channel_array_length = mcc118_info()->NUM_AI_CHANNELS;
     int channel_array[max_channel_array_length];
     uint8_t num_channels = convert_chan_mask_to_array(channel_mask, 
         channel_array);
