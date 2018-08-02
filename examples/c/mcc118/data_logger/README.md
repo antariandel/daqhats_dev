@@ -12,8 +12,6 @@ This example can be run from a terminal window, or accessed with an IDE such as 
 - Monitor connected to the Raspberry Pi to configure acquisition options and view acquired data 
 - IDE, if using. Source code is provided for Geany and CodeBlocks IDEs
  
- > Source code is supplied for Geany and CodeBlocks. 
-
 ## Install the Dependencies
 Install GTK+ and GTKDatabox:
   ```
