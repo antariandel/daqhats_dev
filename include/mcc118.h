@@ -10,6 +10,25 @@
 
 #include <stdint.h>
 
+/// MCC 118 constant device information.
+struct mcc118_device_info
+{
+    /// The number of analog input channels (8.)
+    uint8_t NUM_AI_CHANNELS;
+    /// The minimum ADC code (0.)
+    uint16_t AI_MIN_CODE;
+    /// The maximum ADC code (4095.)
+    uint16_t AI_MAX_CODE;
+    /// The input voltage corresponding to the minimum code (-10.0V.)
+    double AI_MIN_VOLTAGE;
+    /// The input voltage corresponding to the maximum code (+10.0V - 1 LSB.)
+    double AI_MAX_VOLTAGE;
+    /// The minimum voltage of the input range (-10.0V.)
+    double AI_MIN_RANGE;
+    /// The maximum voltage of the input range (+10.0V.)
+    double AI_MAX_RANGE;
+};
+
 /// Scan trigger input modes.
 enum TriggerMode
 {
@@ -64,6 +83,14 @@ int mcc118_is_open(uint8_t address);
 *       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
 */
 int mcc118_close(uint8_t address);
+
+/**
+*   @brief Return constant device information for all MCC 118s.
+*
+*   @return Const pointer to struct mcc118_device_info.
+*       
+*/
+const struct mcc118_device_info* mcc118_info(void);
 
 /**
 *   @brief Blink the LED on the MCC 118.
@@ -156,13 +183,6 @@ int mcc118_calibration_coefficient_read(uint8_t address, uint8_t channel,
 */
 int mcc118_calibration_coefficient_write(uint8_t address, uint8_t channel, 
     double slope, double offset);
-
-/**
-*   @brief Return the number of analog input channels on the MCC 118.
-*
-*   @return The number of channels.
-*/
-int mcc118_a_in_num_channels(void);
 
 /**
 *   @brief Perform a single reading of an analog input channel and return the 
