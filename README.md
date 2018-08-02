@@ -62,7 +62,7 @@ sudo ./uninstall.sh
 ```
 
 ## Examples
-The daqhats library includes common and board-specific example programs developed with C/C++ and Python. 
+The daqhats library includes example programs developed with C/C++ and Python. 
 The examples are available under ~/daqhats/examples, and are provided in the following formats:
 
 - console-based (C/C++ and Python)
