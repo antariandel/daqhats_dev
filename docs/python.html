@@ -384,26 +384,26 @@ descriptions.</p>
 <tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.blink_led" title="daqhats.mcc118.blink_led"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.blink_led()</span></code></a></td>
 <td>Blink the MCC 118 LED.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.firmware_version" title="daqhats.mcc118.firmware_version"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.firmware_version()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.info" title="daqhats.mcc118.info"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.info()</span></code></a></td>
+<td>Get info about this device type.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.firmware_version" title="daqhats.mcc118.firmware_version"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.firmware_version()</span></code></a></td>
 <td>Get the firmware version.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.address" title="daqhats.mcc118.address"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.address()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.address" title="daqhats.mcc118.address"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.address()</span></code></a></td>
 <td>Read the board’s address.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.serial" title="daqhats.mcc118.serial"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.serial()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.serial" title="daqhats.mcc118.serial"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.serial()</span></code></a></td>
 <td>Read the serial number.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.calibration_date" title="daqhats.mcc118.calibration_date"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_date()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.calibration_date" title="daqhats.mcc118.calibration_date"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_date()</span></code></a></td>
 <td>Read the calibration date.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.calibration_coefficient_read" title="daqhats.mcc118.calibration_coefficient_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_coefficient_read()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.calibration_coefficient_read" title="daqhats.mcc118.calibration_coefficient_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_coefficient_read()</span></code></a></td>
 <td>Read the calibration coefficients for a channel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.calibration_coefficient_write" title="daqhats.mcc118.calibration_coefficient_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_coefficient_write()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.calibration_coefficient_write" title="daqhats.mcc118.calibration_coefficient_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_coefficient_write()</span></code></a></td>
 <td>Write the calibration coefficients for a channel.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.a_in_num_channels" title="daqhats.mcc118.a_in_num_channels"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.a_in_num_channels()</span></code></a></td>
-<td>Get the number of analog input channels.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.a_in_read" title="daqhats.mcc118.a_in_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.a_in_read()</span></code></a></td>
 <td>Read an analog input channel.</td>
@@ -437,6 +437,36 @@ descriptions.</p>
 </tr>
 </tbody>
 </table>
+<dl class="staticmethod">
+<dt id="daqhats.mcc118.info">
+<em class="property">static </em><code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc118.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return constant information about this type of device.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a namedtuple containing the following field names<ul class="simple">
+<li><strong>NUM_AI_CHANNELS</strong> (int): The number of analog input channels
+(8.)</li>
+<li><strong>AI_MIN_CODE</strong> (int): The minimum ADC code (0.)</li>
+<li><strong>AI_MAX_CODE</strong> (int): The maximum ADC code (4095.)</li>
+<li><strong>AI_MIN_VOLTAGE</strong> (float): The voltage corresponding to the
+minimum ADC code (-10.0.)</li>
+<li><strong>AI_MAX_VOLTAGE</strong> (float): The voltage corresponding to the
+maximum ADC code (+10.0 - 1 LSB)</li>
+<li><strong>AI_MIN_RANGE</strong> (float): The minimum voltage of the input range
+(-10.0.)</li>
+<li><strong>AI_MAX_RANGE</strong> (float): The maximum voltage of the input range
+(+10.0.)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">namedtuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="daqhats.mcc118.firmware_version">
 <code class="descname">firmware_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc118.firmware_version" title="Permalink to this definition">¶</a></dt>
@@ -598,22 +628,6 @@ input is low.</li>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or
 responds incorrectly.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="daqhats.mcc118.a_in_num_channels">
-<em class="property">static </em><code class="descname">a_in_num_channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc118.a_in_num_channels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of analog input channels.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of channels.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
 </tbody>
 </table>
