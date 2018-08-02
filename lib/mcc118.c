@@ -34,7 +34,7 @@
 #define VOLTAGE_MIN             RANGE_MIN
 #define VOLTAGE_MAX             (RANGE_MAX - LSB_SIZE)
 
-const struct mcc118_device_info c_mcc118_info =
+const struct MCC118DeviceInfo mcc118_device_info =
 {
     // The number of analog input channels.
     8,
@@ -1297,9 +1297,9 @@ int mcc118_reset(uint8_t address)
 /******************************************************************************
   Return the device info struct.
  *****************************************************************************/
-const struct mcc118_device_info* mcc118_info(void)
+const struct MCC118DeviceInfo* mcc118_info(void)
 {
-    return &c_mcc118_info;
+    return &mcc118_device_info;
 }
 
 /******************************************************************************

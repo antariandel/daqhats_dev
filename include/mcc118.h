@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 /// MCC 118 constant device information.
-struct mcc118_device_info
+struct MCC118DeviceInfo
 {
     /// The number of analog input channels (8.)
     uint8_t NUM_AI_CHANNELS;
@@ -87,10 +87,10 @@ int mcc118_close(uint8_t address);
 /**
 *   @brief Return constant device information for all MCC 118s.
 *
-*   @return Const pointer to struct mcc118_device_info.
+*   @return Const pointer to struct MCC118DeviceInfo.
 *       
 */
-const struct mcc118_device_info* mcc118_info(void);
+const struct MCC118DeviceInfo* mcc118_info(void);
 
 /**
 *   @brief Blink the LED on the MCC 118.
