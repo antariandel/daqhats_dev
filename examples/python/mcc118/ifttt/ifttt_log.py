@@ -9,17 +9,20 @@ voltage_data for the name), then choose an activity to occur when the event
 happens. We used the Google Sheets activity and selected "add a row to a
 spreadsheet", then set it up to log the time and voltages (Value0 and Value1).
 
-1. At IFTTT.com go to My Applets, then click New Applet.
-2. Click "this" then search for Webhooks.  Click Webhooks when found.
-3. Click "Receive a web request" on the Choose trigger screen.
-4. Enter your event name in the Event Name field (voltage_data for this
-   example) then click "Create trigger"
-5. Click "that" then search for Google Sheets. Click Google Sheets when found.
-6. Click "Add row to spreadsheet" on the Choose action screen.
-7. Enter your desired spreadsheet name, then change the formatted row to only
-   contain "{{OccurredAt}} ||| {{Value1}} |||{{Value2}}". Change the Drive
-   folder path if desired, then click "Create action"
-8. Review the details, then click Finish.
+1. Sign in to your account at [https://ifttt.com](https://ifttt.com), select
+"My Applets", and click the "New Applet" button.
+2. Click "this" then search for Webhooks. Click the Webhooks icon when found.
+3. On the "Choose trigger" screen, click "Receive a web request".
+4. On the "Complete trigger fields" screen, enter an event name ("voltage_data"
+for this example) and click the "Create trigger" button.
+5. Click "that", then search for "Google Sheets" on the "Choose action service"
+screen and select the "Google Sheets" icon when found.
+6. On the "Choose action" screen, select "Add row to spreadsheet".
+7. On the "Complete action fields" screen, enter a spreadsheet name, modify the
+"Formatted row" field so it contains "{{OccurredAt}} ||| {{Value1}} ||| {{Value2}}"
+(without quotes). Change the Google Drive folder path if desired, then
+click the "Create action" button.
+8. Review the summary statement, then click the **Finish** button.
 
 Enter your key from IFTTT Webhooks documentation for the variable "key". You
 can find this key by:

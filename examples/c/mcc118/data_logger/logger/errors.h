@@ -9,11 +9,11 @@
 
 
 // Status errors
-#define HW_OVERRUN                   -200
+#define HW_OVERRUN                  -200
 #define BUFFER_OVERRUN              -201
 
-extern gpointer get_mcc118_error_message(int error_code);
-extern gboolean show_error(gpointer errmsg);
+extern const char* get_mcc118_error_message(int error_code);
+extern gboolean show_error(const char* errmsg);
 extern void show_mcc118_error_main_thread(gpointer error_code);
 extern void show_mcc118_error(int error_code);
 

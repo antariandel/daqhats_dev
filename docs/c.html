@@ -104,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#mcc-118-functions-and-data">MCC 118 functions and data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id1">Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#data-definitions">Data definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#device-info">Device Info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#trigger-modes">Trigger Modes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#scan-status-flags">Scan Status Flags</a></li>
 </ul>
@@ -447,26 +448,26 @@ type of board.  The library may be used with C and C++.</p>
 <tr class="row-even"><td><a class="reference internal" href="#c.mcc118_close" title="mcc118_close"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_close()</span></code></a></td>
 <td>Close an MCC 118.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_blink_led" title="mcc118_blink_led"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_blink_led()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_info" title="mcc118_info"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_info()</span></code></a></td>
+<td>Return information about this device type.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_blink_led" title="mcc118_blink_led"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_blink_led()</span></code></a></td>
 <td>Blink the MCC 118 LED.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_firmware_version" title="mcc118_firmware_version"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_firmware_version()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_firmware_version" title="mcc118_firmware_version"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_firmware_version()</span></code></a></td>
 <td>Get the firmware version.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_serial" title="mcc118_serial"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_serial()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_serial" title="mcc118_serial"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_serial()</span></code></a></td>
 <td>Read the serial number.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_calibration_date" title="mcc118_calibration_date"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_date()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_calibration_date" title="mcc118_calibration_date"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_date()</span></code></a></td>
 <td>Read the calibration date.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_calibration_coefficient_read" title="mcc118_calibration_coefficient_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_coefficient_read()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_calibration_coefficient_read" title="mcc118_calibration_coefficient_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_coefficient_read()</span></code></a></td>
 <td>Read the calibration coefficients for a channel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_calibration_coefficient_write" title="mcc118_calibration_coefficient_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_coefficient_write()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_calibration_coefficient_write" title="mcc118_calibration_coefficient_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_coefficient_write()</span></code></a></td>
 <td>Write the calibration coefficients for a channel.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_a_in_num_channels" title="mcc118_a_in_num_channels"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_num_channels()</span></code></a></td>
-<td>Get the number of analog input channels.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#c.mcc118_a_in_read" title="mcc118_a_in_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_read()</span></code></a></td>
 <td>Read an analog input value.</td>
@@ -544,6 +545,17 @@ type of board.  The library may be used with C and C++.</p>
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). </li>
 </ul>
 </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc118_info">
+<span class="target" id="mcc118_8h_1abeb03aecb87e3c7a741ab09927386b1d"></span>const struct <a class="reference internal" href="#c.MCC118DeviceInfo" title="MCC118DeviceInfo">MCC118DeviceInfo</a>* <code class="descname">mcc118_info</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return constant device information for all MCC 118s. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Const pointer to struct <a class="reference internal" href="#structMCC118DeviceInfo"><span class="std std-ref">MCC118DeviceInfo</span></a>. </dd>
 </dl>
 </p>
 </dd></dl>
@@ -661,17 +673,6 @@ type of board.  The library may be used with C and C++.</p>
 <li><code class="docutils literal notranslate"><span class="pre">offset</span></code>: The new offset value. </li>
 </ul>
 </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="c.mcc118_a_in_num_channels">
-<span class="target" id="mcc118_8h_1af310908cf36992a3b4fc047940e218c0"></span>int <code class="descname">mcc118_a_in_num_channels</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_a_in_num_channels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of analog input channels on the MCC 118. </p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The number of channels. </dd>
 </dl>
 </p>
 </dd></dl>
@@ -930,6 +931,60 @@ type of board.  The library may be used with C and C++.</p>
 </div>
 <div class="section" id="data-definitions">
 <h3>Data definitions<a class="headerlink" href="#data-definitions" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="device-info">
+<h4>Device Info<a class="headerlink" href="#device-info" title="Permalink to this headline">¶</a></h4>
+<dl class="struct">
+<dt id="c.MCC118DeviceInfo">
+<span class="target" id="structMCC118DeviceInfo"></span><em class="property">struct </em><code class="descname">MCC118DeviceInfo</code><a class="headerlink" href="#c.MCC118DeviceInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>MCC 118 constant device information. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::NUM_AI_CHANNELS">
+<span class="target" id="structMCC118DeviceInfo_1a5d6fee06145f4010ab4ca781bd3fd70c"></span>uint8_t <code class="descname">NUM_AI_CHANNELS</code><a class="headerlink" href="#c.MCC118DeviceInfo::NUM_AI_CHANNELS" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of analog input channels (8.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MIN_CODE">
+<span class="target" id="structMCC118DeviceInfo_1af3ab4f5f809a872055ddf937f78487e4"></span>uint16_t <code class="descname">AI_MIN_CODE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_CODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The minimum ADC code (0.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MAX_CODE">
+<span class="target" id="structMCC118DeviceInfo_1a2b512dac09701b8abcffe2523792c9ac"></span>uint16_t <code class="descname">AI_MAX_CODE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_CODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum ADC code (4095.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MIN_VOLTAGE">
+<span class="target" id="structMCC118DeviceInfo_1a782f41371065d4e9deff1edec92de761"></span>double <code class="descname">AI_MIN_VOLTAGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_VOLTAGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The input voltage corresponding to the minimum code (-10.0V.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MAX_VOLTAGE">
+<span class="target" id="structMCC118DeviceInfo_1a891b3727f33a54deb97c04eddd033f7c"></span>double <code class="descname">AI_MAX_VOLTAGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_VOLTAGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The input voltage corresponding to the maximum code (+10.0V - 1 LSB.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MIN_RANGE">
+<span class="target" id="structMCC118DeviceInfo_1a272e6c81215799a81ed42e4c5ebccaa5"></span>double <code class="descname">AI_MIN_RANGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_RANGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The minimum voltage of the input range (-10.0V.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MAX_RANGE">
+<span class="target" id="structMCC118DeviceInfo_1ae6bfd9c05bebf972e7671231316c5fbd"></span>double <code class="descname">AI_MAX_RANGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_RANGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum voltage of the input range (+10.0V.) </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
 <div class="section" id="trigger-modes">
 <h4>Trigger Modes<a class="headerlink" href="#trigger-modes" title="Permalink to this headline">¶</a></h4>
 <dl class="enum">

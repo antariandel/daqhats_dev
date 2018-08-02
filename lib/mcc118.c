@@ -27,8 +27,31 @@
 // Constants
 //#define DEBUG
 
-#define MAX_CODE                4095
-#define VOLTAGE_RANGE           20.0
+#define MAX_CODE                (4095)
+#define RANGE_MIN               (-10.0)
+#define RANGE_MAX               (+10.0)
+#define LSB_SIZE                ((RANGE_MAX - RANGE_MIN)/(MAX_CODE+1))
+#define VOLTAGE_MIN             RANGE_MIN
+#define VOLTAGE_MAX             (RANGE_MAX - LSB_SIZE)
+
+const struct MCC118DeviceInfo mcc118_device_info =
+{
+    // The number of analog input channels.
+    8,
+    // The minimum uncalibrated ADC code.
+    0,
+    /// The maximum uncalibrated ADC code (4095.)
+    MAX_CODE,
+    /// The input voltage corresponding to the minimum code (-10.0V.)
+    VOLTAGE_MIN,
+    /// The input voltage corresponding to the maximum code (+10.0V - 1 LSB.)
+    VOLTAGE_MAX,
+    /// The minimum voltage of the input range (-10.0V.)
+    RANGE_MIN,
+    /// The maximum voltage of the input range (+10.0V.)
+    RANGE_MAX
+};
+
 #define CLOCK_TIMEBASE          16e6
 #define MAX_ADC_RATE            100000.0
 #define MIN_SCAN_RATE           (CLOCK_TIMEBASE / 0xFFFFFFFF)
@@ -838,8 +861,8 @@ static int _a_in_read_scan_data(uint8_t address, uint16_t sample_count,
         // convert to volts if desired
         if (scaled)
         {
-            buffer[count] *= VOLTAGE_RANGE / (MAX_CODE + 1);
-            buffer[count] -= VOLTAGE_RANGE / 2;
+            buffer[count] *= LSB_SIZE;
+            buffer[count] += VOLTAGE_MIN;
         }
 
         dev->scan_info->channel_index++;
@@ -1272,11 +1295,11 @@ int mcc118_reset(uint8_t address)
 }
 
 /******************************************************************************
-  Return the number of analog input channels on the board.
+  Return the device info struct.
  *****************************************************************************/
-int mcc118_a_in_num_channels(void)
+const struct MCC118DeviceInfo* mcc118_info(void)
 {
-    return NUM_CHANNELS;
+    return &mcc118_device_info;
 }
 
 /******************************************************************************
@@ -1394,7 +1417,7 @@ int mcc118_a_in_read(uint8_t address, uint8_t channel, uint32_t options,
     // calculate voltage?
     if ((options & OPTS_NOSCALEDATA) == 0)
     {
-        val = (val * VOLTAGE_RANGE)/(MAX_CODE+1) - (VOLTAGE_RANGE/2);
+        val = (val * LSB_SIZE) + VOLTAGE_MIN;
     }
     *value = val;
     return RESULT_SUCCESS;

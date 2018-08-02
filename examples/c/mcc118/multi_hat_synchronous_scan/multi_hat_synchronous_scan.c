@@ -50,7 +50,7 @@ int main(void)
     // mcc118_trigger_mode() variable
     uint8_t trigger_mode = TRIG_RISING_EDGE;
 
-    int mcc118_num_channels = mcc118_a_in_num_channels();
+    int mcc118_num_channels = mcc118_info()->NUM_AI_CHANNELS;
 
     // mcc118_a_in_scan_status() and mcc118_a_in_scan_read() variables
     uint16_t scan_status[DEVICE_COUNT] = {0};
