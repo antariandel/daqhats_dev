@@ -1,44 +1,59 @@
 # DataLogger Example
 
 ## About
-The DataLogger example shows how to acquire data from the MCC 118 HAT, display the data on a strip chart, 
-and log the data to a CSV file. 
-This example can be run from a terminal window, or accessed with an IDE such as Geany or CodeBlocks. 
+The **DataLogger** example shows how to acquire data from the **MCC 118 HAT**, display the data on 
+a strip chart, and log the data to a CSV file. 
+This example can be run from a terminal window, or accessed with an IDE such as **Geany** or **CodeBlocks**. 
 
 
 ## Dependencies
-- GTK+ cross-platform toolkit for creating graphical user interfaces.
-- GtkDatabox widget used to display two-dimensional data.
-- Monitor connected to the Raspberry Pi to configure acquisition options and view acquired data 
-- IDE, if using. Source code is provided for Geany and CodeBlocks IDEs
+- **GTK+** cross-platform toolkit for creating graphical user interfaces.
+- **GtkDatabox** widget used to display two-dimensional data.
+- **D-Bus AT-SPI** protocol.
+- Monitor connected to the **Raspberry Pi** to configure acquisition options and view acquired data 
  
+ > Project files are supplied for **Geany** and **CodeBlocks**. 
+
 ## Install the Dependencies
-Install GTK+ and GTKDatabox:
+Install **GTK+**: 
+  ```sh
+	sudo apt-get install libgtk-3-dev
   ```
+Install **GTKDatabox**:
+  ```sh
+    cd ~
     git clone https://github.com/erikd/gtkdatabox.git
     cd gtkdatabox
     ./autogen.sh
     ./configure
     sudo make install
   ```
-Install Geany or CodeBlocks (optional):
+Install **D-Bus AT-SPI**:
+  ```sh
+    sudo apt-get install at-spi2-core
   ```
-    sudo apt-get install geany
-  ```
-
-  ```
-	sudo apt-get install codeblocks
-  ```
-
-## Running the example
+## Running the example from a terminal
 To run the example from a terminal window, enter the following commands:
-  ```
-    cd ~daqhats/examples/c/mcc118/data_logger/logger
+  ```sh
+    cd ~/daqhats/examples/c/mcc118/data_logger/logger
     make
     ./logger
   ```
-When using the Geany or CodeBlocks IDE, the example is compiled when you load the 
-project file located in examples/c/mcc118/data_logger (logger.geany or logger.cbp).
+## Running the example from Geany
+**Geany** is one of the editors supplied with Raspbian, so is probably already installed on your
+**Raspberry Pi**. If not, or to check for updates, run the following in a terminal:
+  ```sh
+    sudo apt-get install geany
+  ```
+To build the project, click **make**. Select the `logger.c` file, then press **F5** or select **Execute** from 
+the **Build** menu to run the example. (A "gtk_label_set_text" message may display; this can be ignored).
+
+## Running the example from CodeBlocks
+To install **CodeBlocks**, run the following in a terminal:
+  ```sh
+	sudo apt-get install codeblocks
+  ```
+Click `Build`, then `Run` to run the example. (A "gtk_label_set_text" message may display; this can be ignored).
 
 ## Support/Feedback
 Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx). 
