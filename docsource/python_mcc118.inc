@@ -17,13 +17,13 @@ Methods
     Method                                              Description
     --------------------------------------------------  --------------------------------------------------------
     :py:func:`mcc118.blink_led`                         Blink the MCC 118 LED.
+    :py:func:`mcc118.info`                              Get info about this device type.
     :py:func:`mcc118.firmware_version`                  Get the firmware version.
     :py:func:`mcc118.address`                           Read the board's address.
     :py:func:`mcc118.serial`                            Read the serial number.
     :py:func:`mcc118.calibration_date`                  Read the calibration date.
     :py:func:`mcc118.calibration_coefficient_read`      Read the calibration coefficients for a channel.
     :py:func:`mcc118.calibration_coefficient_write`     Write the calibration coefficients for a channel.
-    :py:func:`mcc118.a_in_num_channels`                 Get the number of analog input channels.
     :py:func:`mcc118.a_in_read`                         Read an analog input channel.
     :py:func:`mcc118.trigger_mode`                      Set the external trigger input mode.
     :py:func:`mcc118.a_in_scan_actual_rate`             Read the actual sample rate for a requested sample rate.

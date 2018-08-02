@@ -10,13 +10,13 @@ Function                                        Description
 :c:func:`mcc118_open`                           Open an MCC 118 for use.
 :c:func:`mcc118_is_open`                        Check if an MCC 118 is open.
 :c:func:`mcc118_close`                          Close an MCC 118.
+:c:func:`mcc118_info`                           Return information about this device type.
 :c:func:`mcc118_blink_led`                      Blink the MCC 118 LED.
 :c:func:`mcc118_firmware_version`               Get the firmware version.
 :c:func:`mcc118_serial`                         Read the serial number.
 :c:func:`mcc118_calibration_date`               Read the calibration date.
 :c:func:`mcc118_calibration_coefficient_read`   Read the calibration coefficients for a channel.
 :c:func:`mcc118_calibration_coefficient_write`  Write the calibration coefficients for a channel.
-:c:func:`mcc118_a_in_num_channels`              Get the number of analog input channels.
 :c:func:`mcc118_a_in_read`                      Read an analog input value.
 :c:func:`mcc118_trigger_mode`                   Set the external trigger input mode.
 :c:func:`mcc118_a_in_scan_actual_rate`          Read the actual sample rate for a set of scan parameters.
@@ -32,13 +32,13 @@ Function                                        Description
 .. doxygenfunction:: mcc118_open
 .. doxygenfunction:: mcc118_close
 .. doxygenfunction:: mcc118_is_open
+.. doxygenfunction:: mcc118_info
 .. doxygenfunction:: mcc118_blink_led
 .. doxygenfunction:: mcc118_firmware_version
 .. doxygenfunction:: mcc118_serial
 .. doxygenfunction:: mcc118_calibration_date
 .. doxygenfunction:: mcc118_calibration_coefficient_read
 .. doxygenfunction:: mcc118_calibration_coefficient_write
-.. doxygenfunction:: mcc118_a_in_num_channels
 .. doxygenfunction:: mcc118_a_in_read
 .. doxygenfunction:: mcc118_trigger_mode
 .. doxygenfunction:: mcc118_a_in_scan_actual_rate
@@ -52,6 +52,12 @@ Function                                        Description
 
 Data definitions
 ----------------
+
+Device Info
+~~~~~~~~~~~
+
+.. doxygenstruct:: MCC118DeviceInfo
+    :members:
 
 Trigger Modes
 ~~~~~~~~~~~~~
