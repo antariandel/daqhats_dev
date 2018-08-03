@@ -51,7 +51,7 @@ value.
 
 ## Start the IFTTT trigger service
 1. Open ifttt_log.py from an IDE, or execute in a terminal window:  
-   ```
+   ```sh
    cd ~/daqhats/examples/python/mcc118/ifttt
    ./ifttt_log.py
    ```   
