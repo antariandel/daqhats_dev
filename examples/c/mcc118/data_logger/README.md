@@ -17,7 +17,7 @@ This example can be run from a terminal window, or accessed with an IDE such as 
 ## Install the Dependencies
 Install **GTK+**: 
   ```sh
-	sudo apt-get install libgtk-3-dev
+    sudo apt-get install libgtk-3-dev
   ```
 Install **GTKDatabox**:
   ```sh
@@ -51,7 +51,7 @@ the **Build** menu to run the example. (A "gtk_label_set_text" message may displ
 ## Running the example from CodeBlocks
 To install **CodeBlocks**, run the following in a terminal:
   ```sh
-	sudo apt-get install codeblocks
+    sudo apt-get install codeblocks
   ```
 Click `Build`, then `Run` to run the example. (A "gtk_label_set_text" message may display; this can be ignored).
 
