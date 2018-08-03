@@ -444,26 +444,26 @@ descriptions.</p>
 <tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.blink_led" title="daqhats.mcc118.blink_led"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.blink_led()</span></code></a></td>
 <td>Blink the MCC 118 LED.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.firmware_version" title="daqhats.mcc118.firmware_version"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.firmware_version()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.info" title="daqhats.mcc118.info"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.info()</span></code></a></td>
+<td>Get info about this device type.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.firmware_version" title="daqhats.mcc118.firmware_version"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.firmware_version()</span></code></a></td>
 <td>Get the firmware version.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.address" title="daqhats.mcc118.address"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.address()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.address" title="daqhats.mcc118.address"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.address()</span></code></a></td>
 <td>Read the board’s address.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.serial" title="daqhats.mcc118.serial"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.serial()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.serial" title="daqhats.mcc118.serial"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.serial()</span></code></a></td>
 <td>Read the serial number.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.calibration_date" title="daqhats.mcc118.calibration_date"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_date()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.calibration_date" title="daqhats.mcc118.calibration_date"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_date()</span></code></a></td>
 <td>Read the calibration date.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.calibration_coefficient_read" title="daqhats.mcc118.calibration_coefficient_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_coefficient_read()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.calibration_coefficient_read" title="daqhats.mcc118.calibration_coefficient_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_coefficient_read()</span></code></a></td>
 <td>Read the calibration coefficients for a channel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.calibration_coefficient_write" title="daqhats.mcc118.calibration_coefficient_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_coefficient_write()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.calibration_coefficient_write" title="daqhats.mcc118.calibration_coefficient_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.calibration_coefficient_write()</span></code></a></td>
 <td>Write the calibration coefficients for a channel.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc118.a_in_num_channels" title="daqhats.mcc118.a_in_num_channels"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.a_in_num_channels()</span></code></a></td>
-<td>Get the number of analog input channels.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc118.a_in_read" title="daqhats.mcc118.a_in_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc118.a_in_read()</span></code></a></td>
 <td>Read an analog input channel.</td>
@@ -497,6 +497,36 @@ descriptions.</p>
 </tr>
 </tbody>
 </table>
+<dl class="staticmethod">
+<dt id="daqhats.mcc118.info">
+<em class="property">static </em><code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc118.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return constant information about this type of device.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a namedtuple containing the following field names<ul class="simple">
+<li><strong>NUM_AI_CHANNELS</strong> (int): The number of analog input channels
+(8.)</li>
+<li><strong>AI_MIN_CODE</strong> (int): The minimum ADC code (0.)</li>
+<li><strong>AI_MAX_CODE</strong> (int): The maximum ADC code (4095.)</li>
+<li><strong>AI_MIN_VOLTAGE</strong> (float): The voltage corresponding to the
+minimum ADC code (-10.0.)</li>
+<li><strong>AI_MAX_VOLTAGE</strong> (float): The voltage corresponding to the
+maximum ADC code (+10.0 - 1 LSB)</li>
+<li><strong>AI_MIN_RANGE</strong> (float): The minimum voltage of the input range
+(-10.0.)</li>
+<li><strong>AI_MAX_RANGE</strong> (float): The maximum voltage of the input range
+(+10.0.)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">namedtuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="daqhats.mcc118.firmware_version">
 <code class="descname">firmware_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc118.firmware_version" title="Permalink to this definition">¶</a></dt>
@@ -658,22 +688,6 @@ input is low.</li>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or
 responds incorrectly.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="daqhats.mcc118.a_in_num_channels">
-<em class="property">static </em><code class="descname">a_in_num_channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc118.a_in_num_channels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of analog input channels.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of channels.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
 </tbody>
 </table>
@@ -1134,88 +1148,70 @@ responds incorrectly.</td>
 <tr class="row-odd"><td>Method</td>
 <td>Description</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.address" title="daqhats.mcc152.address"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.address()</span></code></a></td>
-<td>Read the board’s address.</td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.info" title="daqhats.mcc152.info"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.info()</span></code></a></td>
+<td>Get info about this device type.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.serial" title="daqhats.mcc152.serial"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.serial()</span></code></a></td>
 <td>Read the serial number.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.a_out_num_channels" title="daqhats.mcc152.a_out_num_channels"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.a_out_num_channels()</span></code></a></td>
-<td>Get the number of analog output channels.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.a_out_code_min" title="daqhats.mcc152.a_out_code_min"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.a_out_code_min()</span></code></a></td>
-<td>Get the minimum DAC code for analog output.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.a_out_code_max" title="daqhats.mcc152.a_out_code_max"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.a_out_code_max()</span></code></a></td>
-<td>Get the maximum DAC code for analog output.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.a_out_voltage_min" title="daqhats.mcc152.a_out_voltage_min"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.a_out_voltage_min()</span></code></a></td>
-<td>Get the minimum output voltage for analog output.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.a_out_voltage_max" title="daqhats.mcc152.a_out_voltage_max"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.a_out_voltage_max()</span></code></a></td>
-<td>Get the maximum output voltage for analog output.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.a_out_write" title="daqhats.mcc152.a_out_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.a_out_write()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.a_out_write" title="daqhats.mcc152.a_out_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.a_out_write()</span></code></a></td>
 <td>Write an analog output channel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.a_out_write_all" title="daqhats.mcc152.a_out_write_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.a_out_write_all()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.a_out_write_all" title="daqhats.mcc152.a_out_write_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.a_out_write_all()</span></code></a></td>
 <td>Write all analog output channels.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_num_channels" title="daqhats.mcc152.dio_num_channels"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_num_channels()</span></code></a></td>
-<td>Get the number of digital I/O channels.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_reset" title="daqhats.mcc152.dio_reset"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_reset()</span></code></a></td>
 <td>Reset the digital I/O to the default configuration.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_input_read" title="daqhats.mcc152.dio_input_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_input_read()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_input_read_bit" title="daqhats.mcc152.dio_input_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_input_read_bit()</span></code></a></td>
 <td>Read a digital input.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_input_read_all" title="daqhats.mcc152.dio_input_read_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_input_read_all()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_input_read_port" title="daqhats.mcc152.dio_input_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_input_read_port()</span></code></a></td>
 <td>Read all digital inputs.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_input_read_tuple" title="daqhats.mcc152.dio_input_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_input_read_tuple()</span></code></a></td>
 <td>Read all digital inputs as a tuple.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_output_write" title="daqhats.mcc152.dio_output_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_output_write()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_output_write_bit" title="daqhats.mcc152.dio_output_write_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_output_write_bit()</span></code></a></td>
 <td>Write a digital output.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_output_write_all" title="daqhats.mcc152.dio_output_write_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_output_write_all()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_output_write_port" title="daqhats.mcc152.dio_output_write_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_output_write_port()</span></code></a></td>
 <td>Write all digital outputs.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_output_write_dict" title="daqhats.mcc152.dio_output_write_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_output_write_dict()</span></code></a></td>
 <td>Write multiple digital outputs with a dictionary.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_output_read" title="daqhats.mcc152.dio_output_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_output_read()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_output_read_bit" title="daqhats.mcc152.dio_output_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_output_read_bit()</span></code></a></td>
 <td>Read the state of a digital output.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_output_read_all" title="daqhats.mcc152.dio_output_read_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_output_read_all()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_output_read_port" title="daqhats.mcc152.dio_output_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_output_read_port()</span></code></a></td>
 <td>Read the state of all digital outputs.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_output_read_tuple" title="daqhats.mcc152.dio_output_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_output_read_tuple()</span></code></a></td>
 <td>Read the state of all digital outputs as a tuple.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_int_status_read" title="daqhats.mcc152.dio_int_status_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_int_status_read()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_bit" title="daqhats.mcc152.dio_int_status_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_int_status_read_bit()</span></code></a></td>
 <td>Read the interrupt status for a single channel.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_all" title="daqhats.mcc152.dio_int_status_read_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_int_status_read_all()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_port" title="daqhats.mcc152.dio_int_status_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_int_status_read_port()</span></code></a></td>
 <td>Read the interrupt status for all channels.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_tuple" title="daqhats.mcc152.dio_int_status_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_int_status_read_tuple()</span></code></a></td>
 <td>Read the interrupt status for all channels as a tuple.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_config_write" title="daqhats.mcc152.dio_config_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_config_write()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_config_write_bit" title="daqhats.mcc152.dio_config_write_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_config_write_bit()</span></code></a></td>
 <td>Write a digital I/O configuration item value for a single channel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_config_write_all" title="daqhats.mcc152.dio_config_write_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_config_write_all()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_config_write_port" title="daqhats.mcc152.dio_config_write_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_config_write_port()</span></code></a></td>
 <td>Write a digital I/O configuration item value for all channels.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_config_write_dict" title="daqhats.mcc152.dio_config_write_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_config_write_dict()</span></code></a></td>
 <td>Write a digital I/O configuration item value for multiple channels.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_config_read" title="daqhats.mcc152.dio_config_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_config_read()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_config_read_bit" title="daqhats.mcc152.dio_config_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_config_read_bit()</span></code></a></td>
 <td>Read a digital I/O configuration item value for a single channel.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_config_read_all" title="daqhats.mcc152.dio_config_read_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_config_read_all()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.mcc152.dio_config_read_port" title="daqhats.mcc152.dio_config_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_config_read_port()</span></code></a></td>
 <td>Read a digital I/O configuration item value for all channels.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#daqhats.mcc152.dio_config_read_tuple" title="daqhats.mcc152.dio_config_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">mcc152.dio_config_read_tuple()</span></code></a></td>
@@ -1223,6 +1219,38 @@ responds incorrectly.</td>
 </tr>
 </tbody>
 </table>
+<dl class="staticmethod">
+<dt id="daqhats.mcc152.info">
+<em class="property">static </em><code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return constant information about this type of device.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a namedtuple containing the following field names<ul class="simple">
+<li><strong>NUM_DIO_CHANNELS</strong> (int): The number of digital I/O channels
+(8.)</li>
+<li><strong>NUM_AO_CHANNELS</strong> (int): The number of analog output channels
+(2.)</li>
+<li><strong>AO_MIN_CODE</strong> (int): The minimum DAC code (0.)</li>
+<li><strong>AO_MAX_CODE</strong> (int): The maximum DAC code (4095.)</li>
+<li><strong>AO_MIN_VOLTAGE</strong> (float): The voltage corresponding to the
+minimum DAC code (0.0.)</li>
+<li><strong>AO_MAX_VOLTAGE</strong> (float): The voltage corresponding to the
+maximum DAC code (+5.0 - 1 LSB)</li>
+<li><strong>AO_MIN_RANGE</strong> (float): The minimum voltage of the output range
+(0.0.)</li>
+<li><strong>AO_MAX_RANGE</strong> (float): The maximum voltage of the output range
+(+5.0.)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">namedtuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="daqhats.mcc152.serial">
 <code class="descname">serial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.serial" title="Permalink to this definition">¶</a></dt>
@@ -1237,102 +1265,6 @@ responds incorrectly.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#daqhats.HatError" title="daqhats.HatError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">HatError</span></code></a> – the board is not initialized, does not respond, or
 responds incorrectly.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="daqhats.mcc152.a_out_num_channels">
-<em class="property">static </em><code class="descname">a_out_num_channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.a_out_num_channels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of analog output channels.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of channels.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="daqhats.mcc152.a_out_code_min">
-<em class="property">static </em><code class="descname">a_out_code_min</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.a_out_code_min" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the minimum DAC code value for the analog output.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the minimum code.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="daqhats.mcc152.a_out_code_max">
-<em class="property">static </em><code class="descname">a_out_code_max</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.a_out_code_max" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the maximum DAC code value for the analog output.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the maximum code.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="daqhats.mcc152.a_out_voltage_min">
-<em class="property">static </em><code class="descname">a_out_voltage_min</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.a_out_voltage_min" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the minimum output voltage value for the analog output.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the minimum voltage.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="daqhats.mcc152.a_out_voltage_max">
-<em class="property">static </em><code class="descname">a_out_voltage_max</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.a_out_voltage_max" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the maximum output voltage value for the analog output.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the maximum voltage.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="daqhats.mcc152.dio_num_channels">
-<em class="property">static </em><code class="descname">dio_num_channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_num_channels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of digital I/O channels.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the number of channels.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
 </tbody>
 </table>
@@ -1433,8 +1365,8 @@ responds incorrectly.</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_input_read">
-<code class="descname">dio_input_read</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_input_read" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_input_read_bit">
+<code class="descname">dio_input_read_bit</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_input_read_bit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a single digital input channel.</p>
 <p>Returns 0 if the input is low, 1 if it is high.</p>
 <p>If the specified channel is configured as an output this will return the
@@ -1445,7 +1377,7 @@ a latched input changes between input reads then changes back to its
 original value, the next input read will report the change to the first
 value then the following read will show the original value. If another
 input is read then this input change could be missed so it is best to
-use <a class="reference internal" href="#daqhats.mcc152.dio_input_read_all" title="daqhats.mcc152.dio_input_read_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_all()</span></code></a> or <a class="reference internal" href="#daqhats.mcc152.dio_input_read_tuple" title="daqhats.mcc152.dio_input_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_tuple()</span></code></a>
+use <a class="reference internal" href="#daqhats.mcc152.dio_input_read_port" title="daqhats.mcc152.dio_input_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_port()</span></code></a> or <a class="reference internal" href="#daqhats.mcc152.dio_input_read_tuple" title="daqhats.mcc152.dio_input_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_tuple()</span></code></a>
 when using latched inputs.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1472,14 +1404,14 @@ responds incorrectly.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_input_read_all">
-<code class="descname">dio_input_read_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_input_read_all" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_input_read_port">
+<code class="descname">dio_input_read_port</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_input_read_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read all digital input channels.</p>
 <p>Returns the values as an integer with a value of 0 - 255. Each channel
 is represented by a bit in the integer (bit 0 is channel 0, etc.)</p>
 <p>The value of a specific input can be found by examining the bit at that
 location. For example, to act on the channel 3 input:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inputs</span> <span class="o">=</span> <span class="n">mcc152</span><span class="o">.</span><span class="n">dio_input_read_all</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inputs</span> <span class="o">=</span> <span class="n">mcc152</span><span class="o">.</span><span class="n">dio_input_read_port</span><span class="p">()</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">inputs</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;channel 3 is 0&quot;</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
@@ -1540,8 +1472,8 @@ responds incorrectly.</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_output_write">
-<code class="descname">dio_output_write</code><span class="sig-paren">(</span><em>channel</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_output_write" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_output_write_bit">
+<code class="descname">dio_output_write_bit</code><span class="sig-paren">(</span><em>channel</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_output_write_bit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a single digital output channel.</p>
 <p>If the specified channel is configured as an input this will not have
 any effect at the terminal, but allows the output register to be loaded
@@ -1568,8 +1500,8 @@ responds incorrectly.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_output_write_all">
-<code class="descname">dio_output_write_all</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_output_write_all" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_output_write_port">
+<code class="descname">dio_output_write_port</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_output_write_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write all digital output channel values.</p>
 <p>Pass an integer in the range of 0 - 255, where each bit represents the
 value of the associated channel (bit 0 is channel 0, etc.) If a
@@ -1577,13 +1509,13 @@ specified channel is configured as an input this will not have any
 effect at the terminal, but allows the output register to be loaded
 before configuring the channel as an output.</p>
 <p>To change specific outputs without affecting other outputs first read
-the output values with dio_output_read_all(), change the desired bits
+the output values with dio_output_read_port(), change the desired bits
 in the result, then write them back.</p>
 <p>For example, to set channels 0 and 2 to 1 without affecting the other
 outputs:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">values</span> <span class="o">=</span> <span class="n">mcc152</span><span class="o">.</span><span class="n">dio_output_read_all</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">values</span> <span class="o">=</span> <span class="n">mcc152</span><span class="o">.</span><span class="n">dio_output_read_port</span><span class="p">()</span>
 <span class="n">values</span> <span class="o">|=</span> <span class="mh">0x05</span>
-<span class="n">mcc152</span><span class="o">.</span><span class="n">dio_output_write_all</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<span class="n">mcc152</span><span class="o">.</span><span class="n">dio_output_write_port</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1634,8 +1566,8 @@ responds incorrectly.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_output_read">
-<code class="descname">dio_output_read</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_output_read" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_output_read_bit">
+<code class="descname">dio_output_read_bit</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_output_read_bit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a single digital output channel value.</p>
 <p>This function returns the value stored in the output register. It may
 not represent the value at the terminal if the channel is configured as
@@ -1665,8 +1597,8 @@ responds incorrectly.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_output_read_all">
-<code class="descname">dio_output_read_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_output_read_all" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_output_read_port">
+<code class="descname">dio_output_read_port</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_output_read_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read all digital output channel values.</p>
 <p>Returns the values as an integer with a value of 0 - 255. Each channel
 is represented by a bit in the integer (bit 0 is channel 0, etc.) The
@@ -1720,8 +1652,8 @@ responds incorrectly.</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_int_status_read">
-<code class="descname">dio_int_status_read</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_int_status_read" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_int_status_read_bit">
+<code class="descname">dio_int_status_read_bit</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_int_status_read_bit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the interrupt status for a single channel.</p>
 <p>Returns 0 if the input is not generating an interrupt, 1 if it is
 generating an interrupt.</p>
@@ -1745,8 +1677,8 @@ responds incorrectly.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_int_status_read_all">
-<code class="descname">dio_int_status_read_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_int_status_read_all" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_int_status_read_port">
+<code class="descname">dio_int_status_read_port</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_int_status_read_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the interrupt status for all channels.</p>
 <p>Returns the values as an integer with a value of 0 - 255. Each channel
 is represented by a bit in the integer (bit 0 is channel 0, etc.) The
@@ -1797,8 +1729,8 @@ responds incorrectly.</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_config_write">
-<code class="descname">dio_config_write</code><span class="sig-paren">(</span><em>channel</em>, <em>item</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_config_write" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_config_write_bit">
+<code class="descname">dio_config_write_bit</code><span class="sig-paren">(</span><em>channel</em>, <em>item</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_config_write_bit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a digital I/O configuration value for a single channel.</p>
 <p>There are several configuration items that may be written for the
 digital I/O. The item is selected with the <strong>item</strong> argument, which may
@@ -1857,11 +1789,12 @@ interrupt to become active with <a class="reference internal" href="#daqhats.hat
 This allows the user to wait for a change on one or more inputs
 without constantly reading the inputs. The source of the interrupt may
 be determined by reading the interrupt status of each MCC 152 with
-<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read" title="daqhats.mcc152.dio_int_status_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read()</span></code></a>, <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_all" title="daqhats.mcc152.dio_int_status_read_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_all()</span></code></a> or
+<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_bit" title="daqhats.mcc152.dio_int_status_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_bit()</span></code></a>,
+<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_port" title="daqhats.mcc152.dio_int_status_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_port()</span></code></a> or
 <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_tuple" title="daqhats.mcc152.dio_int_status_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_tuple()</span></code></a>, and all active interrupt
 sources must be cleared before the interrupt will become inactive. The
 interrupt is cleared by reading the input with
-<a class="reference internal" href="#daqhats.mcc152.dio_input_read" title="daqhats.mcc152.dio_input_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read()</span></code></a>, <a class="reference internal" href="#daqhats.mcc152.dio_input_read_all" title="daqhats.mcc152.dio_input_read_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_all()</span></code></a>, or
+<a class="reference internal" href="#daqhats.mcc152.dio_input_read_bit" title="daqhats.mcc152.dio_input_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_bit()</span></code></a>, <a class="reference internal" href="#daqhats.mcc152.dio_input_read_port" title="daqhats.mcc152.dio_input_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_port()</span></code></a>, or
 <a class="reference internal" href="#daqhats.mcc152.dio_input_read_tuple" title="daqhats.mcc152.dio_input_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_tuple()</span></code></a>.</p>
 </li>
 </ul>
@@ -1889,8 +1822,8 @@ responds incorrectly.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_config_write_all">
-<code class="descname">dio_config_write_all</code><span class="sig-paren">(</span><em>item</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_config_write_all" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_config_write_port">
+<code class="descname">dio_config_write_port</code><span class="sig-paren">(</span><em>item</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_config_write_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a digital I/O configuration value for all channels.</p>
 <p>There are several configuration items that may be written for the
 digital I/O. They are written for all channels at once using an 8-bit
@@ -1952,11 +1885,12 @@ interrupt to become active with <a class="reference internal" href="#daqhats.hat
 This allows the user to wait for a change on one or more inputs
 without constantly reading the inputs. The source of the interrupt may
 be determined by reading the interrupt status of each MCC 152 with
-<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read" title="daqhats.mcc152.dio_int_status_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read()</span></code></a>, <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_all" title="daqhats.mcc152.dio_int_status_read_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_all()</span></code></a>, or
+<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_bit" title="daqhats.mcc152.dio_int_status_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_bit()</span></code></a>,
+<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_port" title="daqhats.mcc152.dio_int_status_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_port()</span></code></a>, or
 <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_tuple" title="daqhats.mcc152.dio_int_status_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_tuple()</span></code></a>, and all active interrupt
 sources must be cleared before the interrupt will become inactive. The
 interrupt is cleared by reading the input with
-<a class="reference internal" href="#daqhats.mcc152.dio_input_read" title="daqhats.mcc152.dio_input_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read()</span></code></a>, <a class="reference internal" href="#daqhats.mcc152.dio_input_read_all" title="daqhats.mcc152.dio_input_read_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_all()</span></code></a>, or
+<a class="reference internal" href="#daqhats.mcc152.dio_input_read_bit" title="daqhats.mcc152.dio_input_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_bit()</span></code></a>, <a class="reference internal" href="#daqhats.mcc152.dio_input_read_port" title="daqhats.mcc152.dio_input_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_port()</span></code></a>, or
 <a class="reference internal" href="#daqhats.mcc152.dio_input_read_tuple" title="daqhats.mcc152.dio_input_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_tuple()</span></code></a>.</p>
 </li>
 </ul>
@@ -2047,11 +1981,12 @@ interrupt to become active with <a class="reference internal" href="#daqhats.hat
 This allows the user to wait for a change on one or more inputs
 without constantly reading the inputs. The source of the interrupt may
 be determined by reading the interrupt status of each MCC 152 with
-<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read" title="daqhats.mcc152.dio_int_status_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read()</span></code></a>, <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_all" title="daqhats.mcc152.dio_int_status_read_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_all()</span></code></a>, or
+<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_bit" title="daqhats.mcc152.dio_int_status_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_bit()</span></code></a>,
+<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_port" title="daqhats.mcc152.dio_int_status_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_port()</span></code></a>, or
 <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_tuple" title="daqhats.mcc152.dio_int_status_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_tuple()</span></code></a>, and all active interrupt
 sources must be cleared before the interrupt will become inactive. The
 interrupt is cleared by reading the input with
-<a class="reference internal" href="#daqhats.mcc152.dio_input_read" title="daqhats.mcc152.dio_input_read"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read()</span></code></a>, <a class="reference internal" href="#daqhats.mcc152.dio_input_read_all" title="daqhats.mcc152.dio_input_read_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_all()</span></code></a>, or
+<a class="reference internal" href="#daqhats.mcc152.dio_input_read_bit" title="daqhats.mcc152.dio_input_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_bit()</span></code></a>, <a class="reference internal" href="#daqhats.mcc152.dio_input_read_port" title="daqhats.mcc152.dio_input_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_port()</span></code></a>, or
 <a class="reference internal" href="#daqhats.mcc152.dio_input_read_tuple" title="daqhats.mcc152.dio_input_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_input_read_tuple()</span></code></a>.</p>
 </li>
 </ul>
@@ -2084,8 +2019,8 @@ responds incorrectly.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_config_read">
-<code class="descname">dio_config_read</code><span class="sig-paren">(</span><em>channel</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_config_read" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_config_read_bit">
+<code class="descname">dio_config_read_bit</code><span class="sig-paren">(</span><em>channel</em>, <em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_config_read_bit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a digital I/O configuration value for a single channel.</p>
 <p>There are several configuration items that may be read for the digital
 I/O. The item is selected with the <strong>item</strong> argument, which may be one of
@@ -2141,8 +2076,8 @@ responds incorrectly.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="daqhats.mcc152.dio_config_read_all">
-<code class="descname">dio_config_read_all</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_config_read_all" title="Permalink to this definition">¶</a></dt>
+<dt id="daqhats.mcc152.dio_config_read_port">
+<code class="descname">dio_config_read_port</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.mcc152.dio_config_read_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a digital I/O configuration value for all channels.</p>
 <p>There are several configuration items that may be read for the digital
 I/O. They are read for all channels at once, returning an 8-bit integer

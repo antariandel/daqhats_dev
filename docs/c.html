@@ -104,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#mcc-118-functions-and-data">MCC 118 functions and data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id1">Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#data-definitions">Data definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#device-info">Device Info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#trigger-modes">Trigger Modes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#scan-status-flags">Scan Status Flags</a></li>
 </ul>
@@ -113,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#mcc-152-functions-and-data">MCC 152 functions and data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id2">Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id3">Data types and definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Device Info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dio-config-items">DIO Config Items</a></li>
 </ul>
 </li>
@@ -496,26 +498,26 @@ type of board.  The library may be used with C and C++.</p>
 <tr class="row-even"><td><a class="reference internal" href="#c.mcc118_close" title="mcc118_close"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_close()</span></code></a></td>
 <td>Close an MCC 118.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_blink_led" title="mcc118_blink_led"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_blink_led()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_info" title="mcc118_info"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_info()</span></code></a></td>
+<td>Return information about this device type.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_blink_led" title="mcc118_blink_led"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_blink_led()</span></code></a></td>
 <td>Blink the MCC 118 LED.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_firmware_version" title="mcc118_firmware_version"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_firmware_version()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_firmware_version" title="mcc118_firmware_version"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_firmware_version()</span></code></a></td>
 <td>Get the firmware version.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_serial" title="mcc118_serial"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_serial()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_serial" title="mcc118_serial"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_serial()</span></code></a></td>
 <td>Read the serial number.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_calibration_date" title="mcc118_calibration_date"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_date()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_calibration_date" title="mcc118_calibration_date"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_date()</span></code></a></td>
 <td>Read the calibration date.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_calibration_coefficient_read" title="mcc118_calibration_coefficient_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_coefficient_read()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_calibration_coefficient_read" title="mcc118_calibration_coefficient_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_coefficient_read()</span></code></a></td>
 <td>Read the calibration coefficients for a channel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc118_calibration_coefficient_write" title="mcc118_calibration_coefficient_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_coefficient_write()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_calibration_coefficient_write" title="mcc118_calibration_coefficient_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_calibration_coefficient_write()</span></code></a></td>
 <td>Write the calibration coefficients for a channel.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc118_a_in_num_channels" title="mcc118_a_in_num_channels"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_num_channels()</span></code></a></td>
-<td>Get the number of analog input channels.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#c.mcc118_a_in_read" title="mcc118_a_in_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc118_a_in_read()</span></code></a></td>
 <td>Read an analog input value.</td>
@@ -593,6 +595,17 @@ type of board.  The library may be used with C and C++.</p>
 <li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The board address (0 - 7). </li>
 </ul>
 </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.mcc118_info">
+<span class="target" id="mcc118_8h_1a598d4c30d18daf37ccb66b71011b0c6b"></span>struct <a class="reference internal" href="#c.MCC118DeviceInfo" title="MCC118DeviceInfo">MCC118DeviceInfo</a>* <code class="descname">mcc118_info</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return constant device information for all MCC 118s. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Pointer to struct <a class="reference internal" href="#structMCC118DeviceInfo"><span class="std std-ref">MCC118DeviceInfo</span></a>. </dd>
 </dl>
 </p>
 </dd></dl>
@@ -710,17 +723,6 @@ type of board.  The library may be used with C and C++.</p>
 <li><code class="docutils literal notranslate"><span class="pre">offset</span></code>: The new offset value. </li>
 </ul>
 </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="c.mcc118_a_in_num_channels">
-<span class="target" id="mcc118_8h_1af310908cf36992a3b4fc047940e218c0"></span>int <code class="descname">mcc118_a_in_num_channels</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_a_in_num_channels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of analog input channels on the MCC 118. </p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The number of channels. </dd>
 </dl>
 </p>
 </dd></dl>
@@ -979,6 +981,60 @@ type of board.  The library may be used with C and C++.</p>
 </div>
 <div class="section" id="data-definitions">
 <h3>Data definitions<a class="headerlink" href="#data-definitions" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="device-info">
+<h4>Device Info<a class="headerlink" href="#device-info" title="Permalink to this headline">¶</a></h4>
+<dl class="struct">
+<dt id="c.MCC118DeviceInfo">
+<span class="target" id="structMCC118DeviceInfo"></span><em class="property">struct </em><code class="descname">MCC118DeviceInfo</code><a class="headerlink" href="#c.MCC118DeviceInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>MCC 118 constant device information. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::NUM_AI_CHANNELS">
+<span class="target" id="structMCC118DeviceInfo_1a7716e43e020482c72c668fc96a7e707e"></span>const uint8_t <code class="descname">NUM_AI_CHANNELS</code><a class="headerlink" href="#c.MCC118DeviceInfo::NUM_AI_CHANNELS" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of analog input channels (8.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MIN_CODE">
+<span class="target" id="structMCC118DeviceInfo_1a09ae65990c7af02bd16edb6cfeca46ed"></span>const uint16_t <code class="descname">AI_MIN_CODE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_CODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The minimum ADC code (0.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MAX_CODE">
+<span class="target" id="structMCC118DeviceInfo_1affc62ed9a07615ef044a206380c615ba"></span>const uint16_t <code class="descname">AI_MAX_CODE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_CODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum ADC code (4095.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MIN_VOLTAGE">
+<span class="target" id="structMCC118DeviceInfo_1a6c9a23e111966e1fa80ee8285d1571af"></span>const double <code class="descname">AI_MIN_VOLTAGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_VOLTAGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The input voltage corresponding to the minimum code (-10.0V.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MAX_VOLTAGE">
+<span class="target" id="structMCC118DeviceInfo_1ae1f2a594c35d377a008793f371af295d"></span>const double <code class="descname">AI_MAX_VOLTAGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_VOLTAGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The input voltage corresponding to the maximum code (+10.0V - 1 LSB.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MIN_RANGE">
+<span class="target" id="structMCC118DeviceInfo_1a0d490a882fc6efa399fec20a6a1c4eb5"></span>const double <code class="descname">AI_MIN_RANGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_RANGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The minimum voltage of the input range (-10.0V.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC118DeviceInfo::AI_MAX_RANGE">
+<span class="target" id="structMCC118DeviceInfo_1a9d7000018484148909d97514251b5a25"></span>const double <code class="descname">AI_MAX_RANGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_RANGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum voltage of the input range (+10.0V.) </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
 <div class="section" id="trigger-modes">
 <h4>Trigger Modes<a class="headerlink" href="#trigger-modes" title="Permalink to this headline">¶</a></h4>
 <dl class="enum">
@@ -1064,23 +1120,11 @@ type of board.  The library may be used with C and C++.</p>
 <tr class="row-even"><td><a class="reference internal" href="#c.mcc152_close" title="mcc152_close"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_close()</span></code></a></td>
 <td>Close an MCC 152.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_serial" title="mcc152_serial"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_serial()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_info" title="mcc152_info"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_info()</span></code></a></td>
+<td>Return information about this device type.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_serial" title="mcc152_serial"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_serial()</span></code></a></td>
 <td>Read the serial number.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_a_out_num_channels" title="mcc152_a_out_num_channels"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_a_out_num_channels()</span></code></a></td>
-<td>Get the number of analog output channels.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_a_out_code_min" title="mcc152_a_out_code_min"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_a_out_code_min()</span></code></a></td>
-<td>Get the minimum DAC code for analog output.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_a_out_code_max" title="mcc152_a_out_code_max"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_a_out_code_max()</span></code></a></td>
-<td>Get the maximum DAC code for analog output.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_a_out_voltage_min" title="mcc152_a_out_voltage_min"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_a_out_voltage_min()</span></code></a></td>
-<td>Get the minimum output voltage for analog output.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_a_out_voltage_max" title="mcc152_a_out_voltage_max"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_a_out_voltage_max()</span></code></a></td>
-<td>Get the maximum output voltage for analog output.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_a_out_write" title="mcc152_a_out_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_a_out_write()</span></code></a></td>
 <td>Write an analog output channel value.</td>
@@ -1088,46 +1132,43 @@ type of board.  The library may be used with C and C++.</p>
 <tr class="row-even"><td><a class="reference internal" href="#c.mcc152_a_out_write_all" title="mcc152_a_out_write_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_a_out_write_all()</span></code></a></td>
 <td>Write all analog output channels simultaneously.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_num_channels" title="mcc152_dio_num_channels"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_num_channels()</span></code></a></td>
-<td>Get the number of digital I/O channels.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_reset" title="mcc152_dio_reset"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_reset()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_reset" title="mcc152_dio_reset"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_reset()</span></code></a></td>
 <td>Reset the digital I/O to the default configuration.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_input_read" title="mcc152_dio_input_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_input_read()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_input_read_bit" title="mcc152_dio_input_read_bit"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_input_read_bit()</span></code></a></td>
 <td>Read a digital input.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_input_read_all" title="mcc152_dio_input_read_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_input_read_all()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_input_read_port" title="mcc152_dio_input_read_port"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_input_read_port()</span></code></a></td>
 <td>Read all digital inputs.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_output_write" title="mcc152_dio_output_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_write()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_output_write_bit" title="mcc152_dio_output_write_bit"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_write_bit()</span></code></a></td>
 <td>Write a digital output.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_output_write_all" title="mcc152_dio_output_write_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_write_all()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_output_write_port" title="mcc152_dio_output_write_port"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_write_port()</span></code></a></td>
 <td>Write all digital outputs.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_output_read" title="mcc152_dio_output_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_read()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_output_read_bit" title="mcc152_dio_output_read_bit"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_read_bit()</span></code></a></td>
 <td>Read the state of a digital output.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_output_read_all" title="mcc152_dio_output_read_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_read_all()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_output_read_port" title="mcc152_dio_output_read_port"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_output_read_port()</span></code></a></td>
 <td>Read the state of all digital outputs.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_int_status_read" title="mcc152_dio_int_status_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_int_status_read()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_int_status_read_bit" title="mcc152_dio_int_status_read_bit"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_int_status_read_bit()</span></code></a></td>
 <td>Read the interrupt status for a single channel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_int_status_read_all" title="mcc152_dio_int_status_read_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_int_status_read_all()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_int_status_read_port" title="mcc152_dio_int_status_read_port"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_int_status_read_port()</span></code></a></td>
 <td>Read the interrupt status for all channels.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_config_write" title="mcc152_dio_config_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_config_write()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_config_write_bit" title="mcc152_dio_config_write_bit"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_config_write_bit()</span></code></a></td>
 <td>Write a digital I/O configuration item value for a single channel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_config_write_all" title="mcc152_dio_config_write_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_config_write_all()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_config_write_port" title="mcc152_dio_config_write_port"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_config_write_port()</span></code></a></td>
 <td>Write a digital I/O configuration item value for all channels.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_config_read" title="mcc152_dio_config_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_config_read()</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_config_read_bit" title="mcc152_dio_config_read_bit"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_config_read_bit()</span></code></a></td>
 <td>Read a digital I/O configuration item value for a single channel.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#c.mcc152_dio_config_read_all" title="mcc152_dio_config_read_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_config_read_all()</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#c.mcc152_dio_config_read_port" title="mcc152_dio_config_read_port"><code class="xref c c-func docutils literal notranslate"><span class="pre">mcc152_dio_config_read_port()</span></code></a></td>
 <td>Read a digital I/O configuration item value for all channels.</td>
 </tr>
 </tbody>
@@ -1181,6 +1222,17 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="c.mcc152_info">
+<span class="target" id="mcc152_8h_1adb417711a270fcdef65f2d4c56534753"></span>struct <a class="reference internal" href="#c.MCC152DeviceInfo" title="MCC152DeviceInfo">MCC152DeviceInfo</a>* <code class="descname">mcc152_info</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return constant device information for all MCC 152s. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>Pointer to struct <a class="reference internal" href="#structMCC152DeviceInfo"><span class="std std-ref">MCC152DeviceInfo</span></a>. </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="c.mcc152_serial">
 <span class="target" id="mcc152_8h_1a53694430a26d207821867d6f9b6f96db"></span>int <code class="descname">mcc152_serial</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, char *<em>&nbsp;buffer</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_serial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the MCC 152 serial number. </p>
@@ -1193,61 +1245,6 @@ type of board.  The library may be used with C and C++.</p>
 <li><code class="docutils literal notranslate"><span class="pre">buffer</span></code>: Pass a user-allocated buffer pointer to receive the serial number as a string. The buffer must be at least 9 characters in length. </li>
 </ul>
 </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="c.mcc152_a_out_num_channels">
-<span class="target" id="mcc152_8h_1ac3251641cec39d7a859474c20dd80329"></span>int <code class="descname">mcc152_a_out_num_channels</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_a_out_num_channels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of analog output channels on the MCC 152. </p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The number of channels. </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="c.mcc152_a_out_code_min">
-<span class="target" id="mcc152_8h_1ad36989757b26504ac5957497d9c3f1cd"></span>int <code class="descname">mcc152_a_out_code_min</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_a_out_code_min" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the minimum DAC code value for the MCC 152 analog output. </p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The minimum code. </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="c.mcc152_a_out_code_max">
-<span class="target" id="mcc152_8h_1ac5a1594e8b0e9ac585fec8f9271d8ebe"></span>int <code class="descname">mcc152_a_out_code_max</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_a_out_code_max" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the maximum DAC code value for the MCC 152 analog output. </p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The maximum code. </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="c.mcc152_a_out_voltage_min">
-<span class="target" id="mcc152_8h_1a86ffe99dfab6b8363d06deec3c713eb7"></span>double <code class="descname">mcc152_a_out_voltage_min</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_a_out_voltage_min" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the minimum voltage value for the MCC 152 analog output. </p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The minimum code. </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="c.mcc152_a_out_voltage_max">
-<span class="target" id="mcc152_8h_1a01eb6da7041fe30b691083e335973571"></span>double <code class="descname">mcc152_a_out_voltage_max</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_a_out_voltage_max" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the maximum voltage value for the MCC 152 analog output. </p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The maximum voltage. </dd>
 </dl>
 </p>
 </dd></dl>
@@ -1292,17 +1289,6 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_num_channels">
-<span class="target" id="mcc152_8h_1ac156de592e11c41917c3194fb4e02029"></span>int <code class="descname">mcc152_dio_num_channels</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_num_channels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of digital I/O on the MCC 152. </p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The number of I/O. </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="c.mcc152_dio_reset">
 <span class="target" id="mcc152_8h_1a92d0150691f052f60d5a31152da21b2f"></span>int <code class="descname">mcc152_dio_reset</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the digital I/O to the default configuration. </p>
@@ -1329,11 +1315,11 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_input_read">
-<span class="target" id="mcc152_8h_1a8d2c1fa537ca347341cfc4fa4fd3cbb1"></span>int <code class="descname">mcc152_dio_input_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_input_read" title="Permalink to this definition">¶</a></dt>
+<dt id="c.mcc152_dio_input_read_bit">
+<span class="target" id="mcc152_8h_1ad5ded094a3e12cd384190982440e21f9"></span>int <code class="descname">mcc152_dio_input_read_bit</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_input_read_bit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a single digital input channel. </p>
 <p>Returns 0 or 1 in <strong>value</strong>. If the specified channel is configured as an output this will return the value present at the terminal.</p>
-<p>This function reads the entire input register, so care must be taken when latched inputs are enabled. If a latched input changes between input reads then changes back to its original value, the next input read will report the change to the first value then the following read will show the original value. If another input is read then this input change could be missed so it is best to use <a class="reference internal" href="#mcc152_8h_1a934363f4597e42f4d9ab5196bde0c355"><span class="std std-ref">mcc152_dio_input_read_all()</span></a> when using latched inputs.</p>
+<p>This function reads the entire input register, so care must be taken when latched inputs are enabled. If a latched input changes between input reads then changes back to its original value, the next input read will report the change to the first value then the following read will show the original value. If another input is read then this input change could be missed so it is best to use <a class="reference internal" href="#mcc152_8h_1adfd860138b00227da22e9ceb3a09233b"><span class="std std-ref">mcc152_dio_input_read_port()</span></a> when using latched inputs.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4"><span class="std std-ref">Result code</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> if successful. </dd>
@@ -1349,8 +1335,8 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_input_read_all">
-<span class="target" id="mcc152_8h_1a934363f4597e42f4d9ab5196bde0c355"></span>int <code class="descname">mcc152_dio_input_read_all</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_input_read_all" title="Permalink to this definition">¶</a></dt>
+<dt id="c.mcc152_dio_input_read_port">
+<span class="target" id="mcc152_8h_1adfd860138b00227da22e9ceb3a09233b"></span>int <code class="descname">mcc152_dio_input_read_port</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_input_read_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read all digital input channels simultaneously. </p>
 <p>Returns an 8-bit value in <strong>value</strong> representing all channels in channel order (bit 0 is channel 0, etc.) If a channel is configured as an output this will return the value present at the terminal.</p>
 <p>Care must be taken when latched inputs are enabled. If a latched input changes between input reads then changes back to its original value, the next input read will report the change to the first value then the following read will show the original value.</p>
@@ -1368,9 +1354,9 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_output_write">
-<span class="target" id="mcc152_8h_1ae11917a4acc35ab229cecddcdc1f4c5a"></span>int <code class="descname">mcc152_dio_output_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a digital output channel. </p>
+<dt id="c.mcc152_dio_output_write_bit">
+<span class="target" id="mcc152_8h_1a09673f08071eb3c102377921a09dad5a"></span>int <code class="descname">mcc152_dio_output_write_bit</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_write_bit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a single digital output channel. </p>
 <p>If the specified channel is configured as an input this will not have any effect at the terminal, but allows the output register to be loaded before configuring the channel as an output.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
@@ -1387,12 +1373,12 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_output_write_all">
-<span class="target" id="mcc152_8h_1aab60276442809b5108820bfac3d1ecfd"></span>int <code class="descname">mcc152_dio_output_write_all</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_write_all" title="Permalink to this definition">¶</a></dt>
+<dt id="c.mcc152_dio_output_write_port">
+<span class="target" id="mcc152_8h_1ab1aa3bac808bab1d3fd81c36a73b6231"></span>int <code class="descname">mcc152_dio_output_write_port</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_write_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write all digital output channels simultaneously. </p>
 <p>Pass an 8-bit value in <strong>value</strong> representing the desired output for all channels in channel order (bit 0 is channel 0, etc.)</p>
 <p>If the specified channel is configured as an input this will not have any effect at the terminal, but allows the output register to be loaded before configuring the channel as an output.</p>
-<p>For example, to set channels 0 - 3 to 0 and channels 4 - 7 to 1 call: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mcc152_dio_output_write_all</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="mh">0xF0</span><span class="p">);</span>
+<p>For example, to set channels 0 - 3 to 0 and channels 4 - 7 to 1 call: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mcc152_dio_output_write</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="mh">0xF0</span><span class="p">);</span>
 </pre></div>
 </div>
 </p>
@@ -1410,9 +1396,9 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_output_read">
-<span class="target" id="mcc152_8h_1ad8e8228e9aafb1a31c5d31f33b11865e"></span>int <code class="descname">mcc152_dio_output_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a digital output register. </p>
+<dt id="c.mcc152_dio_output_read_bit">
+<span class="target" id="mcc152_8h_1ad6c1ed3728e63dfa144446797d52e387"></span>int <code class="descname">mcc152_dio_output_read_bit</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_read_bit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a single digital output register. </p>
 <p>Returns 0 or 1 in <strong>value</strong>.</p>
 <p>This function returns the value stored in the output register. It may not represent the value at the terminal if the channel is configured as input or open-drain output.</p>
 <p><dl class="docutils">
@@ -1430,8 +1416,8 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_output_read_all">
-<span class="target" id="mcc152_8h_1a72a2bde7ed8194cdf70a33fe349050b8"></span>int <code class="descname">mcc152_dio_output_read_all</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_read_all" title="Permalink to this definition">¶</a></dt>
+<dt id="c.mcc152_dio_output_read_port">
+<span class="target" id="mcc152_8h_1a4f76b8c99e0397990553dc832023686f"></span>int <code class="descname">mcc152_dio_output_read_port</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_output_read_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read all digital output registers simultaneously. </p>
 <p>Returns an 8-bit value in <strong>value</strong> representing all channels in channel order (bit 0 is channel 0, etc.)</p>
 <p>This function returns the value stored in the output register. It may not represent the value at the terminal if the channel is configured as input or open-drain output.</p>
@@ -1449,8 +1435,8 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_int_status_read">
-<span class="target" id="mcc152_8h_1aba0429a1840245cc1e156c8f4cefaf77"></span>int <code class="descname">mcc152_dio_int_status_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_int_status_read" title="Permalink to this definition">¶</a></dt>
+<dt id="c.mcc152_dio_int_status_read_bit">
+<span class="target" id="mcc152_8h_1ae95e8ac5712f88bd2bd8a7ce70b619b9"></span>int <code class="descname">mcc152_dio_int_status_read_bit</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_int_status_read_bit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the interrupt status for a single channel. </p>
 <p>Returns 0 when the channel is not generating an interrupt, 1 when the channel is generating an interrupt.</p>
 <p><dl class="docutils">
@@ -1468,8 +1454,8 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_int_status_read_all">
-<span class="target" id="mcc152_8h_1ae20db809e6a18d6b4cd3255ef6dde730"></span>int <code class="descname">mcc152_dio_int_status_read_all</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_int_status_read_all" title="Permalink to this definition">¶</a></dt>
+<dt id="c.mcc152_dio_int_status_read_port">
+<span class="target" id="mcc152_8h_1a5869de01d0a516ea8589cba5057f78d5"></span>int <code class="descname">mcc152_dio_int_status_read_port</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_int_status_read_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the interrupt status for all channels. </p>
 <p>Returns an 8-bit value in <strong>value</strong> representing all channels in channel order (bit 0 is channel 0, etc.) A 0 in a bit indicates the corresponding channel is not generating an interrupt, a 1 indicates the channel is generating an interrupt.</p>
 <p><dl class="docutils">
@@ -1486,8 +1472,8 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_config_write">
-<span class="target" id="mcc152_8h_1a0b41b4b25f4bad1fa16587db2cb93bbb"></span>int <code class="descname">mcc152_dio_config_write</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;item</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_config_write" title="Permalink to this definition">¶</a></dt>
+<dt id="c.mcc152_dio_config_write_bit">
+<span class="target" id="mcc152_8h_1ae51075376f792b198f475b2deb5623de"></span>int <code class="descname">mcc152_dio_config_write_bit</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;item</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_config_write_bit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a digital I/O configuration value for a single channel. </p>
 <p>There are several configuration items that may be written for the digital I/O. The item is selected with the <strong>item</strong> argument, which may be one of the <a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705"><span class="std std-ref">DIOConfigItem</span></a> values:<ul>
 <li><p class="first"><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a3ba75deb838d37da42496c045726e494"><span class="std std-ref">DIO_DIRECTION</span></a>: Set the digital I/O channel direction by passing 0 for output and 1 for input.</p>
@@ -1506,7 +1492,7 @@ type of board.  The library may be used with C and C++.</p>
 <li><p class="first"><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705ad1ff805daab40a51dfde7a491ccd05f2"><span class="std std-ref">DIO_OUTPUT_TYPE</span></a>: Set the output type by writing 0 for push-pull or 1 for open-drain. This setting affects all outputs so is not a per-channel setting and the channel argument will be ignored. It should be set to the desired type before using the <a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a3ba75deb838d37da42496c045726e494"><span class="std std-ref">DIO_DIRECTION</span></a> item to set channels as outputs.</p>
 </li>
 <li><p class="first"><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a625a2602ff2fd8578ac8d247e07a1ab2"><span class="std std-ref">DIO_INT_MASK</span></a>: Enable or disable interrupt generation for the input by masking the interrupt. Write 0 to enable the interrupt or 1 to disable it.</p>
-<p>All MCC 152s share a single interrupt signal to the CPU, so when an interrupt occurs the user must determine the source, optionally act on the interrupt, then clear that source so that other interrupts may be detected. The current interrupt state may be read with <a class="reference internal" href="#daqhats_8h_1a275955f80b2e8e67a896ac61bbca54a6"><span class="std std-ref">hat_interrupt_state()</span></a>. A user program may also wait for the interrupt to become active with <a class="reference internal" href="#daqhats_8h_1a310c568b97d4e34e9534858b5b85602c"><span class="std std-ref">hat_wait_for_interrupt()</span></a>. This allows the user to wait for a change on one or more inputs without constantly reading the inputs. The source of the interrupt may be determined by reading the interrupt status of each MCC 152 with <a class="reference internal" href="#mcc152_8h_1aba0429a1840245cc1e156c8f4cefaf77"><span class="std std-ref">mcc152_dio_int_status_read()</span></a> or <a class="reference internal" href="#mcc152_8h_1ae20db809e6a18d6b4cd3255ef6dde730"><span class="std std-ref">mcc152_dio_int_status_read_all()</span></a>, and all active interrupt sources must be cleared before the interrupt will become inactive. The interrupt is cleared by reading the input(s) with <a class="reference internal" href="#mcc152_8h_1a8d2c1fa537ca347341cfc4fa4fd3cbb1"><span class="std std-ref">mcc152_dio_input_read()</span></a> or <a class="reference internal" href="#mcc152_8h_1a934363f4597e42f4d9ab5196bde0c355"><span class="std std-ref">mcc152_dio_input_read_all()</span></a>.</p>
+<p>All MCC 152s share a single interrupt signal to the CPU, so when an interrupt occurs the user must determine the source, optionally act on the interrupt, then clear that source so that other interrupts may be detected. The current interrupt state may be read with <a class="reference internal" href="#daqhats_8h_1a275955f80b2e8e67a896ac61bbca54a6"><span class="std std-ref">hat_interrupt_state()</span></a>. A user program may also wait for the interrupt to become active with <a class="reference internal" href="#daqhats_8h_1a310c568b97d4e34e9534858b5b85602c"><span class="std std-ref">hat_wait_for_interrupt()</span></a>. This allows the user to wait for a change on one or more inputs without constantly reading the inputs. The source of the interrupt may be determined by reading the interrupt status of each MCC 152 with <a class="reference internal" href="#mcc152_8h_1ae95e8ac5712f88bd2bd8a7ce70b619b9"><span class="std std-ref">mcc152_dio_int_status_read_bit()</span></a> or <a class="reference internal" href="#mcc152_8h_1a5869de01d0a516ea8589cba5057f78d5"><span class="std std-ref">mcc152_dio_int_status_read_port()</span></a>, and all active interrupt sources must be cleared before the interrupt will become inactive. The interrupt is cleared by reading the input(s) with <a class="reference internal" href="#mcc152_8h_1ad5ded094a3e12cd384190982440e21f9"><span class="std std-ref">mcc152_dio_input_read_bit()</span></a> or <a class="reference internal" href="#mcc152_8h_1adfd860138b00227da22e9ceb3a09233b"><span class="std std-ref">mcc152_dio_input_read_port()</span></a>.</p>
 </li>
 </ul>
 </p>
@@ -1526,8 +1512,8 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_config_write_all">
-<span class="target" id="mcc152_8h_1ae6b86691c8a1cdbab02653788884a63b"></span>int <code class="descname">mcc152_dio_config_write_all</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;item</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_config_write_all" title="Permalink to this definition">¶</a></dt>
+<dt id="c.mcc152_dio_config_write_port">
+<span class="target" id="mcc152_8h_1aaa119525f9720f2496f6af05492fd48a"></span>int <code class="descname">mcc152_dio_config_write_port</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;item</em>, uint8_t<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_config_write_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a digital I/O configuration value for all channels. </p>
 <p>There are several configuration items that may be written for the digital I/O. They are written for all channels at once using the 8-bit value passed in <strong>value</strong>, where each bit corresponds to a channel (bit 0 is channel 0, etc.) The item is selected with the <strong>item</strong> argument, which may be one of the <a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705"><span class="std std-ref">DIOConfigItem</span></a> values:<ul>
 <li><p class="first"><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a3ba75deb838d37da42496c045726e494"><span class="std std-ref">DIO_DIRECTION</span></a>: Set the digital I/O channel directions by passing 0 in a bit for output and 1 for input.</p>
@@ -1546,7 +1532,7 @@ type of board.  The library may be used with C and C++.</p>
 <li><p class="first"><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705ad1ff805daab40a51dfde7a491ccd05f2"><span class="std std-ref">DIO_OUTPUT_TYPE</span></a>: Set the output type by writing 0 for push-pull or 1 for open-drain. This setting affects all outputs so is not a per-channel setting. It should be set to the desired type before using <a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a3ba75deb838d37da42496c045726e494"><span class="std std-ref">DIO_DIRECTION</span></a> to set channels as outputs.</p>
 </li>
 <li><p class="first"><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a625a2602ff2fd8578ac8d247e07a1ab2"><span class="std std-ref">DIO_INT_MASK</span></a>: Enable or disable interrupt generation for specific inputs by masking the interrupts. Write 0 in a bit to enable the interrupt from that channel or 1 to disable it.</p>
-<p>All MCC 152s share a single interrupt signal to the CPU, so when an interrupt occurs the user must determine the source, optionally act on the interrupt, then clear that source so that other interrupts may be detected. The current interrupt state may be read with <a class="reference internal" href="#daqhats_8h_1a275955f80b2e8e67a896ac61bbca54a6"><span class="std std-ref">hat_interrupt_state()</span></a>. A user program may also wait for the interrupt to become active with <a class="reference internal" href="#daqhats_8h_1a310c568b97d4e34e9534858b5b85602c"><span class="std std-ref">hat_wait_for_interrupt()</span></a>. This allows the user to wait for a change on one or more inputs without constantly reading the inputs. The source of the interrupt may be determined by reading the interrupt status of each MCC 152 with <a class="reference internal" href="#mcc152_8h_1aba0429a1840245cc1e156c8f4cefaf77"><span class="std std-ref">mcc152_dio_int_status_read()</span></a> or <a class="reference internal" href="#mcc152_8h_1ae20db809e6a18d6b4cd3255ef6dde730"><span class="std std-ref">mcc152_dio_int_status_read_all()</span></a>, and all active interrupt sources must be cleared before the interrupt will become inactive. The interrupt is cleared by reading the input(s) with <a class="reference internal" href="#mcc152_8h_1a8d2c1fa537ca347341cfc4fa4fd3cbb1"><span class="std std-ref">mcc152_dio_input_read()</span></a> or <a class="reference internal" href="#mcc152_8h_1a934363f4597e42f4d9ab5196bde0c355"><span class="std std-ref">mcc152_dio_input_read_all()</span></a>.</p>
+<p>All MCC 152s share a single interrupt signal to the CPU, so when an interrupt occurs the user must determine the source, optionally act on the interrupt, then clear that source so that other interrupts may be detected. The current interrupt state may be read with <a class="reference internal" href="#daqhats_8h_1a275955f80b2e8e67a896ac61bbca54a6"><span class="std std-ref">hat_interrupt_state()</span></a>. A user program may also wait for the interrupt to become active with <a class="reference internal" href="#daqhats_8h_1a310c568b97d4e34e9534858b5b85602c"><span class="std std-ref">hat_wait_for_interrupt()</span></a>. This allows the user to wait for a change on one or more inputs without constantly reading the inputs. The source of the interrupt may be determined by reading the interrupt status of each MCC 152 with <a class="reference internal" href="#mcc152_8h_1ae95e8ac5712f88bd2bd8a7ce70b619b9"><span class="std std-ref">mcc152_dio_int_status_read_bit()</span></a> or <a class="reference internal" href="#mcc152_8h_1a5869de01d0a516ea8589cba5057f78d5"><span class="std std-ref">mcc152_dio_int_status_read_port()</span></a>, and all active interrupt sources must be cleared before the interrupt will become inactive. The interrupt is cleared by reading the input(s) with <a class="reference internal" href="#mcc152_8h_1ad5ded094a3e12cd384190982440e21f9"><span class="std std-ref">mcc152_dio_input_read_bit()</span></a> or <a class="reference internal" href="#mcc152_8h_1adfd860138b00227da22e9ceb3a09233b"><span class="std std-ref">mcc152_dio_input_read_port()</span></a>.</p>
 </li>
 </ul>
 </p>
@@ -1565,14 +1551,14 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_config_read">
-<span class="target" id="mcc152_8h_1a51be3e3a5215d506473ed59933535259"></span>int <code class="descname">mcc152_dio_config_read</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;item</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_config_read" title="Permalink to this definition">¶</a></dt>
+<dt id="c.mcc152_dio_config_read_bit">
+<span class="target" id="mcc152_8h_1ad423ad393b61af0aba34675adfc2904a"></span>int <code class="descname">mcc152_dio_config_read_bit</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;channel</em>, uint8_t<em>&nbsp;item</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_config_read_bit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a digital I/O configuration value for a single channel. </p>
 <p>There are several configuration items that may be read for the digital I/O. The item is selected with the <strong>item</strong> argument, which may be one of the <a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705"><span class="std std-ref">DIOConfigItem</span></a> values:<ul class="simple">
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a3ba75deb838d37da42496c045726e494"><span class="std std-ref">DIO_DIRECTION</span></a>: Read the digital I/O channel direction setting, where 0 is output and 1 is input.</li>
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a1a5814490dc2a97e068d524926765ca0"><span class="std std-ref">DIO_PULL_CONFIG</span></a>: Read the pull-up/down resistor configuration where 0 is pull-down and 1 is pull-up.</li>
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a59e0108fd17e2c1c7d3b7f972f998579"><span class="std std-ref">DIO_PULL_ENABLE</span></a>: Read the pull-up/down resistor enable setting where 0 is disabled and 1 is enabled.</li>
-<li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705af0dde18458c7df721797f051ec0c9f02"><span class="std std-ref">DIO_INPUT_INVERT</span></a>: Read the input inversion setting where 0 is normal input and 1 is inverted.</li>
+<li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705af0dde18458c7df721797f051ec0c9f02"><span class="std std-ref">DIO_INPUT_INVERT</span></a>: Read the input invert setting where 0 is normal input and 1 is inverted.</li>
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a81416db41ddc7568aea49cc6bbb0628d"><span class="std std-ref">DIO_INPUT_LATCH</span></a>: Read the input latching setting where 0 is non-latched and 1 is latched.</li>
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705ad1ff805daab40a51dfde7a491ccd05f2"><span class="std std-ref">DIO_OUTPUT_TYPE</span></a>: Read the output type setting where 0 is push-pull and 1 is open-drain. This setting affects all outputs so is not a per-channel setting and the channel argument is ignored.</li>
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a625a2602ff2fd8578ac8d247e07a1ab2"><span class="std std-ref">DIO_INT_MASK</span></a>: Read the interrupt mask setting where 0 enables the interrupt and 1 disables it.</li>
@@ -1594,14 +1580,14 @@ type of board.  The library may be used with C and C++.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="c.mcc152_dio_config_read_all">
-<span class="target" id="mcc152_8h_1a5356d4b826d4e6eec62a6342e313928f"></span>int <code class="descname">mcc152_dio_config_read_all</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;item</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_config_read_all" title="Permalink to this definition">¶</a></dt>
+<dt id="c.mcc152_dio_config_read_port">
+<span class="target" id="mcc152_8h_1a14dca68b282121b83c019d39cea1e7d5"></span>int <code class="descname">mcc152_dio_config_read_port</code><span class="sig-paren">(</span>uint8_t<em>&nbsp;address</em>, uint8_t<em>&nbsp;item</em>, uint8_t *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mcc152_dio_config_read_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a digital I/O configuration value for all channels. </p>
 <p>There are several configuration items that may be read for the digital I/O. They are read for all channels at once, returning an 8-bit value in <strong>value</strong>, where each bit corresponds to a channel (bit 0 is channel 0, etc.) The item is selected with the <strong>item</strong> argument, which may be one of the <a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705"><span class="std std-ref">DIOConfigItem</span></a> values:<ul class="simple">
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a3ba75deb838d37da42496c045726e494"><span class="std std-ref">DIO_DIRECTION</span></a>: Read the digital I/O channels direction settings, where 0 for a bit is output and 1 is input.</li>
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a1a5814490dc2a97e068d524926765ca0"><span class="std std-ref">DIO_PULL_CONFIG</span></a>: Read the pull-up/down resistor configurations where 0 for a bit is pull-down and 1 is pull-up.</li>
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a59e0108fd17e2c1c7d3b7f972f998579"><span class="std std-ref">DIO_PULL_ENABLE</span></a>: Read the pull-up/down resistor enable settings where 0 for a bit is disabled and 1 is enabled.</li>
-<li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705af0dde18458c7df721797f051ec0c9f02"><span class="std std-ref">DIO_INPUT_INVERT</span></a>: Read the input inversion settings where 0 for a bit is normal input and 1 is inverted.</li>
+<li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705af0dde18458c7df721797f051ec0c9f02"><span class="std std-ref">DIO_INPUT_INVERT</span></a>: Read the input invert settings where 0 for a bit is normal input and 1 is inverted.</li>
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a81416db41ddc7568aea49cc6bbb0628d"><span class="std std-ref">DIO_INPUT_LATCH</span></a>: Read the input latching settings where 0 for a bit is non-latched and 1 is latched.</li>
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705ad1ff805daab40a51dfde7a491ccd05f2"><span class="std std-ref">DIO_OUTPUT_TYPE</span></a>: Read the output type setting where 0 is push-pull and 1 is open-drain. This setting affects all outputs so is not a per-channel setting.</li>
 <li><a class="reference internal" href="#mcc152_8h_1a7204ac46141530f835f15695b3704705a625a2602ff2fd8578ac8d247e07a1ab2"><span class="std std-ref">DIO_INT_MASK</span></a>: Read the interrupt mask settings where 0 enables the interrupt from the corresponding channel and 1 disables it.</li>
@@ -1624,6 +1610,66 @@ type of board.  The library may be used with C and C++.</p>
 </div>
 <div class="section" id="id3">
 <h3>Data types and definitions<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h4>Device Info<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<dl class="struct">
+<dt id="c.MCC152DeviceInfo">
+<span class="target" id="structMCC152DeviceInfo"></span><em class="property">struct </em><code class="descname">MCC152DeviceInfo</code><a class="headerlink" href="#c.MCC152DeviceInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>MCC 152 constant device information. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="variable">
+<dt id="c.MCC152DeviceInfo::NUM_DIO_CHANNELS">
+<span class="target" id="structMCC152DeviceInfo_1a89f5e18085f15c448a09094b0c84739e"></span>const uint8_t <code class="descname">NUM_DIO_CHANNELS</code><a class="headerlink" href="#c.MCC152DeviceInfo::NUM_DIO_CHANNELS" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of digital I/O channels (8.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC152DeviceInfo::NUM_AO_CHANNELS">
+<span class="target" id="structMCC152DeviceInfo_1a45a2432aed75e9014c4e40d9bcf25fda"></span>const uint8_t <code class="descname">NUM_AO_CHANNELS</code><a class="headerlink" href="#c.MCC152DeviceInfo::NUM_AO_CHANNELS" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of analog output channels (2.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC152DeviceInfo::AO_MIN_CODE">
+<span class="target" id="structMCC152DeviceInfo_1a5f6530deb5d7feca7b0b98b29dbc279d"></span>const uint16_t <code class="descname">AO_MIN_CODE</code><a class="headerlink" href="#c.MCC152DeviceInfo::AO_MIN_CODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The minimum DAC code (0.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC152DeviceInfo::AO_MAX_CODE">
+<span class="target" id="structMCC152DeviceInfo_1ad22bf778d5884dc3b4cf83632d622cec"></span>const uint16_t <code class="descname">AO_MAX_CODE</code><a class="headerlink" href="#c.MCC152DeviceInfo::AO_MAX_CODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum DAC code (4095.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC152DeviceInfo::AO_MIN_VOLTAGE">
+<span class="target" id="structMCC152DeviceInfo_1a43382cc26fbccfcb6ad9bfd0c9bdb3a9"></span>const double <code class="descname">AO_MIN_VOLTAGE</code><a class="headerlink" href="#c.MCC152DeviceInfo::AO_MIN_VOLTAGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The output voltage corresponding to the minimum code (0.0V.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC152DeviceInfo::AO_MAX_VOLTAGE">
+<span class="target" id="structMCC152DeviceInfo_1a6cc138828930e43cee7cc1f1087a8ed4"></span>const double <code class="descname">AO_MAX_VOLTAGE</code><a class="headerlink" href="#c.MCC152DeviceInfo::AO_MAX_VOLTAGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The output voltage corresponding to the maximum code (+5.0V - 1 LSB.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC152DeviceInfo::AO_MIN_RANGE">
+<span class="target" id="structMCC152DeviceInfo_1a8f19ba59db0c953834db50a785bb773a"></span>const double <code class="descname">AO_MIN_RANGE</code><a class="headerlink" href="#c.MCC152DeviceInfo::AO_MIN_RANGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The minimum voltage of the output range (0.0V.) </p>
+</dd></dl>
+
+<dl class="variable">
+<dt id="c.MCC152DeviceInfo::AO_MAX_RANGE">
+<span class="target" id="structMCC152DeviceInfo_1a38395cf9d61dcc4bde34403403a7cbb5"></span>const double <code class="descname">AO_MAX_RANGE</code><a class="headerlink" href="#c.MCC152DeviceInfo::AO_MAX_RANGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum voltage of the output range (+5.0V.) </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
 <div class="section" id="dio-config-items">
 <h4>DIO Config Items<a class="headerlink" href="#dio-config-items" title="Permalink to this headline">¶</a></h4>
 <dl class="enum">

@@ -10,17 +10,10 @@ Function                                        Description
 :c:func:`mcc152_open`                           Open an MCC 152 for use.
 :c:func:`mcc152_is_open`                        Check if an MCC 152 is open.
 :c:func:`mcc152_close`                          Close an MCC 152.
+:c:func:`mcc152_info`                           Return information about this device type.
 :c:func:`mcc152_serial`                         Read the serial number.
-:c:func:`mcc152_a_out_num_channels`             Get the number of analog output channels.
-:c:func:`mcc152_a_out_code_min`                 Get the minimum DAC code for analog output.
-:c:func:`mcc152_a_out_code_max`                 Get the maximum DAC code for analog output.
-:c:func:`mcc152_a_out_range_min`                Get the minimum output voltage for analog output.
-:c:func:`mcc152_a_out_range_max`                Get the maximum output voltage for analog output.
-:c:func:`mcc152_a_out_voltage_min`              Get the minimum output voltage for analog output.
-:c:func:`mcc152_a_out_voltage_max`              Get the maximum output voltage for analog output.
 :c:func:`mcc152_a_out_write`                    Write an analog output channel value.
 :c:func:`mcc152_a_out_write_all`                Write all analog output channels simultaneously.
-:c:func:`mcc152_dio_num_channels`               Get the number of digital I/O channels.
 :c:func:`mcc152_dio_reset`                      Reset the digital I/O to the default configuration.
 :c:func:`mcc152_dio_input_read_bit`             Read a digital input.
 :c:func:`mcc152_dio_input_read_port`            Read all digital inputs.
@@ -39,15 +32,10 @@ Function                                        Description
 .. doxygenfunction:: mcc152_open
 .. doxygenfunction:: mcc152_is_open
 .. doxygenfunction:: mcc152_close
+.. doxygenfunction:: mcc152_info
 .. doxygenfunction:: mcc152_serial
-.. doxygenfunction:: mcc152_a_out_num_channels
-.. doxygenfunction:: mcc152_a_out_code_min
-.. doxygenfunction:: mcc152_a_out_code_max
-.. doxygenfunction:: mcc152_a_out_voltage_min
-.. doxygenfunction:: mcc152_a_out_voltage_max
 .. doxygenfunction:: mcc152_a_out_write
 .. doxygenfunction:: mcc152_a_out_write_all
-.. doxygenfunction:: mcc152_dio_num_channels
 .. doxygenfunction:: mcc152_dio_reset
 .. doxygenfunction:: mcc152_dio_input_read_bit
 .. doxygenfunction:: mcc152_dio_input_read_port
@@ -64,6 +52,12 @@ Function                                        Description
 
 Data types and definitions
 --------------------------
+
+Device Info
+~~~~~~~~~~~
+
+.. doxygenstruct:: MCC152DeviceInfo
+    :members:
 
 DIO Config Items
 ~~~~~~~~~~~~~~~~

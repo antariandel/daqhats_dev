@@ -15,16 +15,10 @@ Methods
     ==================================================  ========================================================================
     Method                                              Description
     --------------------------------------------------  ------------------------------------------------------------------------
-    :py:func:`mcc152.address`                           Read the board's address.
+    :py:func:`mcc152.info`                              Get info about this device type.
     :py:func:`mcc152.serial`                            Read the serial number.
-    :py:func:`mcc152.a_out_num_channels`                Get the number of analog output channels.
-    :py:func:`mcc152.a_out_code_min`                    Get the minimum DAC code for analog output.
-    :py:func:`mcc152.a_out_code_max`                    Get the maximum DAC code for analog output.
-    :py:func:`mcc152.a_out_voltage_min`                 Get the minimum output voltage for analog output.
-    :py:func:`mcc152.a_out_voltage_max`                 Get the maximum output voltage for analog output.
     :py:func:`mcc152.a_out_write`                       Write an analog output channel.
     :py:func:`mcc152.a_out_write_all`                   Write all analog output channels.
-    :py:func:`mcc152.dio_num_channels`                  Get the number of digital I/O channels.
     :py:func:`mcc152.dio_reset`                         Reset the digital I/O to the default configuration.
     :py:func:`mcc152.dio_input_read_bit`                Read a digital input.
     :py:func:`mcc152.dio_input_read_port`               Read all digital inputs.
