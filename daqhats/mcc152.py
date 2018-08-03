@@ -2,10 +2,11 @@
 """
 Wraps all of the methods from the MCC 152 library for use in Python.
 """
+from collections import namedtuple
 from ctypes import c_ubyte, c_int, c_char_p, c_ulong, c_double, POINTER, \
     create_string_buffer, byref
-from daqhats.hats import Hat, HatError, OptionFlags
 from enum import IntEnum, unique
+from daqhats.hats import Hat, HatError, OptionFlags
 
 @unique
 class DIOConfigItem(IntEnum):
@@ -125,6 +126,44 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             self._lib.mcc152_close(self._address)
         return
 
+    @staticmethod
+    def info():
+        """
+        Return constant information about this type of device.
+
+        Returns:
+            namedtuple: a namedtuple containing the following field names
+
+            * **NUM_DIO_CHANNELS** (int): The number of digital I/O channels
+              (8.)
+            * **NUM_AO_CHANNELS** (int): The number of analog output channels
+              (2.)
+            * **AO_MIN_CODE** (int): The minimum DAC code (0.)
+            * **AO_MAX_CODE** (int): The maximum DAC code (4095.)
+            * **AO_MIN_VOLTAGE** (float): The voltage corresponding to the
+              minimum DAC code (0.0.)
+            * **AO_MAX_VOLTAGE** (float): The voltage corresponding to the
+              maximum DAC code (+5.0 - 1 LSB)
+            * **AO_MIN_RANGE** (float): The minimum voltage of the output range
+              (0.0.)
+            * **AO_MAX_RANGE** (float): The maximum voltage of the output range
+              (+5.0.)
+        """
+        dev_info = namedtuple(
+            'MCC152DeviceInfo', [
+                'NUM_DIO_CHANNELS', 'NUM_AO_CHANNELS', 'AO_MIN_CODE',
+                'AO_MAX_CODE', 'AO_MIN_VOLTAGE', 'AO_MAX_VOLTAGE',
+                'AO_MIN_RANGE', 'AO_MAX_RANGE'])
+        return dev_info(
+            NUM_DIO_CHANNELS=8,
+            NUM_AO_CHANNELS=2,
+            AO_MIN_CODE=0,
+            AO_MAX_CODE=4095,
+            AO_MIN_VOLTAGE=0.0,
+            AO_MAX_VOLTAGE=(5.0 - (5.0/4096)),
+            AO_MIN_RANGE=0.0,
+            AO_MAX_RANGE=5.0)
+
     def serial(self):
         """
         Read the serial number.
@@ -145,86 +184,6 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             raise HatError(self._address, "Incorrect response.")
         my_serial = my_buffer.value.decode('ascii')
         return my_serial
-
-    @staticmethod
-    def a_out_num_channels():
-        """
-        Return the number of analog output channels (2).
-
-        Returns:
-            int: the number of channels.
-        """
-        return mcc152._AOUT_NUM_CHANNELS
-
-    @staticmethod
-    def a_out_code_min():
-        """
-        Return the minimum DAC code value (0) for the analog output.
-
-        Returns:
-            int: the minimum code.
-        """
-        return int(mcc152._MIN_CODE)
-
-    @staticmethod
-    def a_out_code_max():
-        """
-        Return the maximum DAC code value (4095) for the analog output.
-
-        Returns:
-            int: the maximum code.
-        """
-        return int(mcc152._MAX_CODE)
-
-    @staticmethod
-    def a_out_range_min():
-        """
-        Return the minimum range voltage value (0.0) for the analog output.
-
-        Returns:
-            float: the minimum voltage.
-        """
-        return mcc152._MIN_VOLTAGE
-
-    @staticmethod
-    def a_out_range_max():
-        """
-        Return the maximum range voltage value (5.0) for the analog output.
-
-        Returns:
-            float: the maximum voltage.
-        """
-        return mcc152._MAX_RANGE
-
-    @staticmethod
-    def a_out_voltage_min():
-        """
-        Return the minimum output voltage value (0.0) for the analog output.
-
-        Returns:
-            float: the minimum voltage.
-        """
-        return mcc152._MIN_VOLTAGE
-
-    @staticmethod
-    def a_out_voltage_max():
-        """
-        Return the maximum output voltage value (4.999) for the analog output.
-
-        Returns:
-            float: the maximum voltage.
-        """
-        return mcc152._MAX_VOLTAGE
-
-    @staticmethod
-    def dio_num_channels():
-        """
-        Return the number of digital I/O channels.
-
-        Returns:
-            int: the number of channels.
-        """
-        return mcc152._DIO_NUM_CHANNELS
 
     def a_out_write(self, channel, value, options=OptionFlags.DEFAULT):
         """

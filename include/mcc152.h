@@ -10,6 +10,27 @@
 
 #include <stdint.h>
 
+/// MCC 152 constant device information.
+struct MCC152DeviceInfo
+{
+    /// The number of digital I/O channels (8.)
+    const uint8_t NUM_DIO_CHANNELS;
+    /// The number of analog output channels (2.)
+    const uint8_t NUM_AO_CHANNELS;
+    /// The minimum DAC code (0.)
+    const uint16_t AO_MIN_CODE;
+    /// The maximum DAC code (4095.)
+    const uint16_t AO_MAX_CODE;
+    /// The output voltage corresponding to the minimum code (0.0V.)
+    const double AO_MIN_VOLTAGE;
+    /// The output voltage corresponding to the maximum code (+5.0V - 1 LSB.)
+    const double AO_MAX_VOLTAGE;
+    /// The minimum voltage of the output range (0.0V.)
+    const double AO_MIN_RANGE;
+    /// The maximum voltage of the output range (+5.0V.)
+    const double AO_MAX_RANGE;
+};
+
 /// DIO Configuration Items
 enum DIOConfigItem
 {
@@ -29,23 +50,9 @@ enum DIOConfigItem
     DIO_INT_MASK        = 6
 };
 
-struct mcc152_device_info_struct
-{
-    uint8_t NUM_AO_CHANNELS;
-    uint8_t NUM_DIO_CHANNELS;
-    uint16_t AO_MIN_CODE;
-    uint16_t AO_MAX_CODE;
-    double AO_MIN_VOLTAGE;
-    double AO_MAX_VOLTAGE;
-    double AO_MIN_RANGE;
-    double AO_MAX_RANGE;
-};
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-const struct mcc152_device_info_struct* mcc152_info(void);
 
 /**
 *   @brief Open a connection to the MCC 152 device at the specified address.
@@ -74,6 +81,14 @@ int mcc152_is_open(uint8_t address);
 int mcc152_close(uint8_t address);
 
 /**
+*   @brief Return constant device information for all MCC 152s.
+*
+*   @return Pointer to struct MCC152DeviceInfo.
+*       
+*/
+struct MCC152DeviceInfo* mcc152_info(void);
+
+/**
 *   @brief Read the MCC 152 serial number
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
@@ -83,65 +98,6 @@ int mcc152_close(uint8_t address);
 *       [RESULT_SUCCESS](@ref RESULT_SUCCESS) if successful.
 */
 int mcc152_serial(uint8_t address, char* buffer);
-
-/**
-*   @brief Return the number of analog output channels (2) on the MCC 152.
-*
-*   @return The number of channels.
-*/
-int mcc152_a_out_num_channels(void);
-
-/**
-*   @brief Return the maximum DAC code value (4095) for the MCC 152 analog
-*   output.
-*
-*   @return The maximum code.
-*/
-int mcc152_a_out_code_max(void);
-
-/**
-*   @brief Return the minimum DAC code value (0) for the MCC 152 analog output.
-*
-*   @return The minimum code.
-*/
-int mcc152_a_out_code_min(void);
-
-/**
-*   @brief Return the maximum voltage value (4.999) for the MCC 152 analog
-*   output. This is equivalent to the maximum range voltage (5.0) - 1 LSB.
-*
-*   @return The maximum voltage.
-*/
-double mcc152_a_out_voltage_max(void);
-
-/**
-*   @brief Return the minimum voltage value (0.000) for the MCC 152 analog
-*   output.
-*
-*   @return The minimum voltage.
-*/
-double mcc152_a_out_voltage_min(void);
-
-/**
-*   @brief Return the maximum range voltage (5.0) for the MCC 152 analog output.
-*
-*   @return The maximum voltage.
-*/
-double mcc152_a_out_range_max(void);
-
-/**
-*   @brief Return the minimum range voltage (0.0) for the MCC 152 analog output.
-*
-*   @return The minimum voltage.
-*/
-double mcc152_a_out_range_min(void);
-
-/**
-*   @brief Return the number of digital I/O (8) on the MCC 152.
-*
-*   @return The number of I/O.
-*/
-int mcc152_dio_num_channels(void);
 
 /**
 *   @brief Perform a write to an analog output channel.

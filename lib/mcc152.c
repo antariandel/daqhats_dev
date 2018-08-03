@@ -28,9 +28,30 @@
 #define NUM_DIO_CHANNELS    8       // The number of digital I/O channels.
 
 #define MAX_CODE            4095
-#define MAX_RANGE           5.0
+#define MAX_RANGE           (5.0)
 #define LSB_SIZE            (MAX_RANGE / (MAX_CODE+1))
+#define MIN_VOLTAGE         (0.0)
 #define MAX_VOLTAGE         (MAX_CODE * LSB_SIZE)
+
+struct MCC152DeviceInfo mcc152_device_info =
+{
+    // The number of digital I/O channels.
+    8,
+    // The number of analog output channels.
+    2,
+    // The minimum DAC code.
+    0,
+    // The maximum DAC code (4095.)
+    MAX_CODE,
+    // The output voltage corresponding to the minimum code (0.0V.)
+    MIN_VOLTAGE,
+    // The output voltage corresponding to the maximum code (5.0V - 1 LSB.)
+    MAX_VOLTAGE,
+    // The minimum voltage of the output range (0.0V.)
+    MIN_VOLTAGE,
+    // The maximum voltage of the output range (5.0V.)
+    MAX_RANGE
+};
 
 // The maximum size of the serial number string, plus NULL.
 #define SERIAL_SIZE         (8+1)   
@@ -304,67 +325,11 @@ int mcc152_close(uint8_t address)
 }
 
 /******************************************************************************
-  Return the number of analog output channels on the board.
+  Return the device info struct.
  *****************************************************************************/
-int mcc152_a_out_num_channels(void)
+struct MCC152DeviceInfo* mcc152_info(void)
 {
-    return NUM_AO_CHANNELS;
-}
-
-/******************************************************************************
-  Return the max DAC code.
- *****************************************************************************/
-int mcc152_a_out_code_max(void)
-{
-    return MAX_CODE;
-}
-
-/******************************************************************************
-  Return the min DAC code.
- *****************************************************************************/
-int mcc152_a_out_code_min(void)
-{
-    return 0;
-}
-
-/******************************************************************************
-  Return the analog output range min voltage.
- *****************************************************************************/
-double mcc152_a_out_range_min(void)
-{
-    return 0.0;
-}
-
-/******************************************************************************
-  Return the analog output range max voltage.
- *****************************************************************************/
-double mcc152_a_out_range_max(void)
-{
-    return MAX_RANGE;
-}
-
-/******************************************************************************
-  Return the analog output max voltage.
- *****************************************************************************/
-double mcc152_a_out_voltage_max(void)
-{
-    return MAX_VOLTAGE;
-}
-
-/******************************************************************************
-  Return the analog output min voltage.
- *****************************************************************************/
-double mcc152_a_out_voltage_min(void)
-{
-    return 0.0;
-}
-
-/******************************************************************************
-  Return the number of digital I/O channels on the board.
- *****************************************************************************/
-int mcc152_dio_num_channels(void)
-{
-    return NUM_DIO_CHANNELS;
+    return &mcc152_device_info;
 }
 
 /******************************************************************************
