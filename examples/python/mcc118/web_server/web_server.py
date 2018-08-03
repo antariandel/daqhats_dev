@@ -2,7 +2,7 @@
 #  -*- coding: utf-8 -*-
 """
 This example demonstrates a simple web server providing visualization of data
-from a MCC118 DAQ HAT device for a single client.  It makes use of the Dash
+from a MCC 118 DAQ HAT device for a single client.  It makes use of the Dash
 Python framework for web-based interfaces and a plotly graph.  To install the
 dependencies for this example, run:
    $ pip install dash dash-renderer dash-html-components dash-core-components
@@ -19,34 +19,40 @@ Stopping this example:
 1. To stop the server press Ctrl+C in the terminal window where there server
    was started.
 """
-import dash
+import socket
+import json
+from time import sleep
+from collections import deque
+from dash import Dash
+from dash.dependencies import Input, Output, State, Event
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output, State, Event
 import plotly.graph_objs as go
-import json
-import socket
-import daqhats as hats
+from daqhats import hat_list, mcc118, HatIDs, OptionFlags
 
-app = dash.Dash(__name__)
 
-app.css.config.serve_locally = True
-app.scripts.config.serve_locally = True
+_app = Dash(__name__)   # pylint: disable=invalid-name,no-member
+_app.css.config.serve_locally = True
+_app.scripts.config.serve_locally = True
 
-g_hat = None  # Global variable to retain MCC118 HAT object
+_hat = None  # Store the hat object in a global for use in multiple callbacks.
+
+MCC118_CHANNEL_COUNT = 8
+ALL_AVAILABLE = -1
+RETURN_IMMEDIATELY = 0
 
 
 def create_hat_selector():
     """
-    Gets a list of available MCC118 devices and creates a corresponding
+    Gets a list of available MCC 118 devices and creates a corresponding
     dash-core-components Dropdown element for the user interface.
 
     Returns:
-        A dash-core-components Dropdown object.
+        dcc.Dropdown: A dash-core-components Dropdown object.
     """
-    hat_list = hats.hat_list(filter_by_id=hats.HatIDs.MCC_118)
+    hats = hat_list(filter_by_id=HatIDs.MCC_118)
     hat_selection_options = []
-    for hat in hat_list:
+    for hat in hats:
         # Create the label from the address and product name
         label = '{0}: {1}'.format(hat.address, hat.product_name)
         # Create the value by converting the descriptor to a JSON object
@@ -70,7 +76,7 @@ def init_chart_data(number_of_channels, number_of_samples):
         number_of_samples (int): The number of samples to be displayed.
 
     Returns:
-        A JSON object containing the chart data.
+        str: A string representation of a JSON object containing the chart data.
     """
     samples = []
     for i in range(number_of_samples):
@@ -86,9 +92,9 @@ def init_chart_data(number_of_channels, number_of_samples):
 
 # Define the HTML layout for the user interface, consisting of
 # dash-html-components and dash-core-components.
-app.layout = html.Div([
+_app.layout = html.Div([
     html.H1(
-        children='MCC118 DAQ HAT Web Server Example',
+        children='MCC 118 DAQ HAT Web Server Example',
         id='exampleTitle'
     ),
     html.Div([
@@ -158,13 +164,18 @@ app.layout = html.Div([
         children=init_chart_data(1, 1000)
     ),
     html.Div(
+        id='chartInfo',
+        style={'display': 'none'},
+        children=json.dumps({'sample_count': 0})
+    ),
+    html.Div(
         id='status',
         style={'display': 'none'}
     ),
 ])
 
 
-@app.callback(
+@_app.callback(
     Output('status', 'children'),
     [Input('startStopButton', 'n_clicks')],
     [State('startStopButton', 'children'),
@@ -172,7 +183,7 @@ app.layout = html.Div([
      State('sampleRate', 'value'),
      State('samplesToDisplay', 'value'),
      State('channelSelections', 'values')]
-)
+)   # pylint: disable=too-many-arguments
 def start_stop_click(n_clicks, button_label, hat_descriptor_json_str,
                      sample_rate_val, samples_to_display, active_channels):
     """
@@ -183,27 +194,30 @@ def start_stop_click(n_clicks, button_label, hat_descriptor_json_str,
         n_clicks (int): Number of button clicks - triggers the callback.
         button_label (str): The current label on the button.
         hat_descriptor_json_str (str): A string representation of a JSON object
-            containing the descriptor for the selected MCC118 DAQ HAT.
+            containing the descriptor for the selected MCC 118 DAQ HAT.
         sample_rate_val (float): The user specified sample rate value.
         samples_to_display (float): The number of samples to be displayed.
         active_channels ([int]): A list of integers corresponding to the user
             selected Active channel checkboxes.
 
-    Returns (str):
-        The new application status - "idle", "configured" or "running"
+    Returns:
+        str: The new application status - "idle", "configured", "running"
+        or "error"
 
     """
-    global g_hat
     output = 'idle'
     if n_clicks is not None and n_clicks > 0:
         if button_label == 'Configure':
             if (1 < samples_to_display <= 1000
                     and len(active_channels) > 0
-                    and sample_rate_val < (100000 / len(active_channels))):
+                    and sample_rate_val <= (100000 / len(active_channels))):
                 # If configuring, create the hat object.
                 if hat_descriptor_json_str:
                     hat_descriptor = json.loads(hat_descriptor_json_str)
-                    g_hat = hats.mcc118(hat_descriptor['address'])
+                    # The hat object is retained as a global for use in
+                    # other callbacks.
+                    global _hat
+                    _hat = mcc118(hat_descriptor['address'])
                     output = 'configured'
             else:
                 output = 'error'
@@ -213,14 +227,17 @@ def start_stop_click(n_clicks, button_label, hat_descriptor_json_str,
             channel_mask = 0x0
             for channel in active_channels:
                 channel_mask |= 1 << channel
-            hat = g_hat
-            hat.a_in_scan_start(channel_mask, 10000,
-                                sample_rate, hats.OptionFlags.CONTINUOUS)
+            hat = globals()['_hat']
+            # Buffer 5 seconds of data
+            samples_to_buffer = int(5 * sample_rate)
+            hat.a_in_scan_start(channel_mask, samples_to_buffer,
+                                sample_rate, OptionFlags.CONTINUOUS)
+            sleep(0.5)
             output = 'running'
         elif button_label == 'Stop':
             # If stopping, call the a_in_scan_stop and a_in_scan_cleanup
             # functions.
-            hat = g_hat
+            hat = globals()['_hat']
             hat.a_in_scan_stop()
             hat.a_in_scan_cleanup()
             output = 'idle'
@@ -228,89 +245,119 @@ def start_stop_click(n_clicks, button_label, hat_descriptor_json_str,
     return output
 
 
-@app.callback(
+@_app.callback(
     Output('timer', 'interval'),
     [Input('status', 'children'),
-     Input('samplesToDisplay', 'value')],
-    [State('channelSelections', 'values')]
+     Input('chartData', 'children'),
+     Input('chartInfo', 'children')],
+    [State('channelSelections', 'values'),
+     State('samplesToDisplay', 'value')]
 )
-def update_timer_interval(acq_state, samples_to_display, active_channels):
+def update_timer_interval(acq_state, chart_data_json_str, chart_info_json_str,
+                          active_channels, samples_to_display):
     """
-    A callback function to update the timer interval for reading data when the
-    application status changes.  The resulting interval is a product of the
-    number of active channels and the number of samples to display per channel
-    on the strip chart (with a minimum of 100 ms and maximum of 800 ms).
+    A callback function to update the timer interval.  The timer is temporarily
+    disabled while processing data by setting the interval to 1 day and then
+    re-enabled when the data read has been plotted.  The interval value when
+    enabled is calculated based on the data throughput necessary with a minimum
+    of 500 ms and maximum of 4 seconds.
 
     Args:
         acq_state (str): The application state of "idle", "configured",
             "running" or "error" - triggers the callback.
-        samples_to_display (float): The number of samples to be displayed.
+        chart_data_json_str (str): A string representation of a JSON object
+            containing the current chart data - triggers the callback.
+        chart_info_json_str (str): A string representation of a JSON object
+            containing the current chart status - triggers the callback.
         active_channels ([int]): A list of integers corresponding to the user
-            selected Active channel checkboxes.
+            selected active channel checkboxes.
+        samples_to_display (float): The number of samples to be displayed.
 
-    Returns (int):
-        The new timer interval in ms.
+    Returns:
+
     """
-    refresh_rate = int(len(active_channels) * samples_to_display)
-    refresh_rate = 100 if refresh_rate < 100 else refresh_rate
-    refresh_rate = 800 if refresh_rate > 800 else refresh_rate
-    return refresh_rate if acq_state == 'running' else 1000*60*60*24
+    chart_data = json.loads(chart_data_json_str)
+    chart_info = json.loads(chart_info_json_str)
+    num_channels = int(len(active_channels))
+    refresh_rate = 1000*60*60*24  # 1 day
+
+    if acq_state == 'running':
+        # Activate the timer when the sample count displayed to the chart
+        # matches the sample count of data read from the HAT device.
+        if 0 < chart_info['sample_count'] == chart_data['sample_count']:
+            # Determine the refresh rate based on the amount of data being
+            # displayed.
+            refresh_rate = int(num_channels * samples_to_display / 2)
+            if refresh_rate < 500:
+                refresh_rate = 500  # Minimum of 500 ms
+
+    return refresh_rate
 
 
-@app.callback(
+@_app.callback(
     Output('hatSelector', 'disabled'),
     [Input('status', 'children')]
 )
 def disable_hat_selector_dropdown(acq_state):
     """
     A callback function to disable the HAT selector dropdown when the
-    application status changes to running.
+    application status changes to configured or running.
     """
-    return True if acq_state == 'running' else False
+    disabled = False
+    if acq_state == 'configured' or acq_state == 'running':
+        disabled = True
+    return disabled
 
-
-@app.callback(
+@_app.callback(
     Output('sampleRate', 'disabled'),
     [Input('status', 'children')]
 )
 def disable_sample_rate_input(acq_state):
     """
     A callback function to disable the sample rate input when the
-    application status changes to running.
+    application status changes to configured or running.
     """
-    return True if acq_state == 'running' else False
+    disabled = False
+    if acq_state == 'configured' or acq_state == 'running':
+        disabled = True
+    return disabled
 
 
-@app.callback(
+@_app.callback(
     Output('samplesToDisplay', 'disabled'),
     [Input('status', 'children')]
 )
-def disable_samples_to_display_input(acq_state):
+def disable_samples_to_disp_input(acq_state):
     """
     A callback function to disable the number of samples to display input
-    when the application status changes to running.
+    when the application status changes to configured or running.
     """
-    return True if acq_state == 'running' else False
+    disabled = False
+    if acq_state == 'configured' or acq_state == 'running':
+        disabled = True
+    return disabled
 
 
-@app.callback(
+@_app.callback(
     Output('channelSelections', 'options'),
     [Input('status', 'children')]
 )
-def disable_sample_rate_input(acq_state):
+def disable_channel_checkboxes(acq_state):
     """
     A callback function to disable the active channel checkboxes when the
-    application status changes to running.
+    application status changes to configured or running.
     """
     options = []
-    for channel in range(8):
+    for channel in range(MCC118_CHANNEL_COUNT):
         label = 'Channel ' + str(channel)
-        disabled = True if acq_state == 'running' else False
+        disabled = False
+        if acq_state == 'configured' or acq_state == 'running':
+            disabled = True
         options.append({'label': label, 'value': channel, 'disabled': disabled})
     return options
 
 
-@app.callback(
+@_app.callback(
     Output('startStopButton', 'children'),
     [Input('status', 'children')]
 )
@@ -323,8 +370,8 @@ def update_start_stop_button_name(acq_state):
         acq_state (str): The application state of "idle", "configured",
             "running" or "error" - triggers the callback.
 
-    Returns (str):
-        The new button label of "Configure", "Start" or "Stop"
+    Returns:
+        str: The new button label of "Configure", "Start" or "Stop"
     """
     output = 'Configure'
     if acq_state == 'configured':
@@ -334,7 +381,7 @@ def update_start_stop_button_name(acq_state):
     return output
 
 
-@app.callback(
+@_app.callback(
     Output('chartData', 'children'),
     [Input('status', 'children')],
     [State('chartData', 'children'),
@@ -358,27 +405,23 @@ def update_strip_chart_data(acq_state, chart_data_json_str,
             containing the current chart data.
         samples_to_display_val (float): The number of samples to be displayed.
         active_channels ([int]): A list of integers corresponding to the user
-            selected Active channel checkboxes.
+            selected active channel checkboxes.
 
-    Returns (str):
-        A string representation of a JSON object containing the updated chart
-        data.
+    Returns:
+        str: A string representation of a JSON object containing the updated
+        chart data.
     """
-    global g_hat
     updated_chart_data = chart_data_json_str
     samples_to_display = int(samples_to_display_val)
     num_channels = len(active_channels)
     if acq_state == 'running':
-        hat = g_hat
+        hat = globals()['_hat']
         if hat is not None:
             chart_data = json.loads(chart_data_json_str)
-            current_sample_count = int(chart_data['sample_count'])
 
             # By specifying -1 for the samples_per_channel parameter, the
             # timeout is ignored and all available data is read.
-            read_result = hat.a_in_scan_read(-1, 0)
-            num_samples_read = int(len(read_result.data) / num_channels)
-            total_sample_count = current_sample_count + num_samples_read
+            read_result = hat.a_in_scan_read(ALL_AVAILABLE, RETURN_IMMEDIATELY)
 
             if ('hardware_overrun' not in chart_data.keys()
                     or not chart_data['hardware_overrun']):
@@ -387,46 +430,14 @@ def update_strip_chart_data(acq_state, chart_data_json_str,
                     or not chart_data['buffer_overrun']):
                 chart_data['buffer_overrun'] = read_result.buffer_overrun
 
-            start_sample = current_sample_count
-            if total_sample_count < samples_to_display:
-                # If the total samples read is less than the samples to display
-                # then update the data array with all of the new data.
-                for i in range(num_samples_read):
-                    for channel in range(num_channels):
-                        sample = start_sample + i
-                        data_index = i * num_channels + channel
-                        value = read_result.data[data_index]
-                        chart_data['data'][channel][sample] = value
-            else:
-                samples_to_append = num_samples_read
-                if num_samples_read < samples_to_display:
-                    # Determine how many of the currently displayed samples to
-                    # keep and slice off the rest of the data.
-                    keep = samples_to_display - num_samples_read
-                    chart_data['samples'] = chart_data['samples'][(-1 * keep):]
-                    for channel in range(num_channels):
-                        chan_data = chart_data['data'][channel]
-                        chart_data['data'][channel] = chan_data[(-1 * keep):]
-                else:
-                    # If the data read in this callback is enough the fill
-                    # the strip chart, clear the data arrays.
-                    start_sample = total_sample_count - samples_to_display
-                    samples_to_append = samples_to_display
-                    chart_data['samples'] = []
-                    for channel in range(num_channels):
-                        chart_data['data'][channel] = []
-
-                # Append the new data.
-                for sample in range(samples_to_append):
-                    chart_data['samples'].append(start_sample + sample)
-                    for channel in range(num_channels):
-                        data_index = sample * num_channels + channel
-                        value = read_result.data[data_index]
-                        chart_data['data'][channel].append(value)
+            # Add the samples read to the chart_data object.
+            sample_count = add_samples_to_data(samples_to_display, num_channels,
+                                               chart_data, read_result)
 
             # Update the total sample count.
-            chart_data['sample_count'] = total_sample_count
+            chart_data['sample_count'] = sample_count
             updated_chart_data = json.dumps(chart_data)
+
     elif acq_state == 'configured':
         # Clear the data in the strip chart when Configure is clicked.
         updated_chart_data = init_chart_data(num_channels, samples_to_display)
@@ -434,7 +445,55 @@ def update_strip_chart_data(acq_state, chart_data_json_str,
     return updated_chart_data
 
 
-@app.callback(
+def add_samples_to_data(samples_to_display, num_chans, chart_data, read_result):
+    """
+    Adds the samples read from the mcc118 hat device to the chart_data object
+    used to update the strip chart.
+
+    Args:
+        samples_to_display (int): The number of samples to be displayed.
+        num_chans (int): The number of selected channels.
+        chart_data (dict): A dictionary containing the data used to update the
+            strip chart display.
+        read_result (namedtuple): A namedtuple containing status and data
+            returned from the mcc118 read.
+
+    Returns:
+        int: The updated total sample count after the data is added.
+
+    """
+    num_samples_read = int(len(read_result.data) / num_chans)
+    current_sample_count = int(chart_data['sample_count'])
+
+    # Convert lists to deque objects with the maximum length set to the number
+    # of samples to be displayed.  This will pop off the oldest data
+    # automatically when new data is appended.
+    chart_data['samples'] = deque(chart_data['samples'],
+                                  maxlen=samples_to_display)
+    for chan in range(num_chans):
+        chart_data['data'][chan] = deque(chart_data['data'][chan],
+                                         maxlen=samples_to_display)
+
+    start_sample = 0
+    if num_samples_read > samples_to_display:
+        start_sample = num_samples_read - samples_to_display
+
+    for sample in range(start_sample, num_samples_read):
+        chart_data['samples'].append(current_sample_count + sample)
+        for chan in range(num_chans):
+            data_index = sample * num_chans + chan
+            chart_data['data'][chan].append(read_result.data[data_index])
+
+    # Convert deque objects back to lists so they can be written to to div
+    # element.
+    chart_data['samples'] = list(chart_data['samples'])
+    for chan in range(num_chans):
+        chart_data['data'][chan] = list(chart_data['data'][chan])
+
+    return current_sample_count + num_samples_read
+
+
+@_app.callback(
     Output('stripChart', 'figure'),
     [Input('chartData', 'children')],
     [State('channelSelections', 'values')]
@@ -449,9 +508,9 @@ def update_strip_chart(chart_data_json_str, active_channels):
         active_channels ([int]): A list of integers corresponding to the user
             selected Active channel checkboxes.
 
-    Returns (object):
-        A figure object for a dash-core-components Graph, updated the most
-        recently read data.
+    Returns:
+        object: A figure object for a dash-core-components Graph, updated with
+        the most recently read data.
     """
     data = []
     xaxis_range = [0, 1000]
@@ -465,12 +524,12 @@ def update_strip_chart(chart_data_json_str, active_channels):
     colors = ['#DD3222', '#FFC000', '#3482CB', '#FF6A00',
               '#75B54A', '#808080', '#6E1911', '#806000']
     # Update the serie data for each active channel.
-    for channel in range(len(active_channels)):
+    for chan_idx, channel in enumerate(active_channels):
         scatter_serie = go.Scatter(
             x=list(chart_data['samples']),
-            y=list(data[channel]),
-            name='Channel {0:d}'.format(active_channels[channel]),
-            marker=go.Marker(color=colors[active_channels[channel]])
+            y=list(data[chan_idx]),
+            name='Channel {0:d}'.format(channel),
+            marker=go.Marker(color=colors[channel])
         )
         plot_data.append(scatter_serie)
 
@@ -488,7 +547,33 @@ def update_strip_chart(chart_data_json_str, active_channels):
     return figure
 
 
-@app.callback(
+@_app.callback(
+    Output('chartInfo', 'children'),
+    [Input('stripChart', 'figure')],
+    [State('chartData', 'children')]
+)
+def update_chart_info(_figure, chart_data_json_str):
+    """
+    A callback function to set the sample count for the number of samples that
+    have been displayed on the chart.
+
+    Args:
+        _figure (object): A figure object for a dash-core-components Graph for
+            the strip chart - triggers the callback.
+        chart_data_json_str (str): A string representation of a JSON object
+            containing the current chart data - triggers the callback.
+
+    Returns:
+        str: A string representation of a JSON object containing the chart info
+        with the updated sample count.
+
+    """
+    chart_data = json.loads(chart_data_json_str)
+    chart_info = {'sample_count': chart_data['sample_count']}
+    return json.dumps(chart_info)
+
+
+@_app.callback(
     Output('errorDisplay', 'children'),
     [Input('chartData', 'children'),
      Input('status', 'children')],
@@ -496,7 +581,7 @@ def update_strip_chart(chart_data_json_str, active_channels):
      State('sampleRate', 'value'),
      State('samplesToDisplay', 'value'),
      State('channelSelections', 'values')]
-)
+) # pylint: disable=too-many-arguments
 def update_error_message(chart_data_json_str, acq_state, hat_selection,
                          sample_rate, samples_to_display, active_channels):
     """
@@ -508,14 +593,14 @@ def update_error_message(chart_data_json_str, acq_state, hat_selection,
         acq_state (str): The application state of "idle", "configured",
             "running" or "error" - triggers the callback.
         hat_selection (str): A string representation of a JSON object
-            containing the descriptor for the selected MCC118 DAQ HAT.
+            containing the descriptor for the selected MCC 118 DAQ HAT.
         sample_rate (float): The user specified sample rate value.
         samples_to_display (float): The number of samples to be displayed.
         active_channels ([int]): A list of integers corresponding to the user
             selected Active channel checkboxes.
 
-    Returns (str):
-        The error message to display.
+    Returns:
+        str: The error message to display.
 
     """
     error_message = ''
@@ -529,7 +614,6 @@ def update_error_message(chart_data_json_str, acq_state, hat_selection,
             error_message += 'Buffer overrun occurred; '
     elif acq_state == 'error':
         num_active_channels = len(active_channels)
-        print('Active channels:', num_active_channels)
         max_sample_rate = 100000
         if not hat_selection:
             error_message += 'Invalid HAT selection; '
@@ -549,16 +633,17 @@ def update_error_message(chart_data_json_str, acq_state, hat_selection,
 def get_ip_address():
     """ Utility function to get the IP address of the device. """
     ip_address = '127.0.0.1'  # Default to localhost
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     try:
-        s.connect(('1.1.1.1', 1))  # Does not have to be reachable
-        ip_address = s.getsockname()[0]
+        sock.connect(('1.1.1.1', 1))  # Does not have to be reachable
+        ip_address = sock.getsockname()[0]
     finally:
-        s.close()
+        sock.close()
 
     return ip_address
 
 
 if __name__ == '__main__':
-    app.run_server(host=get_ip_address(), port=8080)
+    # This will only be run when the module is called directly.
+    _app.run_server(host=get_ip_address(), port=8080)
