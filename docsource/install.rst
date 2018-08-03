@@ -24,9 +24,8 @@ Installation
     cd ~/daqhats
     sudo ./install.sh
 
-6. [Optional] To update the firmware on your MCC 118 board(s) use the firmware update tool.  The "0" in the example below is the board address.  The line with the "-b" option updates the bootloader.  Repead the two commands for each MCC 118 address in your board stack::
+6. [Optional] To update the firmware on your MCC 118 board(s) use the firmware update tool.  The "0" in the example below is the board address.  Repeat the command for each MCC 118 address in your board stack::
 
-    mcc118_firmware_update -b 0 ~/daqhats/tools/MCC_118.hex
     mcc118_firmware_update 0 ~/daqhats/tools/MCC_118.hex
     
 You can now run the example programs under ~/daqhats/examples and create your own programs.
