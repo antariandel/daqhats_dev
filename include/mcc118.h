@@ -14,19 +14,19 @@
 struct MCC118DeviceInfo
 {
     /// The number of analog input channels (8.)
-    uint8_t NUM_AI_CHANNELS;
+    const uint8_t NUM_AI_CHANNELS;
     /// The minimum ADC code (0.)
-    uint16_t AI_MIN_CODE;
+    const uint16_t AI_MIN_CODE;
     /// The maximum ADC code (4095.)
-    uint16_t AI_MAX_CODE;
+    const uint16_t AI_MAX_CODE;
     /// The input voltage corresponding to the minimum code (-10.0V.)
-    double AI_MIN_VOLTAGE;
+    const double AI_MIN_VOLTAGE;
     /// The input voltage corresponding to the maximum code (+10.0V - 1 LSB.)
-    double AI_MAX_VOLTAGE;
+    const double AI_MAX_VOLTAGE;
     /// The minimum voltage of the input range (-10.0V.)
-    double AI_MIN_RANGE;
+    const double AI_MIN_RANGE;
     /// The maximum voltage of the input range (+10.0V.)
-    double AI_MAX_RANGE;
+    const double AI_MAX_RANGE;
 };
 
 /// Scan trigger input modes.
@@ -87,10 +87,10 @@ int mcc118_close(uint8_t address);
 /**
 *   @brief Return constant device information for all MCC 118s.
 *
-*   @return Const pointer to struct MCC118DeviceInfo.
+*   @return Pointer to struct MCC118DeviceInfo.
 *       
 */
-const struct MCC118DeviceInfo* mcc118_info(void);
+struct MCC118DeviceInfo* mcc118_info(void);
 
 /**
 *   @brief Blink the LED on the MCC 118.
