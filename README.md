@@ -1,7 +1,7 @@
 # MCC DAQ HAT Library
 <table>
-	<tr><td>Info<td>Contains C and Python Libraries for interacting with Measurement Computing DAQ HAT boards.
-	<tr><td>Author<td>Measurement Computing
+    <tr><td>Info<td>Contains C and Python Libraries for interacting with Measurement Computing DAQ HAT boards.
+    <tr><td>Author<td>Measurement Computing
 </table>
 
 ## About
@@ -78,30 +78,30 @@ Refer to the README.md file in each example folder for more information.
 The following is a basic Python example demonstrating how to read MCC 118 voltage inputs and display channel values.
 
 ```python
-	#!/usr/bin/env python
-	#
-	# MCC 118 example program
-	# Read and display analog input values
-	#
-	import sys
-	import daqhats as hats
+#!/usr/bin/env python
+#
+# MCC 118 example program
+# Read and display analog input values
+#
+import sys
+import daqhats as hats
 
-	# get hat list of MCC HAT boards
-	list = hats.hat_list(filter_by_id = hats.HatIDs.ANY)
-	if not list:
-		print("No boards found")
-		sys.exit()
+# get hat list of MCC HAT boards
+list = hats.hat_list(filter_by_id = hats.HatIDs.ANY)
+if not list:
+    print("No boards found")
+    sys.exit()
 
-	# Read and display every channel
-	for entry in list: 
-    if entry.id == hats.HatIDs.MCC_118:
-        print("Board {}: MCC 118".format(entry.address))
-        board = hats.mcc118(entry.address)
-        for channel in range(board.a_in_num_channels()):
-            value = board.a_in_read(channel)
-            print("Ch {0}: {1:.3f}".format(channel, value))	
+# Read and display every channel
+for entry in list: 
+if entry.id == hats.HatIDs.MCC_118:
+    print("Board {}: MCC 118".format(entry.address))
+    board = hats.mcc118(entry.address)
+    for channel in range(board.info().NUM_AI_CHANNELS):
+        value = board.a_in_read(channel)
+        print("Ch {0}: {1:.3f}".format(channel, value))	
 ```
-	
+    
 ## Support/Feedback
 The **daqhats** library is supported by MCC. Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx).
 
