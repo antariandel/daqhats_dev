@@ -71,8 +71,8 @@ int allocate_channel_xy_arrays(uint8_t current_channel_mask,
     channel = 0;
     for (i = 0; i < MAX_118_CHANNELS; i++)
     {
-        // If this channel is in the scan, then allocate
-        // the arrays for the indices (X) and data (Y)
+        // If this channel is in the scan, then allocate the arrays for the
+        // indices (X) and data (Y)
         if (chanMask & 1)
         {
             graphChannelInfo[channel].X = g_new0 (gfloat,
@@ -515,8 +515,8 @@ static void * analog_in_continuous ()
             {
                 if (first_block)
                 {
-                    // If this is the first block we need
-                    // to set the indices and the data.
+                    // If this is the first block we need to set the indices and
+                    // the data.
                     copy_data_to_xy_arrays(hat_read_buf, read_buf_index,
                         channel, num_channels, buffer_size_samples, TRUE);
 
@@ -655,8 +655,8 @@ void start_stop_event_handler(GtkWidget *widget, gpointer data)
         }
         else
         {
-            // It's a finite scan, so call function to wait
-            // for all of the samples to be acquired
+            // Its a finite scan, so call function to wait for all of the
+            // samples to be acquired
             analog_in_finite();
         }
     }
@@ -793,8 +793,8 @@ void initialize_graph_channel_info (void)
 }
 
 
-// Event handler that is called when the application is
-// launched to create the main window and its controls.
+// Event handler that is called when the application is launched to create
+// the main window and its controls.
 void activate_event_handler(GtkApplication *app, gpointer user_data)
 {
     GtkCssProvider* cssProvider = gtk_css_provider_new();
@@ -956,7 +956,8 @@ void activate_event_handler(GtkApplication *app, gpointer user_data)
 // Display the CSV file name.
 void show_file_name()
 {
-    gtk_label_set_text(GTK_LABEL(labelFile), csv_filename);
+	if(labelFile)
+		gtk_label_set_text(GTK_LABEL(labelFile), csv_filename);
 }
 
 
