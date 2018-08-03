@@ -9,7 +9,7 @@ your needs.
 
 ## Running the example
 To run the example, open a terminal window and enter the following commands:
-```
+```sh
    cd ~/daqhats/examples/c/mcc118/single_value_read
    ./single_value_read
 ```
