@@ -23,8 +23,8 @@ Install pip first if it is not already installed, then install Dash and Plotly.
 1. To start the web server and run the example, open a terminal window and enter the 
 following commands: 
 
-   ```
-   CD ~/daqhats/examples/python/mcc118/web_server
+   ```sh
+   cd ~/daqhats/examples/python/mcc118/web_server
    ./web_server.py
    ```   
 2. Open a web browser on a device on the same network as the host device and

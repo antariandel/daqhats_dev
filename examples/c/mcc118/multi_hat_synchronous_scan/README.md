@@ -41,7 +41,7 @@ for information about the OPTS_EXTCLOCK and OPTS_EXTTRIGGER scan options.
 
 ## Running the example
 To run the example, open a terminal window and enter the following commands:
-```
+```sh
    cd ~/daqhats/examples/c/mcc118/multi_hat_synchronous_scan
    ./multi_hat_synchronous_scan
 ```
