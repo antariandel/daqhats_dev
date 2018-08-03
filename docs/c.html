@@ -551,11 +551,11 @@ type of board.  The library may be used with C and C++.</p>
 
 <dl class="function">
 <dt id="c.mcc118_info">
-<span class="target" id="mcc118_8h_1abeb03aecb87e3c7a741ab09927386b1d"></span>const struct <a class="reference internal" href="#c.MCC118DeviceInfo" title="MCC118DeviceInfo">MCC118DeviceInfo</a>* <code class="descname">mcc118_info</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_info" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="mcc118_8h_1a598d4c30d18daf37ccb66b71011b0c6b"></span>struct <a class="reference internal" href="#c.MCC118DeviceInfo" title="MCC118DeviceInfo">MCC118DeviceInfo</a>* <code class="descname">mcc118_info</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.mcc118_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return constant device information for all MCC 118s. </p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
-<dd>Const pointer to struct <a class="reference internal" href="#structMCC118DeviceInfo"><span class="std std-ref">MCC118DeviceInfo</span></a>. </dd>
+<dd>Pointer to struct <a class="reference internal" href="#structMCC118DeviceInfo"><span class="std std-ref">MCC118DeviceInfo</span></a>. </dd>
 </dl>
 </p>
 </dd></dl>
@@ -941,43 +941,43 @@ type of board.  The library may be used with C and C++.</p>
 <p class="breathe-sectiondef-title rubric">Public Members</p>
 <dl class="variable">
 <dt id="c.MCC118DeviceInfo::NUM_AI_CHANNELS">
-<span class="target" id="structMCC118DeviceInfo_1a5d6fee06145f4010ab4ca781bd3fd70c"></span>uint8_t <code class="descname">NUM_AI_CHANNELS</code><a class="headerlink" href="#c.MCC118DeviceInfo::NUM_AI_CHANNELS" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="structMCC118DeviceInfo_1a7716e43e020482c72c668fc96a7e707e"></span>const uint8_t <code class="descname">NUM_AI_CHANNELS</code><a class="headerlink" href="#c.MCC118DeviceInfo::NUM_AI_CHANNELS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The number of analog input channels (8.) </p>
 </dd></dl>
 
 <dl class="variable">
 <dt id="c.MCC118DeviceInfo::AI_MIN_CODE">
-<span class="target" id="structMCC118DeviceInfo_1af3ab4f5f809a872055ddf937f78487e4"></span>uint16_t <code class="descname">AI_MIN_CODE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_CODE" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="structMCC118DeviceInfo_1a09ae65990c7af02bd16edb6cfeca46ed"></span>const uint16_t <code class="descname">AI_MIN_CODE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_CODE" title="Permalink to this definition">¶</a></dt>
 <dd><p>The minimum ADC code (0.) </p>
 </dd></dl>
 
 <dl class="variable">
 <dt id="c.MCC118DeviceInfo::AI_MAX_CODE">
-<span class="target" id="structMCC118DeviceInfo_1a2b512dac09701b8abcffe2523792c9ac"></span>uint16_t <code class="descname">AI_MAX_CODE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_CODE" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="structMCC118DeviceInfo_1affc62ed9a07615ef044a206380c615ba"></span>const uint16_t <code class="descname">AI_MAX_CODE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_CODE" title="Permalink to this definition">¶</a></dt>
 <dd><p>The maximum ADC code (4095.) </p>
 </dd></dl>
 
 <dl class="variable">
 <dt id="c.MCC118DeviceInfo::AI_MIN_VOLTAGE">
-<span class="target" id="structMCC118DeviceInfo_1a782f41371065d4e9deff1edec92de761"></span>double <code class="descname">AI_MIN_VOLTAGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_VOLTAGE" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="structMCC118DeviceInfo_1a6c9a23e111966e1fa80ee8285d1571af"></span>const double <code class="descname">AI_MIN_VOLTAGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_VOLTAGE" title="Permalink to this definition">¶</a></dt>
 <dd><p>The input voltage corresponding to the minimum code (-10.0V.) </p>
 </dd></dl>
 
 <dl class="variable">
 <dt id="c.MCC118DeviceInfo::AI_MAX_VOLTAGE">
-<span class="target" id="structMCC118DeviceInfo_1a891b3727f33a54deb97c04eddd033f7c"></span>double <code class="descname">AI_MAX_VOLTAGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_VOLTAGE" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="structMCC118DeviceInfo_1ae1f2a594c35d377a008793f371af295d"></span>const double <code class="descname">AI_MAX_VOLTAGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_VOLTAGE" title="Permalink to this definition">¶</a></dt>
 <dd><p>The input voltage corresponding to the maximum code (+10.0V - 1 LSB.) </p>
 </dd></dl>
 
 <dl class="variable">
 <dt id="c.MCC118DeviceInfo::AI_MIN_RANGE">
-<span class="target" id="structMCC118DeviceInfo_1a272e6c81215799a81ed42e4c5ebccaa5"></span>double <code class="descname">AI_MIN_RANGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_RANGE" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="structMCC118DeviceInfo_1a0d490a882fc6efa399fec20a6a1c4eb5"></span>const double <code class="descname">AI_MIN_RANGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MIN_RANGE" title="Permalink to this definition">¶</a></dt>
 <dd><p>The minimum voltage of the input range (-10.0V.) </p>
 </dd></dl>
 
 <dl class="variable">
 <dt id="c.MCC118DeviceInfo::AI_MAX_RANGE">
-<span class="target" id="structMCC118DeviceInfo_1ae6bfd9c05bebf972e7671231316c5fbd"></span>double <code class="descname">AI_MAX_RANGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_RANGE" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="structMCC118DeviceInfo_1a9d7000018484148909d97514251b5a25"></span>const double <code class="descname">AI_MAX_RANGE</code><a class="headerlink" href="#c.MCC118DeviceInfo::AI_MAX_RANGE" title="Permalink to this definition">¶</a></dt>
 <dd><p>The maximum voltage of the input range (+10.0V.) </p>
 </dd></dl>
 
