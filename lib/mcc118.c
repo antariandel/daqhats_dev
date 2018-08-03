@@ -34,21 +34,21 @@
 #define VOLTAGE_MIN             RANGE_MIN
 #define VOLTAGE_MAX             (RANGE_MAX - LSB_SIZE)
 
-const struct MCC118DeviceInfo mcc118_device_info =
+struct MCC118DeviceInfo mcc118_device_info =
 {
     // The number of analog input channels.
     8,
     // The minimum uncalibrated ADC code.
     0,
-    /// The maximum uncalibrated ADC code (4095.)
+    // The maximum uncalibrated ADC code (4095.)
     MAX_CODE,
-    /// The input voltage corresponding to the minimum code (-10.0V.)
+    // The input voltage corresponding to the minimum code (-10.0V.)
     VOLTAGE_MIN,
-    /// The input voltage corresponding to the maximum code (+10.0V - 1 LSB.)
+    // The input voltage corresponding to the maximum code (+10.0V - 1 LSB.)
     VOLTAGE_MAX,
-    /// The minimum voltage of the input range (-10.0V.)
+    // The minimum voltage of the input range (-10.0V.)
     RANGE_MIN,
-    /// The maximum voltage of the input range (+10.0V.)
+    // The maximum voltage of the input range (+10.0V.)
     RANGE_MAX
 };
 
@@ -1297,7 +1297,7 @@ int mcc118_reset(uint8_t address)
 /******************************************************************************
   Return the device info struct.
  *****************************************************************************/
-const struct MCC118DeviceInfo* mcc118_info(void)
+struct MCC118DeviceInfo* mcc118_info(void)
 {
     return &mcc118_device_info;
 }
