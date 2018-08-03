@@ -27,7 +27,6 @@ int main()
     int update_interval_ms;
     int result = RESULT_SUCCESS;
     char c;
-    double max_voltage;
 
     // Determine the address of the device to be used
     if (select_hat_device(HAT_ID_MCC_152, &address) != 0)
@@ -36,11 +35,9 @@ int main()
     }
     
     // Create a 32-point sine waveform for the MCC 152 output
-    max_voltage = mcc152_a_out_voltage_max() * mcc152_a_out_code_max() / 
-        (mcc152_a_out_code_max() + 1);
     for (index = 0; index < WAVEFORM_LENGTH; index++)
     {
-        waveform[index] = max_voltage * 
+        waveform[index] = mcc152_info()->AO_MAX_VOLTAGE * 
             ((sin(((double)index / WAVEFORM_LENGTH) * 2 * M_PI) + 1.0) / 2.0);
     }
 

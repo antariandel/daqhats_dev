@@ -39,9 +39,9 @@ int main()
     // output 1.
     for (index = 0; index < WAVEFORM_LENGTH; index++)
     {
-        waveform_0[index] = mcc152_a_out_voltage_max() * 
+        waveform_0[index] = mcc152_info()->AO_MAX_VOLTAGE * 
             ((sin(((double)index / WAVEFORM_LENGTH) * 2 * M_PI) + 1) / 2);
-        waveform_1[index] = mcc152_a_out_voltage_max() * 
+        waveform_1[index] = mcc152_info()->AO_MAX_VOLTAGE * 
             ((cos(((double)index / WAVEFORM_LENGTH) * 2 * M_PI) + 1) / 2);
     }
 
