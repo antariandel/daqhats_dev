@@ -5,7 +5,6 @@ The **DataLogger** example shows how to acquire data from the **MCC 118 HAT**, d
 a strip chart, and log the data to a CSV file. 
 This example can be run from a terminal window, or accessed with an IDE such as **Geany** or **CodeBlocks**. 
 
-
 ## Dependencies
 - **GTK+** cross-platform toolkit for creating graphical user interfaces.
 - **GtkDatabox** widget used to display two-dimensional data.
@@ -45,15 +44,15 @@ To run the example from a terminal window, enter the following commands:
   ```sh
     sudo apt-get install geany
   ```
-To build the project, click **make**. Select the `logger.c` file, then press **F5** or select **Execute** from 
-the **Build** menu to run the example. (A "gtk_label_set_text" message may display; this can be ignored).
+To build the project, press Shift+F9 or select Make from the Build menu. Select the `logger.c` 
+file, then press F5 or select Execute from the Build menu.
 
 ## Running the example from CodeBlocks
 To install **CodeBlocks**, run the following in a terminal:
   ```sh
     sudo apt-get install codeblocks
   ```
-Click `Build`, then `Run` to run the example. (A "gtk_label_set_text" message may display; this can be ignored).
+Click `Build`, then `Run` to run the example.
 
 ## Support/Feedback
 Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx). 
