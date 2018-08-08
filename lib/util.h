@@ -32,6 +32,9 @@ enum SpiBus
 #define SPI_DEVICE_1            "/dev/spidev0.1"
 /// \endcond
 
+// The Raspberry Pi I2C device driver names
+#define I2C_DEVICE_1            "/dev/i2c-1"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

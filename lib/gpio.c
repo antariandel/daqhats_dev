@@ -10,11 +10,11 @@
 #include <stdbool.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <poll.h>
 #include <sys/mman.h>
+#include <sys/stat.h>
+#include "bcm_host.h"
 #include "gpio.h"
-
-// RPi 1 base address - use as default
-#define PERIPH_BASE_1     0x20000000
 
 #define PERIPH_SIZE       (4*1024)
 
@@ -30,6 +30,8 @@
 #define GPIO_SET *(gpio+7)  // sets   bits which are 1 ignores bits which are 0
 #define GPIO_CLR *(gpio+10) // clears bits which are 1 ignores bits which are 0
 
+#define GET_GPIO(g) ((*(gpio+13)&(1ul<<g)) == (1ul<<g)) // 0 if LOW, 1 if HIGH
+
 static bool gpio_initialized = false;
 static void* gpio_map = NULL;
 
@@ -37,42 +39,16 @@ static volatile unsigned* gpio;
 
 static void gpio_init(void)
 {
-    uint8_t buffer[4];
+    //uint8_t buffer[4];
     int fd;
     uint32_t gpio_base;
 
     gpio_initialized = false;
 
     // Determine which base address to use.
-
-    // Try to open /proc/device-tree/soc/ranges to read the value from there
-    fd = open("/proc/device-tree/soc/ranges", O_RDONLY);
-    if (fd >= 0)
-    {
-        lseek(fd, 4, SEEK_SET);
-        if (read(fd, buffer, 4) == 4)
-        {
-            gpio_base = ((uint32_t)buffer[0] << 24) |
-                        ((uint32_t)buffer[1] << 16) |
-                        ((uint32_t)buffer[2] << 8) |
-                        ((uint32_t)buffer[3]);
-            gpio_base += GPIO_OFFSET;
-        }
-        else
-        {
-            // use the RPi 1 value
-            gpio_base = PERIPH_BASE_1 + GPIO_OFFSET;
-        }
-        close(fd);
-    }
-    else
-    {
-        // use the RPi 1 value
-        gpio_base = PERIPH_BASE_1 + GPIO_OFFSET;
-    }
-
-
-    // Try to use /dev/mem in case we are not running in a recent version of
+    gpio_base = bcm_host_get_peripheral_address() + GPIO_OFFSET;
+    
+    // Try to use /dev/mem in case we are not running in a recent version of 
     // Raspbian.  Must be root for this to work.
     if ((fd = open("/dev/mem", O_RDWR | O_SYNC)) >= 0)
     {
@@ -152,5 +128,92 @@ void gpio_write(int pin, int val)
             // Set the pin to 1
             GPIO_SET = 1 << pin;
         }
+    }
+}
+
+int gpio_status(int pin)
+{
+    return GET_GPIO(pin);
+}
+
+int gpio_wait_for_low(int pin, int timeout)
+{
+    int event_fd;
+    int value_fd;
+    struct pollfd poll_data;
+    char basename[64];
+    char event_filename[64];
+    char value_filename[64];
+    char buffer[32];
+    int ret;
+    
+    // make sure gpio has been exported
+    sprintf(basename, "/sys/class/gpio/gpio%d", pin);
+    struct stat sb;
+    if (stat(basename, &sb) != 0)
+    {
+        int fd = open("/sys/class/gpio/export", O_RDWR);
+        if (fd == -1)
+        {
+            return -1;
+        }
+        sprintf(buffer, "%d", pin);
+        write(fd, buffer, strlen(buffer));
+        close(fd);
+    }
+
+    // return if it is already low
+    sprintf(value_filename, "%s/value", basename);
+    value_fd = open(value_filename, O_RDONLY);
+    if (value_fd == -1)
+    {
+        return -1;
+    }
+    read(value_fd, buffer, 1);
+    if (buffer[0] == '0')
+    {
+        return 1;
+    }
+    
+    // make sure edge is set
+    sprintf(event_filename, "%s/edge", basename);
+    event_fd = open(event_filename, O_RDWR);
+    if (event_fd == -1)
+    {
+        return -1;
+    }
+    read(event_fd, buffer, 32);
+    if (strcmp(buffer, "falling") != 0)
+    {
+        lseek(event_fd, 0, SEEK_SET);
+        sprintf(buffer, "falling");
+        write(event_fd, buffer, strlen(buffer));
+    }
+    close(event_fd);
+    
+    poll_data.fd = value_fd;
+    poll_data.events = POLLPRI | POLLERR;
+    poll_data.revents = 0;
+    
+    read(value_fd, buffer, 1);
+    
+    ret = poll(&poll_data, 1, timeout);
+    lseek(value_fd, 0, SEEK_SET);
+    read(value_fd, buffer, 1);
+    
+    close(value_fd);
+    if (ret == 0)
+    {
+        // timeout
+        return 0;
+    }
+    else if (ret == -1)
+    {
+        // error
+        return -1;
+    }
+    else
+    {
+        return 1;
     }
 }
