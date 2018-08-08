@@ -2,12 +2,17 @@
 <table>
     <tr><td>Info</td><td>Contains C and Python Libraries for interacting with 
     Measurement Computing DAQ HAT boards.</td></tr>
-    <tr><td>Author</td><td>Measurement Computing</td></tr>
+    <tr><td>Author</td><td>Measurement Computing</td></tr>   
+    <tr><td>Library Version<td>1.0.0</td></tr>
 </table>
 
 ## About
 This is the development repository for Measurement Computing DAQ HAT boards. The
 **daqhats** library was created and is supported by Measurement Computing Corporation (MCC).
+
+#### Supported MCC DAQ HAT hardware
+Hardware supported by this version of the MCC DAQ HAT Library:
+- MCC 118
 
 ## Prerequisites
 - Raspbian or Raspbian Lite image (may work with other Raspberry Pi operating systems)
