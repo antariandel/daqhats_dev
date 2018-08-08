@@ -118,9 +118,9 @@ def hat_list(filter_by_id=0):
 
     return my_list
 
-def hat_interrupt_state():
+def interrupt_state():
     """
-    Read the current interrupt status
+    Read the current DAQ HAT interrupt status
 
     Returns the status of the interrupt signal, True if active or False if
     inactive. The signal can be shared by multiple DAQ HATs so the status of
@@ -142,9 +142,9 @@ def hat_interrupt_state():
 
     return state == 1
 
-def hat_wait_for_interrupt(timeout):
+def wait_for_interrupt(timeout):
     """
-    Wait for an interrupt to occur.
+    Wait for an interrupt from a DAQ HAT to occur.
 
     Pass a timeout in seconds. Pass -1 to wait forever or 0 to return
     immediately. If the interrupt has not occurred before the timeout elapses

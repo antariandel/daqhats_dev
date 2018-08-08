@@ -346,7 +346,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             raise ValueError("Invalid channel {}.".format(channel))
 
         value = c_ubyte()
-        result = self._lib.mcc152_dio_input_read(
+        result = self._lib.mcc152_dio_input_read_bit(
             self._address, channel, byref(value))
 
         if result != self._RESULT_SUCCESS:
@@ -467,7 +467,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             raise ValueError(
                 "Invalid value {}, expecting 0 or 1.".format(value))
 
-        result = self._lib.mcc152_dio_output_write(
+        result = self._lib.mcc152_dio_output_write_bit(
             self._address, channel, value)
 
         if result != self._RESULT_SUCCESS:
@@ -604,7 +604,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             raise ValueError("Invalid channel {}.".format(channel))
 
         value = c_ubyte()
-        result = self._lib.mcc152_dio_output_read(
+        result = self._lib.mcc152_dio_output_read_bit(
             self._address, channel, byref(value))
 
         if result != self._RESULT_SUCCESS:
@@ -705,7 +705,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             raise ValueError("Invalid channel {}.".format(channel))
 
         value = c_ubyte()
-        result = self._lib.mcc152_dio_int_status_read(
+        result = self._lib.mcc152_dio_int_status_read_bit(
             self._address, channel, byref(value))
 
         if result != self._RESULT_SUCCESS:
@@ -734,7 +734,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             raise HatError(self._address, "Not initialized.")
 
         value = c_ubyte()
-        result = self._lib.mcc152_dio_int_status_read(
+        result = self._lib.mcc152_dio_int_status_read_port(
             self._address, byref(value))
 
         if result != self._RESULT_SUCCESS:
@@ -867,7 +867,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             raise ValueError(
                 "Invalid value {}, expecting 0 or 1.".format(value))
 
-        result = self._lib.mcc152_dio_config_write(
+        result = self._lib.mcc152_dio_config_write_bit(
             self._address, channel, item, value)
 
         if result == self._RESULT_BAD_PARAMETER:
@@ -1141,7 +1141,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             raise ValueError("Invalid channel {}.".format(channel))
 
         value = c_ubyte()
-        result = self._lib.mcc152_dio_config_read(
+        result = self._lib.mcc152_dio_config_read_bit(
             self._address, channel, item, byref(value))
 
         if result == self._RESULT_BAD_PARAMETER:
