@@ -19,7 +19,7 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
 ## Build Instructions
 1. Power off the Raspberry Pi and attach one or more DAQ HAT boards, using unique 
    address settings for each. Refer to 
-   [Installing the HAT board](https://www.mccdaq.com/PDFs/Manuals/DAQ-HAT/hardware.html) 
+   [Installing the HAT board](https://mccdaq.github.io/daqhats/hardware.html) 
    for detailed information.
    When using a single board, leave it at address 0 (all address jumpers removed.) 
    One board must always be at address 0 to ensure that the OS reads a HAT EEPROM
@@ -35,7 +35,7 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
 
    ```sh
    cd ~
-   git clone https://github.com/nwright98/daqhats
+   git clone https://github.com/mccdaq/daqhats.git
    ```
 5. Build and install the shared library, tools, and optional Python support. The 
    installer will ask if you want to install Python 2 and Python 3 support. It 
@@ -123,7 +123,5 @@ The **daqhats** library is supported by MCC. Contact technical support through
 our [support page](https://www.mccdaq.com/support/support_form.aspx).
 
 ## Documentation 
-Current docs: https://nwright98.github.io/daqhats/index.html
-
 Documentation for the daqhats library is available at 
-[mccdaq.com](https://www.mccdaq.com/PDFs/Manuals/DAQ-HAT/).
+https://mccdaq.github.io/daqhats/index.html.
