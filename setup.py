@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='daqhats',
-    version='0.2',
+    version='1.0.0',
     description='MCC DAQ HAT Python Library',
     author='Measurement Computing Corp.',
     #author_email='',
