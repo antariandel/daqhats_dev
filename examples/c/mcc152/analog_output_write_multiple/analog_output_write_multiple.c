@@ -14,13 +14,13 @@
 #include <math.h>
 #include "../../daqhats_utils.h"
 
-#define WAVEFORM_LENGTH     32      // number of samples in the waveform
+#define WAVEFORM_LENGTH     128     // number of samples in the waveform
 #define PERIOD              0.1     // period of the waveform in seconds
+#define OPTIONS             OPTS_DEFAULT    // default output options
 
 int main()
 {
     uint8_t address;
-    uint32_t options = OPTS_DEFAULT;
     double waveform_0[WAVEFORM_LENGTH];
     double waveform_1[WAVEFORM_LENGTH];
     double write_data[2];
@@ -35,7 +35,7 @@ int main()
         return -1;
     }
     
-    // Create a 32-point sine waveform for output 0 and a cosine waveform for
+    // Create a multi-point sine waveform for output 0 and a cosine waveform for
     // output 1.
     for (index = 0; index < WAVEFORM_LENGTH; index++)
     {
@@ -68,7 +68,7 @@ int main()
         // Write a value to the selected channel
         write_data[0] = waveform_0[index];
         write_data[1] = waveform_1[index];
-        result = mcc152_a_out_write_all(address, options, write_data);
+        result = mcc152_a_out_write_all(address, OPTIONS, write_data);
         STOP_ON_ERROR(result);
 
         if (++index >= WAVEFORM_LENGTH)

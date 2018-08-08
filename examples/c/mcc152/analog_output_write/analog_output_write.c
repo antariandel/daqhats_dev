@@ -14,7 +14,8 @@
 #include <math.h>
 #include "../../daqhats_utils.h"
 
-#define WAVEFORM_LENGTH     32      // number of samples in the waveform
+#define WAVEFORM_LENGTH     128     // number of samples in the waveform
+#define WAVEFORM_TYPE       1       // 0 - sine, 1 - triangle
 #define PERIOD              0.1     // period of the waveform in seconds
 #define CHANNEL             0       // update channel
 #define OPTIONS             OPTS_DEFAULT    // default output options
@@ -34,11 +35,24 @@ int main()
         return -1;
     }
     
-    // Create a 32-point sine waveform for the MCC 152 output
+    // Create a multi-point waveform for the MCC 152 output
     for (index = 0; index < WAVEFORM_LENGTH; index++)
     {
-        waveform[index] = mcc152_info()->AO_MAX_VOLTAGE * 
-            ((sin(((double)index / WAVEFORM_LENGTH) * 2 * M_PI) + 1.0) / 2.0);
+        switch (WAVEFORM_TYPE)
+        {
+        case 0:
+            waveform[index] = mcc152_info()->AO_MAX_VOLTAGE * 
+                ((sin(((double)index / WAVEFORM_LENGTH) * 2 * M_PI) + 1.0) / 
+                2.0);
+            break;
+        case 1:
+            waveform[index] = (mcc152_info()->AO_MAX_VOLTAGE / (WAVEFORM_LENGTH/2)) *
+                (WAVEFORM_LENGTH/2 - abs((index % WAVEFORM_LENGTH) - WAVEFORM_LENGTH/2));
+            break;
+        default:
+            waveform[index] = 0.0;
+            break;
+        }
     }
 
     // determine the interval between updates
@@ -48,7 +62,7 @@ int main()
     result = mcc152_open(address);
     STOP_ON_ERROR(result);
 
-    printf("\nMCC 152 single data value analog output example.\n");
+    printf("\nMCC 152 single channel analog output example.\n");
     printf("Outputs a sine wave to the analog output.\n");
     printf("    Function demonstrated: mcc152_a_out_write\n");
     printf("    Channel: %d\n", CHANNEL);
@@ -73,6 +87,9 @@ int main()
     }
 
 stop:
+    result = mcc152_a_out_write(address, CHANNEL, OPTIONS, 0.0);
+    print_error(result);
+    
     result = mcc152_close(address);
     print_error(result);
 
