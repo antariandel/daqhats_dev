@@ -17,6 +17,13 @@ enum SpiBus
     SPI_BUS_1
 };
 
+enum LockIndex
+{
+    LOCK_SPI_0 = 0,
+    LOCK_SPI_1,
+    LOCK_I2C
+};
+
 #define MAX_SPI_TRANSFER        4096        // Defined in the spidev driver
 
 // Delay / timeout constants
@@ -39,9 +46,11 @@ enum SpiBus
 extern "C" {
 #endif
 
+
 // internal functions for use by board classes
 int _obtain_spi_lock(enum SpiBus bus);
-int _obtain_board_lock(uint8_t address);
+int _obtain_lock(enum LockIndex index);
+//int _obtain_board_lock(uint8_t address);
 void _release_lock(int lock_fd);
 
 uint32_t _difftime_us(struct timespec* start, struct timespec* end);

@@ -201,6 +201,8 @@ int mcc152_open(uint8_t address)
     struct mcc152Device* dev;
     int result;
         
+    custom_data = NULL;
+    
     _mcc152_lib_init();
     
     // validate the parameters
@@ -234,7 +236,7 @@ int mcc152_open(uint8_t address)
             // uninitialized EEPROM
             custom_size = 0;
         }
-    
+        
         // create a struct to hold device instance data
         _devices[address] = (struct mcc152Device*)calloc(1,
             sizeof(struct mcc152Device));

@@ -95,6 +95,7 @@ static inline int _read_byte(int file)
 static int _mcc152_i2c_write(uint8_t address, uint8_t command, uint8_t value)
 {
     int i2c_fd;
+    //int lock_fd;
     uint8_t addr;
     int ret;
 
@@ -104,17 +105,27 @@ static int _mcc152_i2c_write(uint8_t address, uint8_t command, uint8_t value)
     }    
     addr = I2C_BASE_ADDR + address;
 
-    // open the I2C device handle
+    // Open the I2C device handle - this will block until all other handles are
+    // closed.
     i2c_fd = open(I2C_DEVICE_1, O_RDWR);
     if (i2c_fd < 0)
     {
         return RESULT_RESOURCE_UNAVAIL;
     }
-
+#if 0
+    // Obtain a lock
+    if ((lock_fd = _obtain_lock(LOCK_I2C)) < 0)
+    {
+        // could not get a lock within 5 seconds, report as a timeout
+        //close(i2c_fd);
+        return RESULT_LOCK_TIMEOUT;
+    }
+#endif
     // set slave address
     ret = ioctl(i2c_fd, I2C_SLAVE, addr);
     if (ret == -1)
     {
+        //_release_lock(lock_fd);
         close(i2c_fd);
         return RESULT_UNDEFINED;
     }
@@ -129,9 +140,11 @@ static int _mcc152_i2c_write(uint8_t address, uint8_t command, uint8_t value)
     {
         ret = RESULT_SUCCESS;
     }
-    
-    dio_devices[address].last_command = command;
+#if 0    
+    _release_lock(lock_fd);
+#endif    
     close(i2c_fd);
+    dio_devices[address].last_command = command;
     
     return ret;
 }
@@ -142,6 +155,7 @@ static int _mcc152_i2c_write(uint8_t address, uint8_t command, uint8_t value)
 static int _mcc152_i2c_read(uint8_t address, uint8_t command, uint8_t* value)
 {
     int i2c_fd;
+    //int lock_fd;
     uint8_t addr;
     int ret;
 
@@ -152,17 +166,27 @@ static int _mcc152_i2c_read(uint8_t address, uint8_t command, uint8_t* value)
     }    
     addr = I2C_BASE_ADDR + address;
 
-    // open the I2C device handle
+    // Open the I2C device handle - this will block until all other handles are
+    // closed.
     i2c_fd = open(I2C_DEVICE_1, O_RDWR);
     if (i2c_fd < 0)
     {
         return RESULT_RESOURCE_UNAVAIL;
     }
-
+#if 0
+    // Obtain a lock
+    if ((lock_fd = _obtain_lock(LOCK_I2C)) < 0)
+    {
+        // could not get a lock within 5 seconds, report as a timeout
+        //close(i2c_fd);
+        return RESULT_LOCK_TIMEOUT;
+    }
+#endif
     // set the slave address
     ret = ioctl(i2c_fd, I2C_SLAVE, addr);
     if (ret == -1)
     {
+        //_release_lock(lock_fd);
         close(i2c_fd);
         return RESULT_UNDEFINED;
     }
@@ -179,6 +203,11 @@ static int _mcc152_i2c_read(uint8_t address, uint8_t command, uint8_t* value)
         // read from the device
         ret = _read_byte_data(i2c_fd, command);
     }
+
+#if 0    
+    _release_lock(lock_fd);
+#endif    
+    close(i2c_fd);
     
     if (ret == -1)
     {
@@ -190,8 +219,6 @@ static int _mcc152_i2c_read(uint8_t address, uint8_t command, uint8_t* value)
         ret = RESULT_SUCCESS;
         dio_devices[address].last_command = command;
     }
-    
-    close(i2c_fd);
     
     return ret;
 }
@@ -319,7 +346,10 @@ int _mcc152_dio_init(int address)
     {
         return RESULT_BAD_PARAMETER;
     }
-    
+
+    // Only one handle may be open to an I2C bus at a time, so open it only
+    // while performing a bus transfer.
+
     // read the registers that have local cache
     dio_devices->last_command = 0xFF;
     

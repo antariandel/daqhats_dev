@@ -6,6 +6,7 @@
 *   07/18/2018
 */
 #include <fcntl.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
@@ -32,7 +33,7 @@
 #define MAX_CODE        4095
 
 static const char* const spi_device = SPI_DEVICE_1; // the spidev device
-static const enum SpiBus spi_bus_num = SPI_BUS_1;   // for obtain_lock()
+static const int spi_bus_num = LOCK_SPI_1;          // for obtain_lock()
 static const uint8_t spi_mode = SPI_MODE_1;         // use mode 1
                                                     // (CPOL=0, CPHA=1)
 static const uint8_t spi_bits = 8;                  // 8 bits per transfer
@@ -41,6 +42,8 @@ static const uint32_t spi_rate = 50000000;          // maximum SPI clock
 static const uint16_t spi_delay = 0;                // delay in us before
                                                     // removing CS
 
+static int spi_fd = -1;
+
 /******************************************************************************
   Perform a SPI transfer to the DAC
  *****************************************************************************/
@@ -48,7 +51,6 @@ static int _mcc152_spi_transfer(uint8_t address, void* tx_data,
     uint8_t data_count)
 {
     int lock_fd;
-    int spi_fd;
     uint8_t temp;
     int ret;
 
@@ -57,21 +59,19 @@ static int _mcc152_spi_transfer(uint8_t address, void* tx_data,
         return RESULT_BAD_PARAMETER;
     }    
 
-    // open the SPI device handle
-    spi_fd = open(spi_device, O_RDWR);
-    if (spi_fd < 0)
+    if (spi_fd == -1)
     {
         return RESULT_RESOURCE_UNAVAIL;
     }
-
-    // Obtain a spi lock
-    if ((lock_fd = _obtain_spi_lock(spi_bus_num)) < 0)
+#if 1
+    // Obtain a lock
+    if ((lock_fd = _obtain_lock(spi_bus_num)) < 0)
     {
         // could not get a lock within 5 seconds, report as a timeout
         close(spi_fd);
         return RESULT_LOCK_TIMEOUT;
     }
-    
+#endif
     _set_address(address);
     
     // check spi mode and change if necessary
@@ -92,7 +92,7 @@ static int _mcc152_spi_transfer(uint8_t address, void* tx_data,
             return RESULT_UNDEFINED;
         }
     }
-    
+
     // Init the spi ioctl structure
     struct spi_ioc_transfer tr = {
         .tx_buf = (uintptr_t)tx_data,
@@ -111,12 +111,10 @@ static int _mcc152_spi_transfer(uint8_t address, void* tx_data,
     {
         ret = RESULT_SUCCESS;
     }
-    
+#if 1
     // clear the SPI lock
     _release_lock(lock_fd);
-
-    close(spi_fd);
-    
+#endif
     return ret;
 }
     
@@ -184,12 +182,22 @@ int _mcc152_dac_init(uint8_t address)
     {
         return RESULT_BAD_PARAMETER;
     }    
+
+    if (spi_fd == -1)
+    {
+        spi_fd = open(spi_device, O_RDWR);
+        if (spi_fd < 0)
+        {
+            return RESULT_RESOURCE_UNAVAIL;
+        }
+    }
     
     // the DAC defaults to external reference so switch it to the internal
     // reference
     data[0] = DACCMD_REF_MODE;
     data[1] = 0;
     data[2] = 1;
-    return _mcc152_spi_transfer(address, data, 3);
+    int result = _mcc152_spi_transfer(address, data, 3);
+    
+    return result;
 }
-
