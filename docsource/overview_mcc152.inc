@@ -11,20 +11,21 @@ features:
 - 2 5 mA sink per output
 - Interrupt on input change
 
-.. only html::
+.. only:: html
 
     .. image:: images/mcc_152.png
-       :align: center
-       :alt: MCC 152 circuit board
-    :scale:50%
+        :align: center
+        :alt: MCC 152 circuit board
+        :scale: 50%
 
-.. only latex::
+.. only:: latex
 
     .. image:: images/mcc_152.png
-       :align: center
-       :alt: MCC 152 circuit board
-    :scale:50%
-	
+        :align: center
+        :alt: MCC 152 circuit board
+        :scale: 50%
+
+
 Board components
 ----------------
 Screw terminals
@@ -37,9 +38,10 @@ Screw terminals
 Address jumpers
 ^^^^^^^^^^^^^^^
 - **A0** to **A2**: Used to identify each HAT when multiple boards are
-connected. The first HAT connected to the Raspberry Pi must be at address 0
-(no jumper). Install jumpers on each additional connected board to set the
-desired address. Refer to the :ref:`multiple` topic for more information about the recommended addressing method.
+  connected. The first HAT connected to the Raspberry Pi must be at address 0
+  (no jumper). Install jumpers on each additional connected board to set the
+  desired address. Refer to the :ref:`multiple` topic for more information about
+  the recommended addressing method.
 
 Power jumper
 ^^^^^^^^^^^^^^^
@@ -47,12 +49,13 @@ Power jumper
 
 Status LED
 ^^^^^^^^^^
-The LED turns on when the board is connected to a Raspberry Pi with external power applied. 
+The LED turns on when the board is connected to a Raspberry Pi with external power 
+applied. 
 
 Header connector
 ^^^^^^^^^^^^^^^^
-The board header is used to connect with the Raspberry Pi. Refer to :ref:`install` for more information about the  
-header connector.
+The board header is used to connect with the Raspberry Pi. Refer to :ref:`install`
+for more information about the header connector.
 
 Functional block diagram
 ------------------------

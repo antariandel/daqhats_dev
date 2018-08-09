@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.3
+                0.3.0
               </div>
             
           
@@ -107,10 +107,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#mcc-152">MCC 152</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id1">Board components</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id2">Screw terminals</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id3">Status LED</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id4">Header connector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Address jumpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#power-jumper">Power jumper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Status LED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Header connector</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Functional block diagram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Specifications</a></li>
 </ul>
 </li>
 </ul>
@@ -201,7 +205,7 @@ develop your own applications.</p>
 <li>Onboard sample buffers</li>
 <li>Digital trigger input</li>
 </ul>
-<a class="reference internal image-reference" href="_images/mcc118.jpg"><img alt="MCC 118 circuit board" class="align-center" src="_images/mcc118.jpg" style="width: 518.5px; height: 471.5px;" /></a>
+<a class="reference internal image-reference" href="_images/mcc118.jpg"><img alt="MCC 118 circuit board" class="align-center" src="_images/mcc118.jpg" style="width: 612.5px; height: 464.5px;" /></a>
 <div class="section" id="board-components">
 <h3>Board components<a class="headerlink" href="#board-components" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="screw-terminals">
@@ -254,35 +258,63 @@ with the board. The LED may be blinked by the user.</p>
 </div>
 </div>
 <div class="section" id="mcc-152">
-<span id="mcc152"></span><h2>MCC 152<a class="headerlink" href="#mcc-152" title="Permalink to this headline">¶</a></h2>
-<p>2-channel analog output / 8 digital I/O board</p>
+<h2>MCC 152<a class="headerlink" href="#mcc-152" title="Permalink to this headline">¶</a></h2>
+<p>The MCC 152 is 2-channel analog output / 8 digital I/O board with the following
+features:</p>
 <ul class="simple">
 <li>12-bit D/A converter</li>
-<li>0 - 5V output</li>
-<li>5V / 3.3V selectable digital I/O</li>
+<li>0 - 5 V output</li>
+<li>5 V / 3.3 V selectable digital I/O</li>
 <li>Programmable pull-up/pull-down resistors</li>
-<li>25mA sink per output</li>
+<li>2 5 mA sink per output</li>
 <li>Interrupt on input change</li>
 </ul>
-<img alt="MCC 152 circuit board" class="align-center" src="_images/mcc_152.png" />
+<a class="reference internal image-reference" href="_images/mcc_152.png"><img alt="MCC 152 circuit board" class="align-center" src="_images/mcc_152.png" style="width: 542.5px; height: 471.0px;" /></a>
 <div class="section" id="id1">
 <h3>Board components<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="id2">
 <h4>Screw terminals<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
-<li><strong>AO0</strong> to <strong>AO1</strong>: Analog output terminals.</li>
-<li><strong>DIO0</strong> to <strong>DIO7</strong>: Digital input/output terminals</li>
+<li><strong>AO0</strong> to <strong>AO1</strong> (AOx): Analog output terminals.</li>
+<li><strong>DIO0</strong> to <strong>DIO7</strong> (DIOx): Digital input/output terminals.</li>
+<li><strong>AGND</strong> (GND): Common ground for the analog terminals.</li>
+<li><strong>DGND</strong> (GND): Common ground for the digital terminals.</li>
 </ul>
 </div>
 <div class="section" id="id3">
-<h4>Status LED<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
-<p>The LED turns on when the board is connected to a Raspberry Pi with external power applied.</p>
+<h4>Address jumpers<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><strong>A0</strong> to <strong>A2</strong>: Used to identify each HAT when multiple boards are
+connected. The first HAT connected to the Raspberry Pi must be at address 0
+(no jumper). Install jumpers on each additional connected board to set the
+desired address. Refer to the <a class="reference internal" href="hardware.html#multiple"><span class="std std-ref">Installing multiple boards</span></a> topic for more information about
+the recommended addressing method.</li>
+</ul>
+</div>
+<div class="section" id="power-jumper">
+<h4>Power jumper<a class="headerlink" href="#power-jumper" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><strong>5V</strong> and <strong>3.3V</strong>: Selects the DIO voltage.</li>
+</ul>
 </div>
 <div class="section" id="id4">
-<h4>Header connector<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
-<p>The board header is used to connect with the Raspberry Pi. Refer to <a class="reference internal" href="hardware.html#install"><span class="std std-ref">Installing the DAQ HAT board</span></a> for more information about the
-header connector.</p>
+<h4>Status LED<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>The LED turns on when the board is connected to a Raspberry Pi with external power
+applied.</p>
 </div>
+<div class="section" id="id5">
+<h4>Header connector<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p>The board header is used to connect with the Raspberry Pi. Refer to <a class="reference internal" href="hardware.html#install"><span class="std std-ref">Installing the DAQ HAT board</span></a>
+for more information about the header connector.</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>Functional block diagram<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="_images/mcc152-diag.jpg"><img alt="MCC 152 block diagram" class="align-center" src="_images/mcc152-diag.jpg" style="width: 534.0px; height: 317.7px;" /></a>
+</div>
+<div class="section" id="id7">
+<h3>Specifications<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="_static/esmcc152.pdf">MCC 152 Electrical Specifications</a></p>
 </div>
 </div>
 </div>

@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.3
+                0.3.0
               </div>
             
           
@@ -190,8 +190,8 @@ of board.  The Python package is named <em>daqhats</em>.</p>
 <h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
 <colgroup>
-<col width="38%" />
-<col width="63%" />
+<col width="42%" />
+<col width="58%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>Method</td>
@@ -200,11 +200,11 @@ of board.  The Python package is named <em>daqhats</em>.</p>
 <tr class="row-even"><td><a class="reference internal" href="#daqhats.hat_list" title="daqhats.hat_list"><code class="xref py py-func docutils literal notranslate"><span class="pre">hat_list()</span></code></a></td>
 <td>Return a list of detected DAQ HAT boards.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#daqhats.hat_interrupt_state" title="daqhats.hat_interrupt_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code></a></td>
-<td>Read the current interrupt status.</td>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.interrupt_state" title="daqhats.interrupt_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">interrupt_state()</span></code></a></td>
+<td>Read the current DAQ HAT interrupt status.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#daqhats.hat_wait_for_interrupt" title="daqhats.hat_wait_for_interrupt"><code class="xref py py-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code></a></td>
-<td>Wait for an interrupt to occur.</td>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.wait_for_interrupt" title="daqhats.wait_for_interrupt"><code class="xref py py-func docutils literal notranslate"><span class="pre">wait_for_interrupt()</span></code></a></td>
+<td>Wait for a DAQ HAT  interrupt to occur.</td>
 </tr>
 </tbody>
 </table>
@@ -242,9 +242,9 @@ DAQ HATs found. Each namedtuple will contain the following field names<ul class=
 </dd></dl>
 
 <dl class="function">
-<dt id="daqhats.hat_interrupt_state">
-<code class="descclassname">daqhats.</code><code class="descname">hat_interrupt_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.hat_interrupt_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the current interrupt status</p>
+<dt id="daqhats.interrupt_state">
+<code class="descclassname">daqhats.</code><code class="descname">interrupt_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.interrupt_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the current DAQ HAT interrupt status</p>
 <p>Returns the status of the interrupt signal, True if active or False if
 inactive. The signal can be shared by multiple DAQ HATs so the status of
 each board that may generate an interrupt must be read and the interrupt
@@ -262,9 +262,9 @@ source(s) cleared before the interrupt will become inactive.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="daqhats.hat_wait_for_interrupt">
-<code class="descclassname">daqhats.</code><code class="descname">hat_wait_for_interrupt</code><span class="sig-paren">(</span><em>timeout</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.hat_wait_for_interrupt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wait for an interrupt to occur.</p>
+<dt id="daqhats.wait_for_interrupt">
+<code class="descclassname">daqhats.</code><code class="descname">wait_for_interrupt</code><span class="sig-paren">(</span><em>timeout</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.wait_for_interrupt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for an interrupt from a DAQ HAT to occur.</p>
 <p>Pass a timeout in seconds. Pass -1 to wait forever or 0 to return
 immediately. If the interrupt has not occurred before the timeout elapses
 the function will return 0.</p>
@@ -1784,8 +1784,8 @@ or 1 to mask (disable) it.</p>
 interrupt occurs the user must determine the source, optionally act
 on the interrupt, then clear that source so that other interrupts
 may be detected. The current interrupt state may be read with
-<a class="reference internal" href="#daqhats.hat_interrupt_state" title="daqhats.hat_interrupt_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code></a>. A user program may also wait for the
-interrupt to become active with <a class="reference internal" href="#daqhats.hat_wait_for_interrupt" title="daqhats.hat_wait_for_interrupt"><code class="xref py py-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code></a>.
+<code class="xref py py-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code>. A user program may also wait for the
+interrupt to become active with <code class="xref py py-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code>.
 This allows the user to wait for a change on one or more inputs
 without constantly reading the inputs. The source of the interrupt may
 be determined by reading the interrupt status of each MCC 152 with
@@ -1880,8 +1880,8 @@ it.</p>
 interrupt occurs the user must determine the source, optionally act
 on the interrupt, then clear that source so that other interrupts
 may be detected. The current interrupt state may be read with
-<a class="reference internal" href="#daqhats.hat_interrupt_state" title="daqhats.hat_interrupt_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code></a>. A user program may also wait for the
-interrupt to become active with <a class="reference internal" href="#daqhats.hat_wait_for_interrupt" title="daqhats.hat_wait_for_interrupt"><code class="xref py py-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code></a>.
+<code class="xref py py-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code>. A user program may also wait for the
+interrupt to become active with <code class="xref py py-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code>.
 This allows the user to wait for a change on one or more inputs
 without constantly reading the inputs. The source of the interrupt may
 be determined by reading the interrupt status of each MCC 152 with
@@ -1976,8 +1976,8 @@ it.</p>
 interrupt occurs the user must determine the source, optionally act
 on the interrupt, then clear that source so that other interrupts
 may be detected. The current interrupt state may be read with
-<a class="reference internal" href="#daqhats.hat_interrupt_state" title="daqhats.hat_interrupt_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code></a>. A user program may also wait for the
-interrupt to become active with <a class="reference internal" href="#daqhats.hat_wait_for_interrupt" title="daqhats.hat_wait_for_interrupt"><code class="xref py py-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code></a>.
+<code class="xref py py-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code>. A user program may also wait for the
+interrupt to become active with <code class="xref py py-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code>.
 This allows the user to wait for a change on one or more inputs
 without constantly reading the inputs. The source of the interrupt may
 be determined by reading the interrupt status of each MCC 152 with

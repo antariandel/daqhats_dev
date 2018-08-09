@@ -15,14 +15,13 @@ The MCC 118 is an 8-channel analog voltage input board with the following featur
     .. image:: images/mcc118.jpg
         :align: center
         :alt: MCC 118 circuit board
-	:scale: 50%
+        :scale: 50%
 
 .. only:: latex
 
     .. image:: images/mcc118.jpg
         :align: center
         :alt: MCC 118 circuit board
-	
 
 
 Board components
