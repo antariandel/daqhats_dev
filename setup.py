@@ -4,12 +4,12 @@ from setuptools import setup
 
 setup(
     name='daqhats',
-    version='0.3',
+    version='0.3.0',
     description='MCC DAQ HAT Python Library',
     author='Measurement Computing Corp.',
     #author_email='',
     license='MIT',
-    url='https://github.com/nwright98/daqhats',
+    url='https://github.com/mccdaq/daqhats',
     packages=['daqhats'],
     install_requires=['enum34;python_version<"3.4"']
 )

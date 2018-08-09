@@ -1,12 +1,18 @@
-# MCC DAQ HAT Library
+# MCC DAQ HAT Library for Raspberry Pi
 <table>
-    <tr><td>Info</td><td>Contains C and Python Libraries for interacting with Measurement Computing DAQ HAT boards.</td></tr>
-    <tr><td>Author</td><td>Measurement Computing</td></tr>
+    <tr><td>Info</td><td>Contains C and Python Libraries for interacting with 
+    Measurement Computing DAQ HAT boards.</td></tr>
+    <tr><td>Author</td><td>Measurement Computing</td></tr>   
+    <tr><td>Library Version<td>1.0.0</td></tr>
 </table>
 
 ## About
 This is the development repository for Measurement Computing DAQ HAT boards. The
 **daqhats** library was created and is supported by Measurement Computing Corporation (MCC).
+
+#### Supported MCC DAQ HAT hardware
+Hardware supported by this version of the MCC DAQ HAT Library:
+- [MCC 118](https://nwright98.github.io/daqhats/overview.html#mcc-118)
 
 ## Prerequisites
 - Raspbian or Raspbian Lite image (may work with other Raspberry Pi operating systems)
@@ -19,7 +25,7 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
 ## Build Instructions
 1. Power off the Raspberry Pi and attach one or more DAQ HAT boards, using unique 
    address settings for each. Refer to 
-   [Installing the HAT board](https://www.mccdaq.com/PDFs/Manuals/DAQ-HAT/hardware.html) 
+   [Installing the HAT board](https://mccdaq.github.io/daqhats/hardware.html) 
    for detailed information.
    When using a single board, leave it at address 0 (all address jumpers removed.) 
    One board must always be at address 0 to ensure that the OS reads a HAT EEPROM
@@ -35,7 +41,7 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
 
    ```sh
    cd ~
-   git clone https://github.com/nwright98/daqhats
+   git clone https://github.com/mccdaq/daqhats.git
    ```
 5. Build and install the shared library, tools, and optional Python support. The 
    installer will ask if you want to install Python 2 and Python 3 support. It 
@@ -58,8 +64,9 @@ programs. Refer to the [Examples](#examples) section below for more information.
 
 #### List the installed boards
 You can use the tool **daqhats_list_boards** to display a list of the detected 
-MCC DAQ HATs.  This list is generated from the EEPROM images so it will not be 
-correct if you change the board stack without updating the EEPROM images (see below.)
+MCC DAQ HATs.  This list is generated from the EEPROM images, so it will not be 
+correct if you change the board stack without updating the EEPROM images 
+(see below.)
 
 #### Update the EEPROM images
 If you change your board stack, you must update the saved EEPROM images so that 
@@ -123,7 +130,5 @@ The **daqhats** library is supported by MCC. Contact technical support through
 our [support page](https://www.mccdaq.com/support/support_form.aspx).
 
 ## Documentation 
-Current docs: https://nwright98.github.io/daqhats/index.html
-
 Documentation for the daqhats library is available at 
-[mccdaq.com](https://www.mccdaq.com/PDFs/Manuals/DAQ-HAT/).
+https://nwright98.github.io/daqhats/index.html.
