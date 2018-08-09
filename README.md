@@ -130,4 +130,4 @@ The **daqhats** library is supported by MCC. Contact technical support through
 our [support page](https://www.mccdaq.com/support/support_form.aspx).
 
 ## Documentation 
-Current docs: https://nwright98.github.io/daqhats/index.html
+https://nwright98.github.io/daqhats/index.html
