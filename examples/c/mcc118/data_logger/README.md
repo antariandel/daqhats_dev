@@ -27,10 +27,16 @@ Install **GTKDatabox**:
     ./configure
     sudo make install
   ```
-Install **D-Bus AT-SPI**:
+ Install **D-Bus AT-SPI**:
   ```sh
     sudo apt-get install at-spi2-core
   ```
+
+> You may need to run ldconfig after installing the dependencies.
+  ```sh
+    sudo ldconfig
+  ```
+  
 ## Running the example from a terminal
 To run the example from a terminal window, enter the following commands:
   ```sh
