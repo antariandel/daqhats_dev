@@ -1,4 +1,4 @@
-# MCC DAQ HAT Library
+# MCC DAQ HAT Library for Raspberry Pi
 <table>
     <tr><td>Info</td><td>Contains C and Python Libraries for interacting with 
     Measurement Computing DAQ HAT boards.</td></tr>
