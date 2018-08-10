@@ -59,9 +59,8 @@ To run an example, open a terminal window in the folder where the example is loc
 (the default path is /daqhats/examples/python/mcc118/) and enter the following command:
 
 ```
-   sudo ./<example_name>.py
+   ./<example_name>.py
 ```
->   **Note**: The examples may need to be run with sudo.
 
 ## Support/Feedback
 Contact technical support through our [support page](https://www.mccdaq.com/support/support_form.aspx).
