@@ -3,7 +3,7 @@
     <tr><td>Info</td><td>Contains C and Python Libraries for interacting with 
     Measurement Computing DAQ HAT boards.</td></tr>
     <tr><td>Author</td><td>Measurement Computing</td></tr>   
-    <tr><td>Library Version<td>1.0.0</td></tr>
+    <tr><td>Library Version<td>1.1.0</td></tr>
 </table>
 
 ## About
@@ -13,6 +13,7 @@ This is the development repository for Measurement Computing DAQ HAT boards. The
 #### Supported MCC DAQ HAT hardware
 Hardware supported by this version of the MCC DAQ HAT Library:
 - [MCC 118](https://nwright98.github.io/daqhats_dev/overview.html#mcc-118)
+- [MCC 152](https://nwright98.github.io/daqhats_dev/overview.html#mcc-152)
 
 ## Prerequisites
 - Raspbian or Raspbian Lite image (may work with other Raspberry Pi operating systems)
@@ -41,7 +42,7 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
 
    ```sh
    cd ~
-   git clone https://github.com/mccdaq/daqhats.git
+   git clone https://github.com/nwright98/daqhats_dev.git
    ```
 5. Build and install the shared library, tools, and optional Python support. The 
    installer will ask if you want to install Python 2 and Python 3 support. It 
@@ -51,10 +52,10 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
    cd ~/daqhats
    sudo ./install.sh
    ```   
-6. [Optional] Use the firmware update tool to update the firmware on your MCC HAT 
-   board. The "0" in the example below is the board address. Repeat the command for
+6. [Optional] Use the firmware update tool to update the firmware on your MCC 118 
+   board(s). The "0" in the example below is the board address. Repeat the command for
    each MCC 118 address in your board stack. This example demonstrates how to update 
-   the firmware on the MCC 118 HAT that is installed at address 0.
+   the firmware on the MCC 118 that is installed at address 0.
 
    ```sh
    mcc118_firmware_update 0 ~/daqhats/tools/MCC_118.hex
