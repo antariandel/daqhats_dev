@@ -48,7 +48,7 @@ extern "C" {
 
 
 // internal functions for use by board classes
-int _obtain_spi_lock(enum SpiBus bus);
+//int _obtain_spi_lock(enum SpiBus bus);
 int _obtain_lock(enum LockIndex index);
 //int _obtain_board_lock(uint8_t address);
 void _release_lock(int lock_fd);
