@@ -13,12 +13,10 @@ Enter the following commands to install the dependencies.
 Install pip first if it is not already installed, then install Dash and Plotly.
 
    ```
-   apt-get install python-pip
+   sudo apt-get install python-pip
    pip install dash dash-renderer dash-html-components dash-core-components plotly  
    ```
 
->   **Note**: Installation may need to be run with sudo.
-    
 ## Start the web server
 1. To start the web server and run the example, open a terminal window and enter the 
 following commands: 

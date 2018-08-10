@@ -19,7 +19,6 @@ To run the example, open a terminal window and enter the following commands:
    cd ~/daqhats/examples/c/mcc118/finite_scan
    ./finite_scan
 ```
->   **Note**: The example may need to be run with sudo.
 
 ## Support/Feedback
 Contact technical support through our
