@@ -12,7 +12,7 @@ This is the development repository for Measurement Computing DAQ HAT boards. The
 
 #### Supported MCC DAQ HAT hardware
 Hardware supported by this version of the MCC DAQ HAT Library:
-- [MCC 118](https://nwright98.github.io/daqhats/overview.html#mcc-118)
+- [MCC 118](https://nwright98.github.io/daqhats_dev/overview.html#mcc-118)
 
 ## Prerequisites
 - Raspbian or Raspbian Lite image (may work with other Raspberry Pi operating systems)
@@ -25,7 +25,7 @@ Follow the instructions at https://www.raspberrypi.org/help/ for setting up a Ra
 ## Build Instructions
 1. Power off the Raspberry Pi and attach one or more DAQ HAT boards, using unique 
    address settings for each. Refer to 
-   [Installing the HAT board](https://mccdaq.github.io/daqhats/hardware.html) 
+   [Installing the HAT board](https://nwright98.github.io/daqhats_dev/hardware.html) 
    for detailed information.
    When using a single board, leave it at address 0 (all address jumpers removed.) 
    One board must always be at address 0 to ensure that the OS reads a HAT EEPROM
@@ -131,4 +131,4 @@ our [support page](https://www.mccdaq.com/support/support_form.aspx).
 
 ## Documentation 
 Documentation for the daqhats library is available at 
-https://nwright98.github.io/daqhats/index.html.
+https://nwright98.github.io/daqhats_dev/index.html.

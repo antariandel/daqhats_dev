@@ -14,8 +14,6 @@ To run the example, open a terminal window and enter the following commands:
    ./single_value_read
 ```
 
->   **Note**: The example may need to be run with sudo.
-
 ## Support/Feedback
 Contact technical support through our 
 [support page](https://www.mccdaq.com/support/support_form.aspx).
