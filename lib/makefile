@@ -1,5 +1,5 @@
-MAJOR = 0
-MINOR = 3
+MAJOR = 1
+MINOR = 1
 SUB   = 0
 NAME = daqhats
 VERSION = $(MAJOR).$(MINOR).$(SUB)
