@@ -53,7 +53,7 @@ def _load_daqhats_library():
     """
     Load the library
     """
-    libname = 'libdaqhats.so.0'
+    libname = 'libdaqhats.so.1'
     try:
         lib = cdll.LoadLibrary(libname)
     except: # pylint: disable=bare-except
