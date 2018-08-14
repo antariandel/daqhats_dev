@@ -68,4 +68,23 @@ fi
 
 echo
 
-echo "Install complete"
+# Check for SPI and I2C devices enabled
+devices_changed=0
+if [ $(raspi-config nonint get_spi) -eq 1 ]; then
+    echo "Enabling SPI interface"
+    raspi-config nonint do_spi 0
+    devices_changed=1
+    echo
+fi
+if [ $(raspi-config nonint get_i2c) -eq 1 ]; then
+    echo "Enabling I2C interface"
+    raspi-config nonint do_i2c 0
+    devices_changed=1
+    echo
+fi
+
+if [ "$devices_changed" -eq 1 ]; then
+    echo "Install complete, please reboot before using devices."
+else
+    echo "Install complete"
+fi
