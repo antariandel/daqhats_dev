@@ -278,6 +278,7 @@ void _semaphore_init(void)
         S_IWGRP     |
         S_IROTH     |   // other permission: read/write
         S_IWOTH);
+    printf("lockfiles open\n");
 
     // revert umask
     umask(mask);
@@ -715,7 +716,7 @@ void _release_lock(int lock_fd)
         break;
     }
 #else
-    flock(lockfiles[lock_fd], LOCK_UN);
+    flock(lock_fd, LOCK_UN);
     //printf("R: %d", lock_fd);
     //close(lock_fd);
 #endif
@@ -1171,6 +1172,36 @@ int hat_wait_for_interrupt(int timeout)
     case 0:     // timeout
         return RESULT_TIMEOUT;
     default:    // success
+        return RESULT_SUCCESS;
+    }
+}
+
+/******************************************************************************
+  Create an interrupt handler that calls the user-provided callback function.
+ *****************************************************************************/
+int hat_interrupt_callback_enable(void (*function)(void))
+{
+    switch (gpio_interrupt_callback(IRQ_GPIO, 0, function))
+    {
+    case -1:    // error
+        return RESULT_UNDEFINED;
+    case 0:
+    default:
+        return RESULT_SUCCESS;
+    }
+}
+
+/******************************************************************************
+  Disable an interrupt callback.
+ *****************************************************************************/
+int hat_interrupt_callback_disable(void)
+{
+    switch (gpio_interrupt_callback(IRQ_GPIO, 3, NULL))
+    {
+    case -1:    // error
+        return RESULT_UNDEFINED;
+    case 0:
+    default:
         return RESULT_SUCCESS;
     }
 }

@@ -11,6 +11,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <poll.h>
+#include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include "bcm_host.h"
@@ -36,6 +37,26 @@ static bool gpio_initialized = false;
 static void* gpio_map = NULL;
 
 static volatile unsigned* gpio;
+
+// Variables for GPIO interrupt threads
+#define NUM_GPIO            32          // max number of GPIO pins we handle for
+                                        // interrupts
+static int gpio_int_read_fds[NUM_GPIO] = 
+{
+    -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1
+};
+static int gpio_int_thread_signal[NUM_GPIO] =
+{
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0
+};
+static pthread_t gpio_int_threads[NUM_GPIO];
+static void (*gpio_callback_functions[NUM_GPIO])(void);
 
 static void gpio_init(void)
 {
@@ -134,6 +155,159 @@ void gpio_write(int pin, int val)
 int gpio_status(int pin)
 {
     return GET_GPIO(pin);
+}
+
+static void *gpio_interrupt_thread(void* arg)
+{
+    struct pollfd poll_data;
+    int ret;
+    uint8_t c;
+    int pin;
+    
+    pin = *(int*)arg;
+    free(arg);
+    if (pin >= NUM_GPIO)
+    {
+        return NULL;
+    }
+    
+    while (gpio_int_thread_signal[pin] == 0)
+    {
+        poll_data.fd = gpio_int_read_fds[pin];
+        poll_data.events = POLLPRI | POLLERR;
+        poll_data.revents = 0;
+        
+        // timeout after 1ms
+        ret = poll(&poll_data, 1, 1);
+        
+        if (ret > 0)
+        {
+            // read to clear the interrupt
+            lseek(gpio_int_read_fds[pin], 0, SEEK_SET);
+            read(gpio_int_read_fds[pin], &c, 1);
+            
+            // call the callback
+            gpio_callback_functions[pin]();
+        }
+    }
+    
+    return NULL;
+}
+
+int gpio_interrupt_callback(int pin, int mode, void (*function)(void))
+{
+    int event_fd;
+    int value_fd;
+    char basename[64];
+    char event_filename[64];
+    char value_filename[64];
+    char buffer[32];
+    char mode_string[32];
+    int count;
+    int i;
+    struct stat sb;
+    
+    if (pin >= NUM_GPIO)
+    {
+        return -1;
+    }
+    
+    // make sure gpio has been exported
+    sprintf(basename, "/sys/class/gpio/gpio%d", pin);
+    if (stat(basename, &sb) != 0)
+    {
+        int fd = open("/sys/class/gpio/export", O_RDWR);
+        if (fd == -1)
+        {
+            return -1;
+        }
+        sprintf(buffer, "%d", pin);
+        write(fd, buffer, strlen(buffer));
+        close(fd);
+    }
+
+    // make sure edge is set
+    sprintf(event_filename, "%s/edge", basename);
+    event_fd = open(event_filename, O_RDWR);
+    if (event_fd == -1)
+    {
+        return -1;
+    }
+    read(event_fd, buffer, 32);
+    
+    switch (mode)
+    {
+    case 0: // falling
+        sprintf(mode_string, "falling");
+        break;
+    case 1: // rising
+        sprintf(mode_string, "rising");
+        break;
+    case 2: // both
+        sprintf(mode_string, "both");
+        break;
+    default:    // disable
+        sprintf(mode_string, "none");
+        lseek(event_fd, 0, SEEK_SET);
+        write(event_fd, mode_string, strlen(mode_string));
+        close(event_fd);
+        
+        if (gpio_int_read_fds[pin] != -1)
+        {
+            // there is already an interrupt thread on this pin so signal the
+            // thread to end and wait for it
+            gpio_int_thread_signal[pin] = 1;
+            pthread_join(gpio_int_threads[pin], NULL);
+            close(gpio_int_read_fds[pin]);
+            gpio_int_read_fds[pin] = -1;
+        }
+        return 0;
+    }
+
+    // only get here if we are configuring an edge
+    if (strcmp(buffer, mode_string) != 0)
+    {
+        lseek(event_fd, 0, SEEK_SET);
+        write(event_fd, mode_string, strlen(mode_string));
+    }
+    close(event_fd);
+
+    // check for an existing thread
+    if (gpio_int_read_fds[pin] != -1)
+    {
+        // there is already an interrupt thread on this pin so signal the
+        // thread to end and wait for it
+        gpio_int_thread_signal[pin] = 1;
+        pthread_join(gpio_int_threads[pin], NULL);
+        close(gpio_int_read_fds[pin]);
+        gpio_int_read_fds[pin] = -1;
+    }
+    
+    // clear any pending interrupts
+    sprintf(value_filename, "%s/value", basename);
+    value_fd = open(value_filename, O_RDONLY);
+    if (value_fd == -1)
+    {
+        return -1;
+    }
+    
+    ioctl(value_fd, FIONREAD, &count);
+    for (i = 0; i < count; i++)
+    {
+        read(value_fd, buffer, 1);
+    }
+    
+    // set the callback function
+    gpio_callback_functions[pin] = function;
+    gpio_int_read_fds[pin] = value_fd;
+    gpio_int_thread_signal[pin] = 0;
+    int* ppin = (int*)malloc(sizeof(int));
+    *ppin = pin;
+    
+    // start the interrupt thread
+    pthread_create(&gpio_int_threads[pin], NULL, gpio_interrupt_thread, ppin);
+    
+    return 0;
 }
 
 int gpio_wait_for_low(int pin, int timeout)
