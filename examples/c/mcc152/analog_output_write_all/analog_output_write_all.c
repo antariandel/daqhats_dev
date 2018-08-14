@@ -1,20 +1,20 @@
 /*****************************************************************************
 
     MCC 152 Functions Demonstrated:
-        mcc152_a_out_write
+        mcc152_a_out_write_all
         mcc152_info
 
     Purpose:
-        Write values to analog output 0 in a loop.
+        Write values to both analog outputs in a loop.
 
     Description:
-        This example demonstrates writing output data using analog output 0.
+        This example demonstrates writing output data to both outputs
+        simultaneously.
 
 *****************************************************************************/
 #include <stdbool.h>
 #include "../../daqhats_utils.h"
 
-#define CHANNEL             0               // output channel
 #define OPTIONS             OPTS_DEFAULT    // default output options
 #define BUFFER_SIZE         32
 
@@ -23,17 +23,16 @@ int main()
     uint8_t address;
     int result = RESULT_SUCCESS;
     char buffer[BUFFER_SIZE];
-    double value;
+    double values[2];
     double min;
     double max;
     bool error;
 
-    printf("\nMCC 152 single channel analog output example.\n");
-    printf("Writes the specified voltage to the analog output.\n");
+    printf("\nMCC 152 all channel analog output example.\n");
+    printf("Writes the specified voltages to the analog outputs.\n");
     printf("   Functions demonstrated:\n");
-    printf("      mcc152_a_out_write\n");
+    printf("      mcc152_a_out_write_all\n");
     printf("      mcc152_info\n");
-    printf("   Channel: %d\n\n", CHANNEL);
     printf("\nMCC 152s detected:\n\n");
 
     // Select the device to be used
@@ -56,9 +55,11 @@ int main()
     error = false;
     while (1)
     {
-        // Get the value from the user
-        printf("Enter a voltage between %.1f and %.1f, non-numeric character to exit: ",
+        // Get the values from the user
+        printf("Enter voltages between %.1f and %.1f, non-numeric character to exit:\n",
             min, max);
+            
+        printf("   Ch 0: ");
 
         if (fgets(buffer, BUFFER_SIZE, stdin) == NULL)
         {
@@ -73,32 +74,63 @@ int main()
                 break;
             }
             
-            if (sscanf(buffer, "%lf", &value) == 0)
+            if (sscanf(buffer, "%lf", &values[0]) == 0)
             {
                 // Not a number
                 break;
             }
             
-            if ((value < min) || (value > max))
+            if ((values[0] < min) || (values[0] > max))
             {
                 printf("Value out of range.\n");
                 continue;
             }
             
-            // Write a value to the selected channel
-            result = mcc152_a_out_write(address, CHANNEL, OPTIONS, value);
-            if (result != RESULT_SUCCESS)
+        }
+
+        printf("   Ch 1: ");
+
+        if (fgets(buffer, BUFFER_SIZE, stdin) == NULL)
+        {
+            // empty string or error
+            break;
+        }
+        else
+        {
+            if (buffer[0] == '\n')
             {
-                print_error(result);
-                error = true;
+                // Enter
                 break;
             }
+            
+            if (sscanf(buffer, "%lf", &values[1]) == 0)
+            {
+                // Not a number
+                break;
+            }
+            
+            if ((values[1] < min) || (values[1] > max))
+            {
+                printf("Value out of range.\n");
+                continue;
+            }
+            
+        }
+
+        // Write the values
+        result = mcc152_a_out_write_all(address, OPTIONS, values);
+        if (result != RESULT_SUCCESS)
+        {
+            print_error(result);
+            error = true;
+            break;
         }
     }
 
     if (!error)
     {
-        result = mcc152_a_out_write(address, CHANNEL, OPTIONS, 0.0);
+        values[0] = values[1] = 0.0;
+        result = mcc152_a_out_write_all(address, OPTIONS, values);
         print_error(result);
     }
     

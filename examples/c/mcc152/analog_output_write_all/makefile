@@ -1,4 +1,4 @@
-NAME = analog_output_write_multiple
+NAME = analog_output_write_all
 OBJ = $(NAME).o
 LIBS = -ldaqhats -lm
 CFLAGS = -Wall -I/usr/local/include -I./ -g
