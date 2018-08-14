@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>C Library Reference &mdash; MCC DAQ HAT Library 0.3.0 documentation</title>
+  <title>C Library Reference &mdash; MCC DAQ HAT Library 1.1.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.3.0
+                1.1.0
               </div>
             
           
@@ -198,8 +198,8 @@ type of board.  The library may be used with C and C++.</p>
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
 <colgroup>
-<col width="37%" />
-<col width="63%" />
+<col width="46%" />
+<col width="54%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>Function</td>
@@ -216,6 +216,12 @@ type of board.  The library may be used with C and C++.</p>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#c.hat_interrupt_state" title="hat_interrupt_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code></a></td>
 <td>Read the current interrupt status.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#c.hat_interrupt_callback_enable" title="hat_interrupt_callback_enable"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_interrupt_callback_enable()</span></code></a></td>
+<td>Enable an interrupt callback function.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#c.hat_interrupt_callback_disable" title="hat_interrupt_callback_disable"><code class="xref c c-func docutils literal notranslate"><span class="pre">hat_interrupt_callback_disable()</span></code></a></td>
+<td>Disable interrupt callback function.</td>
 </tr>
 </tbody>
 </table>
@@ -293,6 +299,37 @@ type of board.  The library may be used with C and C++.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd>1 if interrupt is active, 0 if inactive. </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.hat_interrupt_callback_enable">
+<span class="target" id="daqhats_8h_1a674dafaa5bcb8c7c40ac234293768ec2"></span>int <code class="descname">hat_interrupt_callback_enable</code><span class="sig-paren">(</span>void(<em>*function</em>)(void)<span class="sig-paren">)</span><a class="headerlink" href="#c.hat_interrupt_callback_enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure an interrupt callback function.</p>
+<p>Set a function that will be called when a DAQ HAT interrupt occurs. The function must have a void return type and argument list, such as:</p>
+<p>void function(void)</p>
+<p>The function will be called when any enabled DAQ HAT interrupt source is active, so must read and clear all active sources before it can be called again. There may only be one callback function at a time; if you call this when a function is already set as the callback function then it will be replaced with the new function and the old function will no longer be called if an interrupt occurs.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>RESULT_SUCCESS or RESULT_UNDEFINED. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">function</span></code>: The callback function. </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c.hat_interrupt_callback_disable">
+<span class="target" id="daqhats_8h_1a8e10d63dead5be6d82200786dbc30b33"></span>int <code class="descname">hat_interrupt_callback_disable</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.hat_interrupt_callback_disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable interrupt callbacks.</p>
+<p>Removes any callback function from the interrupt handler.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>RESULT_SUCCESS or RESULT_UNDEFINED. </dd>
 </dl>
 </p>
 </dd></dl>
@@ -1768,7 +1805,7 @@ type of board.  The library may be used with C and C++.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.3.0',
+            VERSION:'1.1.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
