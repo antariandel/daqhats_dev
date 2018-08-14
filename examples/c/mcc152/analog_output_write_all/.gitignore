@@ -1,2 +1,2 @@
 *.o
-analog_output_write_multiple
+analog_output_write_all
