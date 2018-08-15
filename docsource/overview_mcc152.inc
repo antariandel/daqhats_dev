@@ -13,18 +13,17 @@ features:
 
 .. only:: html
 
-    .. image:: images/mcc_152.png
+    .. image:: images/mcc152.jpg
         :align: center
         :alt: MCC 152 circuit board
         :scale: 50%
 
 .. only:: latex
 
-    .. image:: images/mcc_152.png
+    .. image:: images/mcc152.jpg
         :align: center
         :alt: MCC 152 circuit board
-        :scale: 50%
-
+		:scale: 110%
 
 Board components
 ----------------
@@ -65,15 +64,13 @@ Functional block diagram
     .. image:: images/mcc152-diag.jpg
 	:align: center
 	:alt: MCC 152 block diagram
-	:scale: 30%
+	:scale: 35%
 
 .. only:: latex
 
     .. image:: images/mcc152-diag.jpg
 	:align: center
 	:alt: MCC 152 block diagram
-	:scale: 90%
-
 
 Specifications
 --------------
