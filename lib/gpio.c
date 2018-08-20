@@ -18,7 +18,7 @@
 #include "bcm_host.h"
 #include "gpio.h"
 
-#define DEBUG
+//#define DEBUG
 
 #define PERIPH_SIZE       (4*1024)
 
@@ -232,8 +232,10 @@ int gpio_interrupt_callback(int pin, int mode, void (*function)(void*),
     
     // make sure gpio has been exported
     sprintf(basename, "/sys/class/gpio/gpio%d", pin);
+    sprintf(event_filename, "%s/edge", basename);
     if (stat(basename, &sb) != 0)
     {
+        // export the interrupt pin
         int fd = open("/sys/class/gpio/export", O_RDWR);
         if (fd == -1)
         {
@@ -245,10 +247,16 @@ int gpio_interrupt_callback(int pin, int mode, void (*function)(void*),
         sprintf(buffer, "%d", pin);
         write(fd, buffer, strlen(buffer));
         close(fd);
+        
+        // wait for the edge file to appear with group write access
+        do
+        {
+            usleep(10);
+        } while (!( (stat(event_filename, &sb) == 0) &&     // file exists
+                    ((sb.st_mode & S_IWGRP) == S_IWGRP) )); // group writable
     }
 
     // make sure edge is set
-    sprintf(event_filename, "%s/edge", basename);
     event_fd = open(event_filename, O_RDWR);
     if (event_fd == -1)
     {
@@ -348,10 +356,11 @@ int gpio_wait_for_low(int pin, int timeout)
     char value_filename[64];
     char buffer[32];
     int ret;
+    struct stat sb;
     
     // make sure gpio has been exported
     sprintf(basename, "/sys/class/gpio/gpio%d", pin);
-    struct stat sb;
+    sprintf(event_filename, "%s/edge", basename);
     if (stat(basename, &sb) != 0)
     {
         int fd = open("/sys/class/gpio/export", O_RDWR);
@@ -362,6 +371,13 @@ int gpio_wait_for_low(int pin, int timeout)
         sprintf(buffer, "%d", pin);
         write(fd, buffer, strlen(buffer));
         close(fd);
+
+        // wait for the edge file to appear with group write access
+        do
+        {
+            usleep(10);
+        } while (!( (stat(event_filename, &sb) == 0) &&     // file exists
+                    ((sb.st_mode & S_IWGRP) == S_IWGRP) )); // group writable
     }
 
     // return if it is already low
@@ -378,7 +394,6 @@ int gpio_wait_for_low(int pin, int timeout)
     }
     
     // make sure edge is set
-    sprintf(event_filename, "%s/edge", basename);
     event_fd = open(event_filename, O_RDWR);
     if (event_fd == -1)
     {
