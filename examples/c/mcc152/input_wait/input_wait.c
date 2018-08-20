@@ -29,6 +29,7 @@ void isr(void* data)
 int main(int argc, char* argv[])
 {
     uint8_t value;
+    int result;
 
     // Use MCC 152 at address 0
     address = 0;
@@ -54,7 +55,10 @@ int main(int argc, char* argv[])
     
 #if 1
     value = 5;
-    hat_interrupt_callback_enable(isr, &value);
+    if ((result = hat_interrupt_callback_enable(isr, &value)) != RESULT_SUCCESS)
+    {
+        printf("Error %d\n", result);
+    }
     
     while (done == 0)
     {
