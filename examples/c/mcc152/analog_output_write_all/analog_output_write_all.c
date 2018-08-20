@@ -23,18 +23,21 @@ int main()
     uint8_t address;
     int result = RESULT_SUCCESS;
     char buffer[BUFFER_SIZE];
-    double values[2];
+    double *values;
     double min;
     double max;
     bool error;
+    bool run_loop;
+    bool valid_value;
+    int channel;
 
     printf("\nMCC 152 all channel analog output example.\n");
     printf("Writes the specified voltages to the analog outputs.\n");
     printf("   Functions demonstrated:\n");
     printf("      mcc152_a_out_write_all\n");
-    printf("      mcc152_info\n");
+    printf("      mcc152_info\n\n");
 
-    // Select the device to be used
+    // Select the device to be used.
     if (select_hat_device(HAT_ID_MCC_152, &address) != 0)
     {
         return 1;
@@ -42,101 +45,112 @@ int main()
     
     printf("\nUsing address %d.\n", address);
     
-    // Open a connection to the device
+    // Open a connection to the device.
     result = mcc152_open(address);
+    print_error(result);
     if (result != RESULT_SUCCESS)
     {
+        // Could not open the device - exit.
         printf("Unable to open device at address %d\n", address);
-        print_error(result);
         return 1;
     }
         
+    // Get the min and max voltage values for the analog outputs to validate
+    // the user input.
     min = mcc152_info()->AO_MIN_RANGE;
     max = mcc152_info()->AO_MAX_RANGE;
-    error = false;
-    while (1)
+    // Allocate memory for the values.
+    values = (double*)malloc(mcc152_info()->NUM_AO_CHANNELS * sizeof(double));
+    if (values == NULL)
     {
-        // Get the values from the user
-        printf("Enter voltages between %.1f and %.1f, non-numeric character to exit:\n",
-            min, max);
+        mcc152_close(address);
+        printf("Could not allocate memory.\n");
+        return 1;
+    }
+    error = false;
+    run_loop = true;
+    // Loop until the user terminates or we get a library error.
+    while (run_loop && !error)
+    {
+        printf("Enter voltages between %.1f and %.1f, non-numeric character to"
+            " exit:\n", min, max);
             
-        printf("   Ch 0: ");
+        for (channel = 0; 
+             (channel < mcc152_info()->NUM_AO_CHANNELS) && run_loop; 
+             channel++)
+        {
+            do
+            {
+                // Loop if the user enters an out of range value.
+                valid_value = true;
+                
+                // Get the channel value from the user as a string.
+                printf("   Ch %d: ", channel);
 
-        if (fgets(buffer, BUFFER_SIZE, stdin) == NULL)
-        {
-            // empty string or error
-            break;
-        }
-        else
-        {
-            if (buffer[0] == '\n')
-            {
-                // Enter
-                break;
-            }
-            
-            if (sscanf(buffer, "%lf", &values[0]) == 0)
-            {
-                // Not a number
-                break;
-            }
-            
-            if ((values[0] < min) || (values[0] > max))
-            {
-                printf("Value out of range.\n");
-                continue;
-            }
-            
-        }
-
-        printf("   Ch 1: ");
-
-        if (fgets(buffer, BUFFER_SIZE, stdin) == NULL)
-        {
-            // empty string or error
-            break;
-        }
-        else
-        {
-            if (buffer[0] == '\n')
-            {
-                // Enter
-                break;
-            }
-            
-            if (sscanf(buffer, "%lf", &values[1]) == 0)
-            {
-                // Not a number
-                break;
-            }
-            
-            if ((values[1] < min) || (values[1] > max))
-            {
-                printf("Value out of range.\n");
-                continue;
-            }
-            
+                if (fgets(buffer, BUFFER_SIZE, stdin) == NULL)
+                {
+                    // Empty string or input error.
+                    run_loop = false;
+                    break;
+                }
+                else
+                {
+                    if (buffer[0] == '\n')
+                    {
+                        // Enter.
+                        run_loop = false;
+                        break;
+                    }
+                    
+                    if (sscanf(buffer, "%lf", &values[channel]) == 0)
+                    {
+                        // Not a number.
+                        run_loop = false;
+                        break;
+                    }
+                        
+                    // Compare the number to min and max allowed.
+                    if ((values[channel] < min) || (values[channel] > max))
+                    {
+                        // Out of range, ask again.
+                        printf("Value out of range.\n");
+                        valid_value = false;
+                        continue;
+                    }
+                }
+            } while (!valid_value);
         }
 
-        // Write the values
-        result = mcc152_a_out_write_all(address, OPTIONS, values);
-        if (result != RESULT_SUCCESS)
+        // If the user entered valid values then update the outputs.
+        if (run_loop)
         {
-            print_error(result);
-            error = true;
-            break;
+            result = mcc152_a_out_write_all(address, OPTIONS, values);
+            if (result != RESULT_SUCCESS)
+            {
+                print_error(result);
+                error = true;
+                break;
+            }
         }
     }
 
+    // If there was no library error reset the output to 0V.
     if (!error)
     {
-        values[0] = values[1] = 0.0;
+        for (channel = 0; channel < mcc152_info()->NUM_AO_CHANNELS; channel++)
+        {
+            values[channel] = 0.0;
+        }
         result = mcc152_a_out_write_all(address, OPTIONS, values);
         print_error(result);
     }
     
+    // Close the device.
     result = mcc152_close(address);
     print_error(result);
-
+    
+    // Free allocated memory.
+    free(values);
+    
     return (int)error;
 }
