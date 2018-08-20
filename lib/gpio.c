@@ -55,8 +55,15 @@ static int gpio_int_thread_signal[NUM_GPIO] =
     0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0
 };
+static void* gpio_callback_data[NUM_GPIO] =
+{
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+};
 static pthread_t gpio_int_threads[NUM_GPIO];
-static void (*gpio_callback_functions[NUM_GPIO])(void);
+static void (*gpio_callback_functions[NUM_GPIO])(void*);
 
 static void gpio_init(void)
 {
@@ -187,14 +194,15 @@ static void *gpio_interrupt_thread(void* arg)
             read(gpio_int_read_fds[pin], &c, 1);
             
             // call the callback
-            gpio_callback_functions[pin]();
+            gpio_callback_functions[pin](gpio_callback_data[pin]);
         }
     }
     
     return NULL;
 }
 
-int gpio_interrupt_callback(int pin, int mode, void (*function)(void))
+int gpio_interrupt_callback(int pin, int mode, void (*function)(void*),
+    void* data)
 {
     int event_fd;
     int value_fd;
@@ -299,6 +307,7 @@ int gpio_interrupt_callback(int pin, int mode, void (*function)(void))
     
     // set the callback function
     gpio_callback_functions[pin] = function;
+    gpio_callback_data[pin] = data;
     gpio_int_read_fds[pin] = value_fd;
     gpio_int_thread_signal[pin] = 0;
     int* ppin = (int*)malloc(sizeof(int));

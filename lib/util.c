@@ -278,7 +278,6 @@ void _semaphore_init(void)
         S_IWGRP     |
         S_IROTH     |   // other permission: read/write
         S_IWOTH);
-    printf("lockfiles open\n");
 
     // revert umask
     umask(mask);
@@ -1179,9 +1178,9 @@ int hat_wait_for_interrupt(int timeout)
 /******************************************************************************
   Create an interrupt handler that calls the user-provided callback function.
  *****************************************************************************/
-int hat_interrupt_callback_enable(void (*function)(void))
+int hat_interrupt_callback_enable(void (*function)(void*), void* data)
 {
-    switch (gpio_interrupt_callback(IRQ_GPIO, 0, function))
+    switch (gpio_interrupt_callback(IRQ_GPIO, 0, function, data))
     {
     case -1:    // error
         return RESULT_UNDEFINED;
@@ -1196,7 +1195,7 @@ int hat_interrupt_callback_enable(void (*function)(void))
  *****************************************************************************/
 int hat_interrupt_callback_disable(void)
 {
-    switch (gpio_interrupt_callback(IRQ_GPIO, 3, NULL))
+    switch (gpio_interrupt_callback(IRQ_GPIO, 3, NULL, NULL))
     {
     case -1:    // error
         return RESULT_UNDEFINED;

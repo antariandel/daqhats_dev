@@ -158,21 +158,23 @@ int hat_wait_for_interrupt(int timeout);
 *   Configure an interrupt callback function.
 *
 *   Set a function that will be called when a DAQ HAT interrupt occurs. The 
-*   function must have a void return type and argument list, such as:
+*   function must have a void return type and void * argument, such as:
 *
-*   void function(void)
+*   void function(void* data)
 *
 *   The function will be called when any enabled DAQ HAT interrupt source is
 *   active, so must read and clear all active sources before it can be called 
 *   again. There may only be one callback function at a time; if you call this
 *   when a function is already set as the callback function then it will be
 *   replaced with the new function and the old function will no longer be called
-*   if an interrupt occurs.
+*   if an interrupt occurs. The data argument to this function will be passed
+*   to the callback function when it is called.
 *
 *   @param function     The callback function.
+*   @param data         The data to pass to the callback function.
 *   @return RESULT_SUCCESS or RESULT_UNDEFINED.
 */
-int hat_interrupt_callback_enable(void (*function)(void));
+int hat_interrupt_callback_enable(void (*function)(void*), void* data);
 
 /**
 *   Disable interrupt callbacks.
