@@ -305,17 +305,18 @@ type of board.  The library may be used with C and C++.</p>
 
 <dl class="function">
 <dt id="c.hat_interrupt_callback_enable">
-<span class="target" id="daqhats_8h_1a674dafaa5bcb8c7c40ac234293768ec2"></span>int <code class="descname">hat_interrupt_callback_enable</code><span class="sig-paren">(</span>void(<em>*function</em>)(void)<span class="sig-paren">)</span><a class="headerlink" href="#c.hat_interrupt_callback_enable" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="daqhats_8h_1a671bbe957a0b9aa2fef3b2d79ef425f4"></span>int <code class="descname">hat_interrupt_callback_enable</code><span class="sig-paren">(</span>void(<em>*function</em>)(void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hat_interrupt_callback_enable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure an interrupt callback function.</p>
-<p>Set a function that will be called when a DAQ HAT interrupt occurs. The function must have a void return type and argument list, such as:</p>
-<p>void function(void)</p>
-<p>The function will be called when any enabled DAQ HAT interrupt source is active, so must read and clear all active sources before it can be called again. There may only be one callback function at a time; if you call this when a function is already set as the callback function then it will be replaced with the new function and the old function will no longer be called if an interrupt occurs.</p>
+<p>Set a function that will be called when a DAQ HAT interrupt occurs. The function must have a void return type and void * argument, such as:</p>
+<p>void function(void* data)</p>
+<p>The function will be called when any enabled DAQ HAT interrupt source is active, so must read and clear all active sources before it can be called again. There may only be one callback function at a time; if you call this when a function is already set as the callback function then it will be replaced with the new function and the old function will no longer be called if an interrupt occurs. The data argument to this function will be passed to the callback function when it is called.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd>RESULT_SUCCESS or RESULT_UNDEFINED. </dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">function</span></code>: The callback function. </li>
+<li><code class="docutils literal notranslate"><span class="pre">data</span></code>: The data to pass to the callback function. </li>
 </ul>
 </dd>
 </dl>
