@@ -33,13 +33,14 @@ int main()
     printf("   Functions demonstrated:\n");
     printf("      mcc152_a_out_write_all\n");
     printf("      mcc152_info\n");
-    printf("\nMCC 152s detected:\n\n");
 
     // Select the device to be used
     if (select_hat_device(HAT_ID_MCC_152, &address) != 0)
     {
         return 1;
     }
+    
+    printf("\nUsing address %d.\n", address);
     
     // Open a connection to the device
     result = mcc152_open(address);
