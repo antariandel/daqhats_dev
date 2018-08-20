@@ -11,11 +11,14 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <poll.h>
+#include <syslog.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include "bcm_host.h"
 #include "gpio.h"
+
+#define DEBUG
 
 #define PERIPH_SIZE       (4*1024)
 
@@ -110,6 +113,10 @@ static void gpio_init(void)
         return;
     }
     gpio = (volatile unsigned*)gpio_map;
+
+#ifdef DEBUG
+    openlog("daqhats", LOG_CONS | LOG_NDELAY, LOG_USER);
+#endif
 
     gpio_initialized = true;
 }
@@ -217,6 +224,9 @@ int gpio_interrupt_callback(int pin, int mode, void (*function)(void*),
     
     if (pin >= NUM_GPIO)
     {
+#ifdef DEBUG
+        syslog(LOG_ERR, "gpio error 1");
+#endif        
         return -1;
     }
     
@@ -227,6 +237,9 @@ int gpio_interrupt_callback(int pin, int mode, void (*function)(void*),
         int fd = open("/sys/class/gpio/export", O_RDWR);
         if (fd == -1)
         {
+#ifdef DEBUG
+            syslog(LOG_ERR, "gpio error 2");
+#endif        
             return -1;
         }
         sprintf(buffer, "%d", pin);
@@ -239,6 +252,9 @@ int gpio_interrupt_callback(int pin, int mode, void (*function)(void*),
     event_fd = open(event_filename, O_RDWR);
     if (event_fd == -1)
     {
+#ifdef DEBUG
+        syslog(LOG_ERR, "gpio error 3");
+#endif        
         return -1;
     }
     read(event_fd, buffer, 32);
@@ -296,6 +312,9 @@ int gpio_interrupt_callback(int pin, int mode, void (*function)(void*),
     value_fd = open(value_filename, O_RDONLY);
     if (value_fd == -1)
     {
+#ifdef DEBUG
+        syslog(LOG_ERR, "gpio error 4");
+#endif        
         return -1;
     }
     
