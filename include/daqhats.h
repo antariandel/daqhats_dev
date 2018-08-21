@@ -150,7 +150,9 @@ int hat_interrupt_state(void);
 *
 *   @param timeout  Wait timeout in milliseconds. -1 to wait forever, 0 to
 *       return immediately.
-*   @return RESULT_TIMEOUT, RESULT_SUCCESS, or RESULT_UNDEFINED.
+*   @return [RESULT_TIMEOUT](@ref RESULT_TIMEOUT),
+*       [RESULT_SUCCESS](@ref RESULT_SUCCESS), or 
+*       [RESULT_UNDEFINED](@ref RESULT_UNDEFINED).
 */
 int hat_wait_for_interrupt(int timeout);
 
@@ -160,11 +162,17 @@ int hat_wait_for_interrupt(int timeout);
 *   Set a function that will be called when a DAQ HAT interrupt occurs. The 
 *   function must have a void return type and void * argument, such as:
 *
-*   void function(void* data)
+*       void function(void* data)
 *
-*   The function will be called when any enabled DAQ HAT interrupt source is
-*   active, so must read and clear all active sources before it can be called 
-*   again. There may only be one callback function at a time; if you call this
+*   The function will be called when the DAQ HAT interrupt signal becomes
+*   active, and cannot be called again until the interrupt signal becomes
+*   inactive. Active sources become inactive when manually cleared (such as
+*   reading the digital I/O inputs or clearing the interrupt enable.) If not
+*   latched, an active source also becomes inactive when the value returns to
+*   the original value (the value at the source before the interrupt was
+*   generated.)
+*
+*   There may only be one callback function at a time; if you call this
 *   when a function is already set as the callback function then it will be
 *   replaced with the new function and the old function will no longer be called
 *   if an interrupt occurs. The data argument to this function will be passed
@@ -172,7 +180,8 @@ int hat_wait_for_interrupt(int timeout);
 *
 *   @param function     The callback function.
 *   @param data         The data to pass to the callback function.
-*   @return RESULT_SUCCESS or RESULT_UNDEFINED.
+*   @return [RESULT_SUCCESS](@ref RESULT_SUCCESS) or 
+*       [RESULT_UNDEFINED](@ref RESULT_UNDEFINED).
 */
 int hat_interrupt_callback_enable(void (*function)(void*), void* data);
 
@@ -181,7 +190,8 @@ int hat_interrupt_callback_enable(void (*function)(void*), void* data);
 *
 *   Removes any callback function from the interrupt handler.
 *
-*   @return RESULT_SUCCESS or RESULT_UNDEFINED.
+*   @return [RESULT_SUCCESS](@ref RESULT_SUCCESS) or
+*       [RESULT_UNDEFINED](@ref RESULT_UNDEFINED).
 */
 int hat_interrupt_callback_disable(void);
 
