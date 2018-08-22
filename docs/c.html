@@ -281,7 +281,7 @@ type of board.  The library may be used with C and C++.</p>
 <p>It waits for the interrupt signal to become active, with a timeout parameter.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
-<dd>RESULT_TIMEOUT, RESULT_SUCCESS, or RESULT_UNDEFINED. </dd>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4ad02c8491b0eab6eab286a00466993805"><span class="std std-ref">RESULT_TIMEOUT</span></a>, <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a>, or <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4aee38f3e4015c3c821852c2c14304770a"><span class="std std-ref">RESULT_UNDEFINED</span></a>. </dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: Wait timeout in milliseconds. -1 to wait forever, 0 to return immediately. </li>
@@ -307,12 +307,15 @@ type of board.  The library may be used with C and C++.</p>
 <dt id="c.hat_interrupt_callback_enable">
 <span class="target" id="daqhats_8h_1a671bbe957a0b9aa2fef3b2d79ef425f4"></span>int <code class="descname">hat_interrupt_callback_enable</code><span class="sig-paren">(</span>void(<em>*function</em>)(void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hat_interrupt_callback_enable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configure an interrupt callback function.</p>
-<p>Set a function that will be called when a DAQ HAT interrupt occurs. The function must have a void return type and void * argument, such as:</p>
-<p>void function(void* data)</p>
-<p>The function will be called when any enabled DAQ HAT interrupt source is active, so must read and clear all active sources before it can be called again. There may only be one callback function at a time; if you call this when a function is already set as the callback function then it will be replaced with the new function and the old function will no longer be called if an interrupt occurs. The data argument to this function will be passed to the callback function when it is called.</p>
+<p>Set a function that will be called when a DAQ HAT interrupt occurs. The function must have a void return type and void * argument, such as: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">function</span><span class="p">(</span><span class="n">void</span><span class="o">*</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</p>
+<p>The function will be called when the DAQ HAT interrupt signal becomes active, and cannot be called again until the interrupt signal becomes inactive. Active sources become inactive when manually cleared (such as reading the digital I/O inputs or clearing the interrupt enable.) If not latched, an active source also becomes inactive when the value returns to the original value (the value at the source before the interrupt was generated.)</p>
+<p>There may only be one callback function at a time; if you call this when a function is already set as the callback function then it will be replaced with the new function and the old function will no longer be called if an interrupt occurs. The data argument to this function will be passed to the callback function when it is called.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
-<dd>RESULT_SUCCESS or RESULT_UNDEFINED. </dd>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> or <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4aee38f3e4015c3c821852c2c14304770a"><span class="std std-ref">RESULT_UNDEFINED</span></a>. </dd>
 <dt><strong>Parameters</strong></dt>
 <dd><ul class="breatheparameterlist first last simple">
 <li><code class="docutils literal notranslate"><span class="pre">function</span></code>: The callback function. </li>
@@ -330,7 +333,7 @@ type of board.  The library may be used with C and C++.</p>
 <p>Removes any callback function from the interrupt handler.</p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
-<dd>RESULT_SUCCESS or RESULT_UNDEFINED. </dd>
+<dd><a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4af3d0d72febdcc6491554576ed31f686e"><span class="std std-ref">RESULT_SUCCESS</span></a> or <a class="reference internal" href="#daqhats_8h_1ad8097859ab1bdd06be52a8421df152d4aee38f3e4015c3c821852c2c14304770a"><span class="std std-ref">RESULT_UNDEFINED</span></a>. </dd>
 </dl>
 </p>
 </dd></dl>
