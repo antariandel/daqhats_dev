@@ -277,7 +277,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
                     value = self._MAX_VOLTAGE
 
         data_array = (c_double * len(values))(*values)
-        result = self._lib.mcc152_a_out_write_port(
+        result = self._lib.mcc152_a_out_write_all(
             self._address, options, data_array)
 
         if result == self._RESULT_BAD_PARAMETER:
