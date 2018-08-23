@@ -2,8 +2,8 @@
 
 ## About
 The console-based examples demonstrate various scan modes and trigger options to
-familiarize yourself with the daqhats library and MCC 118 DAQ HAT boards. All
-examples are shipped ready-to-run, and can be customized to suit your needs.
+familiarize yourself with the daqhats library and MCC 118 DAQ HAT board. All
+examples are ready-to-run and can be customized to suit your needs.
 
 ## Example Programs
 - **single_value_read**: reads and displays a single data value for each 
