@@ -1,4 +1,4 @@
-NAME = input_wait
+NAME = digital_output_write_bit
 OBJ = $(NAME).o
 LIBS = -ldaqhats
 CFLAGS = -Wall -I/usr/local/include -g

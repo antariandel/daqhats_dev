@@ -1,4 +1,4 @@
-NAME = read_rate
+NAME = digital_input_read_port
 OBJ = $(NAME).o
 LIBS = -ldaqhats
 CFLAGS = -Wall -I/usr/local/include -g

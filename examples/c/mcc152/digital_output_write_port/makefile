@@ -1,4 +1,4 @@
-NAME = toggle_output
+NAME = digital_output_write_port
 OBJ = $(NAME).o
 LIBS = -ldaqhats
 CFLAGS = -Wall -I/usr/local/include -g
