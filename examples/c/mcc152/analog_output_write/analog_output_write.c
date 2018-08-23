@@ -18,14 +18,69 @@
 #define OPTIONS             OPTS_DEFAULT    // default output options (voltage)
 #define BUFFER_SIZE         32
 
-int main()
+bool get_input_value(double* p_value)
+{
+    char buffer[BUFFER_SIZE];
+    double min;
+    double max;
+    double value;
+
+    if (p_value == NULL)
+    {
+        return false;
+    }
+    
+    // Get the min and max voltage values for the analog outputs to validate
+    // the user input.
+    min = mcc152_info()->AO_MIN_RANGE;
+    max = mcc152_info()->AO_MAX_RANGE;
+
+    while (1)
+    {
+        printf("Enter a voltage between %.1f and %.1f, non-numeric character to"
+            " exit: ", min, max);
+
+        if (fgets(buffer, BUFFER_SIZE, stdin) == NULL)
+        {
+            // Empty string or input error.
+            return false;
+        }
+        else
+        {
+            if (buffer[0] == '\n')
+            {
+                // Enter.
+                return false;
+            }
+            
+            // Got a string - convert to a number.
+            if (sscanf(buffer, "%lf", &value) == 0)
+            {
+                // Not a number.
+                return false;
+            }
+            
+            // Compare the number to min and max allowed.
+            if ((value < min) || (value > max))
+            {
+                // Out of range, ask again.
+                printf("Value out of range.\n");
+            }
+            else
+            {
+                // Valid value.
+                *p_value = value;
+                return true;
+            }
+        }
+    }
+}
+
+int main(void)
 {
     uint8_t address;
     int result = RESULT_SUCCESS;
-    char buffer[BUFFER_SIZE];
     double value;
-    double min;
-    double max;
     bool error;
     bool run_loop;
 
@@ -54,49 +109,14 @@ int main()
         return 1;
     }
         
-    // Get the min and max voltage values for the analog outputs to validate
-    // the user input.
-    min = mcc152_info()->AO_MIN_RANGE;
-    max = mcc152_info()->AO_MAX_RANGE;
     error = false;
     run_loop = true;
     // Loop until the user terminates or we get a library error.
     while (run_loop && !error)
     {
         // Get the value from the user as a string.
-        printf("Enter a voltage between %.1f and %.1f, non-numeric character to"
-            " exit: ", min, max);
-
-        if (fgets(buffer, BUFFER_SIZE, stdin) == NULL)
+        if (get_input_value(&value))
         {
-            // Empty string or input error.
-            run_loop = false;
-        }
-        else
-        {
-            if (buffer[0] == '\n')
-            {
-                // Enter.
-                run_loop = false;
-                continue;
-            }
-            
-            // Convert the string to a number.
-            if (sscanf(buffer, "%lf", &value) == 0)
-            {
-                // Not a number.
-                run_loop = false;
-                continue;
-            }
-            
-            // Compare the number to min and max allowed.
-            if ((value < min) || (value > max))
-            {
-                // Out of range, ask again.
-                printf("Value out of range.\n");
-                continue;
-            }
-            
             // Write the value to the selected channel.
             result = mcc152_a_out_write(address, CHANNEL, OPTIONS, value);
             if (result != RESULT_SUCCESS)
@@ -104,8 +124,11 @@ int main()
                 // We got an error from the library.
                 print_error(result);
                 error = true;
-                continue;
             }
+        }
+        else
+        {
+            run_loop = false;
         }
     }
 

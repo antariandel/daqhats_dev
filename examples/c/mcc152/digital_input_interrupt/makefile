@@ -1,4 +1,4 @@
-NAME = input_wait_multiple
+NAME = digital_input_interrupt
 OBJ = $(NAME).o
 LIBS = -ldaqhats
 CFLAGS = -Wall -I/usr/local/include -g

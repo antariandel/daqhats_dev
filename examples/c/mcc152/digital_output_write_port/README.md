@@ -1,8 +1,8 @@
-# Analog output example - multiple channel write
+# Digital output example - write port
 
 ## About
-This example loops until exited by the user, updating both channels of the
-selected board with the voltages entered by the user.
+This example configures all digital channels as outputs then allows the user to
+change the values of all channels at once.
 
 This example is compiled and ready-to-run, and can be customized to suit 
 your needs.
@@ -10,8 +10,8 @@ your needs.
 ## Running the example
 To run the example, open a terminal window and enter the following commands:
 ```
-   cd ~/daqhats/examples/c/mcc152/analog_output_write_all
-   ./analog_output_write_all
+   cd ~/daqhats/examples/c/mcc152/digital_output_write_port
+   ./digital_output_write_port
 ```
 
 ## Support/Feedback
