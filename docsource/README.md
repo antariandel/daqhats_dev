@@ -2,7 +2,7 @@
 This is the documentation source for the DAQ HAT library.
 The output of this documentation is stored in the \docs directory and at:
 
-https://nwright98.github.io/daqhats.
+https://mccdaq.github.io/daqhats.
 
 Generating Documentation (not normally needed)
 ==============================================
