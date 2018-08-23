@@ -1,97 +1,88 @@
 #!/usr/bin/env python
-#  -*- coding: utf-8 -*-
 """
-    MCC 118 Functions Demonstrated:
-        mcc118.a_in_read
+    MCC 152 Methods Demonstrated:
+        mcc152.a_out_write
+        mcc152.info
 
     Purpose:
-        Read a single data value for each channel in a loop.
+        Write a single data value for channel 0 in a loop.
 
     Description:
-        This example demonstrates acquiring data using a software timed loop
-        to read a single value from each selected channel on each iteration
-        of the loop.
+        This example demonstrates writing output data using analog output 0.
 """
 from __future__ import print_function
-from time import sleep
-from sys import stdout
-from daqhats_utils import select_hat_device, enum_mask_to_string
-from daqhats import mcc118, OptionFlags, HatIDs, HatError
+from daqhats_utils import select_hat_device
+from daqhats import mcc152, OptionFlags, HatIDs, HatError
 
-# Constants
-CURSOR_BACK_2 = '\x1b[2D'
-ERASE_TO_END_OF_LINE = '\x1b[0K'
+def get_input_value():
+    """
+    Get the voltage from the user and validate it.
+    """
 
+    # Get the min and max voltage values for the analog outputs to validate
+    # the user input.
+    min_v = mcc152.info().AO_MIN_RANGE
+    max_v = mcc152.info().AO_MAX_RANGE
+
+    while True:
+        str_v = raw_input("Enter a voltage between {0:.1f} and {1:.1f}, non-"
+                          "numeric character to exit: ".format(min_v, max_v))
+        try:
+            value = float(str_v)
+        except ValueError:
+            raise
+        else:
+            if (value < min_v) or (value > max_v):
+                # Out of range, ask again.
+                print("Value out of range.")
+            else:
+                # Valid value.
+                return value
 
 def main():
     """
     This function is executed automatically when the module is run directly.
     """
     options = OptionFlags.DEFAULT
-    low_chan = 0
-    high_chan = 3
-    mcc_118_num_channels = mcc118.info().NUM_AI_CHANNELS
-    sample_interval = 0.5  # Seconds
+    channel = 0
+    num_channels = mcc152.info().NUM_AO_CHANNELS
 
-    try:
-        # Ensure low_chan and high_chan are valid.
-        if low_chan < 0 or low_chan >= mcc_118_num_channels:
-            error_message = ('Error: Invalid low_chan selection - must be '
-                             '0 - {0:d}'.format(mcc_118_num_channels - 1))
-            raise Exception(error_message)
-        if high_chan < 0 or high_chan >= mcc_118_num_channels:
-            error_message = ('Error: Invalid high_chan selection - must be '
-                             '0 - {0:d}'.format(mcc_118_num_channels - 1))
-            raise Exception(error_message)
-        if low_chan > high_chan:
-            error_message = ('Error: Invalid channels - high_chan must be '
-                             'greater than or equal to low_chan')
-            raise Exception(error_message)
+    # Ensure channel is valid.
+    if channel not in range(num_channels):
+        error_message = ('Error: Invalid channel selection - must be '
+                         '0 - {}'.format(num_channels - 1))
+        raise Exception(error_message)
 
-        # Get an instance of the selected hat device object.
-        address = select_hat_device(HatIDs.MCC_118)
-        hat = mcc118(address)
+    print('MCC 152 single channel analog output example.')
+    print('Writes the specified voltage to the analog output.')
+    print("   Methods demonstrated:")
+    print("      mcc152.a_out_write")
+    print("      mcc152.info")
+    print("   Channel: {}\n".format(channel))
 
-        print('\nMCC 118 single data value read example')
-        print('    Function demonstrated: mcc118.a_in_read')
-        print('    Channels: {0:d} - {1:d}'.format(low_chan, high_chan))
-        print('    Options:', enum_mask_to_string(OptionFlags, options))
+    # Get an instance of the selected hat device object.
+    address = select_hat_device(HatIDs.MCC_152)
+
+    print("\nUsing address {}.\n".format(address))
+
+    hat = mcc152(address)
+
+    run_loop = True
+    error = False
+    while run_loop and not error:
+        # Get the value from the user.
         try:
-            input("\nPress 'Enter' to continue")
-        except (NameError, SyntaxError):
-            pass
-
-        print('\nAcquiring data ... Press Ctrl-C to abort')
-
-        # Display the header row for the data table.
-        print('\n  Samples/Channel', end='')
-        for chan in range(low_chan, high_chan + 1):
-            print('     Channel', chan, end='')
-        print('')
-
-        try:
-            samples_per_channel = 0
-            while True:
-                # Display the updated samples per channel count
-                samples_per_channel += 1
-                print('\r{:17}'.format(samples_per_channel), end='')
-
-                # Read a single value from each selected channel.
-                for chan in range(low_chan, high_chan + 1):
-                    value = hat.a_in_read(chan, options)
-                    print('{:12.5} V'.format(value), end='')
-
-                stdout.flush()
-
-                # Wait the specified interval between reads.
-                sleep(sample_interval)
-
-        except KeyboardInterrupt:
-            # Clear the '^C' from the display.
-            print(CURSOR_BACK_2, ERASE_TO_END_OF_LINE, '\n')
-
-    except (HatError, ValueError) as error:
-        print('\n', error)
+            value = get_input_value()
+        except ValueError:
+            run_loop = False
+        else:
+            # Write the value to the selected channel.
+            try:
+                hat.a_out_write(channel=channel,
+                                value=value,
+                                options=options)
+            except (HatError, ValueError):
+                error = True
 
 
 if __name__ == '__main__':
