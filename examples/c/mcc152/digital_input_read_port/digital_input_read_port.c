@@ -22,7 +22,6 @@ int main(void)
 {
     uint8_t address;
     int result = RESULT_SUCCESS;
-    bool error;
     bool run_loop;
     uint8_t value;
     char buffer[BUFFER_SIZE];
@@ -42,9 +41,9 @@ int main(void)
     
     // Open a connection to the device.
     result = mcc152_open(address);
-    print_error(result);
     if (result != RESULT_SUCCESS)
     {
+        print_error(result);
         // Could not open the device - exit.
         printf("Unable to open device at address %d\n", address);
         return 1;
@@ -53,45 +52,47 @@ int main(void)
     // Reset the DIO to defaults (all channels input, pull-up resistors
     // enabled).
     result = mcc152_dio_reset(address);
-    print_error(result);
+    if (result != RESULT_SUCCESS)
+    {
+        print_error(result);
+        mcc152_close(address);
+        return 1;
+    }
     
-    error = false;
     run_loop = true;
     // Loop until the user terminates or we get a library error.
-    while (run_loop && !error)
+    while (run_loop)
     {
         // Read and display the individual channels.
         result = mcc152_dio_input_read_port(address, &value);
         if (result != RESULT_SUCCESS)
         {
-            // We got an error from the library.
             print_error(result);
-            error = true;
-            continue;
+            mcc152_close(address);
+            return 1;
         }
         
         printf("Digital inputs: 0x%02X\n", value);
+        printf("Enter Q to exit, anything else to read again: ");
         
-        if (!error)
+        // Read a string from the user
+        if (fgets(buffer, BUFFER_SIZE, stdin) != NULL)
         {
-            printf("Enter Q to exit, anything else to read again: ");
-            
-            // Read a string from the user
-            if (fgets(buffer, BUFFER_SIZE, stdin) != NULL)
+            if ((buffer[0] == 'Q') || (buffer[0] == 'q'))
             {
-                if ((buffer[0] == 'Q') || (buffer[0] == 'q'))
-                {
-                    // Exit the loop
-                    run_loop = false;
-                    continue;
-                }
+                // Exit the loop
+                run_loop = false;
             }
         }
     }
 
     // Close the device.
     result = mcc152_close(address);
-    print_error(result);
-
-    return (int)error;
+    if (result != RESULT_SUCCESS)
+    {
+        print_error(result);
+        return 1;
+    }
+    
+    return 0;
 }

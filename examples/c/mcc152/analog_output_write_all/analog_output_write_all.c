@@ -15,7 +15,9 @@
 #include <stdbool.h>
 #include "../../daqhats_utils.h"
 
-#define OPTIONS             OPTS_DEFAULT    // default output options
+#define OPTIONS     OPTS_DEFAULT    // default output options (voltage), set to 
+                                    // OPTS_NOSCALEDATA to use DAC codes
+
 #define BUFFER_SIZE         32
 
 bool get_channel_value(double* p_value, int channel)
@@ -30,10 +32,18 @@ bool get_channel_value(double* p_value, int channel)
         return false;
     }
     
-    // Get the min and max voltage values for the analog outputs to validate
-    // the user input.
-    min = mcc152_info()->AO_MIN_RANGE;
-    max = mcc152_info()->AO_MAX_RANGE;
+    // Get the min and max voltage/code values for the analog outputs to 
+    // validate the user input.
+    if ((OPTIONS & OPTS_NOSCALEDATA) == 0)
+    {
+        min = mcc152_info()->AO_MIN_RANGE;
+        max = mcc152_info()->AO_MAX_RANGE;
+    }
+    else
+    {
+        min = (double)mcc152_info()->AO_MIN_CODE;
+        max = (double)mcc152_info()->AO_MAX_CODE;
+    }
 
     while (1)
     {
@@ -84,10 +94,20 @@ bool get_input_values(double* p_values, int count)
         return false;
     }
     
-    printf("Enter voltages between %.1f and %.1f, non-numeric character to"
-        " exit:\n", 
-        mcc152_info()->AO_MIN_RANGE, 
-        mcc152_info()->AO_MAX_RANGE);
+    if ((OPTIONS & OPTS_NOSCALEDATA) == 0)
+    {
+        printf("Enter values between %.1f and %.1f, non-numeric character to "
+            "exit:\n", 
+            mcc152_info()->AO_MIN_RANGE, 
+            mcc152_info()->AO_MAX_RANGE);
+    }
+    else
+    {
+        printf("Enter values between %u and %u, non-numeric character to "
+            "exit:\n", 
+            mcc152_info()->AO_MIN_CODE, 
+            mcc152_info()->AO_MAX_CODE);
+    }
 
     for (channel = 0; channel < count; channel++)
     {
@@ -109,12 +129,16 @@ int main()
     bool run_loop;
     int channel;
     int num_channels;
+    char options_str[256];
 
     printf("\nMCC 152 all channel analog output example.\n");
     printf("Writes the specified voltages to the analog outputs.\n");
     printf("   Functions demonstrated:\n");
     printf("      mcc152_a_out_write_all\n");
-    printf("      mcc152_info\n\n");
+    printf("      mcc152_info\n");
+
+    convert_options_to_string(OPTIONS, options_str);
+    printf("   Options: %s\n\n", options_str);
 
     // Select the device to be used.
     if (select_hat_device(HAT_ID_MCC_152, &address) != 0)

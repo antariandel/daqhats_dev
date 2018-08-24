@@ -14,9 +14,11 @@
 #include <stdbool.h>
 #include "../../daqhats_utils.h"
 
-#define CHANNEL             0               // output channel
-#define OPTIONS             OPTS_DEFAULT    // default output options (voltage)
-#define BUFFER_SIZE         32
+#define CHANNEL     0               // output channel, set to 1 for channel 1
+#define OPTIONS     OPTS_DEFAULT    // default output options (voltage), set to 
+                                    // OPTS_NOSCALEDATA to use DAC codes
+
+#define BUFFER_SIZE 32
 
 bool get_input_value(double* p_value)
 {
@@ -30,15 +32,31 @@ bool get_input_value(double* p_value)
         return false;
     }
     
-    // Get the min and max voltage values for the analog outputs to validate
-    // the user input.
-    min = mcc152_info()->AO_MIN_RANGE;
-    max = mcc152_info()->AO_MAX_RANGE;
+    // Get the min and max voltage/code values for the analog outputs to 
+    // validate the user input.
+    if ((OPTIONS & OPTS_NOSCALEDATA) == 0)
+    {
+        min = mcc152_info()->AO_MIN_RANGE;
+        max = mcc152_info()->AO_MAX_RANGE;
+    }
+    else
+    {
+        min = (double)mcc152_info()->AO_MIN_CODE;
+        max = (double)mcc152_info()->AO_MAX_CODE;
+    }
 
     while (1)
     {
-        printf("Enter a voltage between %.1f and %.1f, non-numeric character to"
-            " exit: ", min, max);
+        if ((OPTIONS & OPTS_NOSCALEDATA) == 0)
+        {
+            printf("Enter a value between %.1f and %.1f, non-numeric character "
+                "to exit: ", min, max);
+        }
+        else
+        {
+            printf("Enter a value between %.0f and %.0f, non-numeric character "
+                "to exit: ", min, max);
+        }
 
         if (fgets(buffer, BUFFER_SIZE, stdin) == NULL)
         {
@@ -81,15 +99,18 @@ int main(void)
     uint8_t address;
     int result = RESULT_SUCCESS;
     double value;
-    bool error;
     bool run_loop;
+    char options_str[256];
 
     printf("\nMCC 152 single channel analog output example.\n");
-    printf("Writes the specified voltage to the analog output.\n");
+    printf("Writes the entered value to the analog output.\n");
     printf("   Functions demonstrated:\n");
     printf("      mcc152_a_out_write\n");
     printf("      mcc152_info\n");
-    printf("   Channel: %d\n\n", CHANNEL);
+    printf("   Channel: %d\n", CHANNEL);
+
+    convert_options_to_string(OPTIONS, options_str);
+    printf("   Options: %s\n\n", options_str);
 
     // Select the device to be used.
     if (select_hat_device(HAT_ID_MCC_152, &address) != 0)
@@ -101,29 +122,28 @@ int main(void)
     
     // Open a connection to the device.
     result = mcc152_open(address);
-    print_error(result);
     if (result != RESULT_SUCCESS)
     {
+        print_error(result);
         // Could not open the device - exit.
         printf("Unable to open device at address %d\n", address);
         return 1;
     }
         
-    error = false;
     run_loop = true;
     // Loop until the user terminates or we get a library error.
-    while (run_loop && !error)
+    while (run_loop)
     {
-        // Get the value from the user as a string.
+        // Get the value from the user.
         if (get_input_value(&value))
         {
             // Write the value to the selected channel.
             result = mcc152_a_out_write(address, CHANNEL, OPTIONS, value);
             if (result != RESULT_SUCCESS)
             {
-                // We got an error from the library.
                 print_error(result);
-                error = true;
+                mcc152_close(address);
+                return 1;
             }
         }
         else
@@ -132,16 +152,22 @@ int main(void)
         }
     }
 
-    // If there was no library error reset the output to 0V.
-    if (!error)
+    // Reset the output to 0V.
+    result = mcc152_a_out_write(address, CHANNEL, OPTIONS, 0.0);
+    if (result != RESULT_SUCCESS)
     {
-        result = mcc152_a_out_write(address, CHANNEL, OPTIONS, 0.0);
         print_error(result);
+        mcc152_close(address);
+        return 1;
     }
     
     // Close the device.
     result = mcc152_close(address);
-    print_error(result);
+    if (result != RESULT_SUCCESS)
+    {
+        print_error(result);
+        return 1;
+    }
 
-    return (int)error;
+    return 0;
 }

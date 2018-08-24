@@ -24,11 +24,14 @@ bool get_input(uint8_t* p_value)
 {
     char buffer[BUFFER_SIZE];
     int value;
+    int max_value;
 
     if (p_value == NULL)
     {
         return false;
     }
+    
+    max_value = (1 << mcc152_info()->NUM_DIO_CHANNELS);
     
     while (1)
     {
@@ -56,7 +59,7 @@ bool get_input(uint8_t* p_value)
             }
 
             // Compare the number to min and max allowed.
-            if ((value < 0) || (value > 255))
+            if ((value < 0) || (value >= max_value))
             {
                 // Out of range, ask again.
                 printf("Value out of range.\n");
@@ -75,7 +78,6 @@ int main(void)
 {
     uint8_t address;
     int result = RESULT_SUCCESS;
-    bool error;
     bool run_loop;
     uint8_t value;
 
@@ -100,9 +102,9 @@ int main(void)
     
     // Open a connection to the device.
     result = mcc152_open(address);
-    print_error(result);
     if (result != RESULT_SUCCESS)
     {
+        print_error(result);
         // Could not open the device - exit.
         printf("Unable to open device at address %d\n", address);
         return 1;
@@ -111,16 +113,20 @@ int main(void)
     // Reset the DIO to defaults (all channels input, pull-up resistors
     // enabled).
     result = mcc152_dio_reset(address);
-    print_error(result);
+    if (result != RESULT_SUCCESS)
+    {
+        print_error(result);
+        mcc152_close(address);
+        return 1;
+    }
     
     // Set all channels as outputs.
     result = mcc152_dio_config_write_port(address, DIO_DIRECTION, 0x00);
     print_error(result);
     
-    error = false;
     run_loop = true;
     // Loop until the user terminates or we get a library error.
-    while (run_loop && !error)
+    while (run_loop)
     {
         if (get_input(&value))
         {
@@ -128,9 +134,9 @@ int main(void)
             result = mcc152_dio_output_write_port(address, value);
             if (result != RESULT_SUCCESS)
             {
-                // We got an error from the library.
                 print_error(result);
-                error = true;
+                mcc152_close(address);
+                return 1;
             }
         }
         else
@@ -139,16 +145,22 @@ int main(void)
         }
     }
 
-    if (!error)
+    // Return the digital I/O to default settings.
+    result = mcc152_dio_reset(address);
+    if (result != RESULT_SUCCESS)
     {
-        // Return the digital I/O to default settings.
-        result = mcc152_dio_reset(address);
         print_error(result);
+        mcc152_close(address);
+        return 1;
     }
     
     // Close the device.
     result = mcc152_close(address);
-    print_error(result);
+    if (result != RESULT_SUCCESS)
+    {
+        print_error(result);
+        return 1;
+    }
 
-    return (int)error;
+    return 0;
 }
