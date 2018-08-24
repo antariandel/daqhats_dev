@@ -42,6 +42,8 @@ enum ResultCode
     RESULT_INVALID_DEVICE      = -5,
     /// A needed resource was not available.
     RESULT_RESOURCE_UNAVAIL    = -6,
+    /// Could not communicate with the device.
+    RESULT_COMMS_FAILURE       = -7,
     /// Some other error occurred.
     RESULT_UNDEFINED           = -10
 };
@@ -162,7 +164,7 @@ int hat_wait_for_interrupt(int timeout);
 *   Set a function that will be called when a DAQ HAT interrupt occurs. The 
 *   function must have a void return type and void * argument, such as:
 *
-*       void function(void* data)
+*       void function(void* user_data)
 *
 *   The function will be called when the DAQ HAT interrupt signal becomes
 *   active, and cannot be called again until the interrupt signal becomes
@@ -172,14 +174,17 @@ int hat_wait_for_interrupt(int timeout);
 *   the original value (the value at the source before the interrupt was
 *   generated.)
 *
+*   The user_data argument can be used for passing a reference to anything 
+*   needed by the callback function. It will be passed to the callback function
+*   when the interrupt occurs. Set it to NULL if not needed.
+
 *   There may only be one callback function at a time; if you call this
 *   when a function is already set as the callback function then it will be
 *   replaced with the new function and the old function will no longer be called
-*   if an interrupt occurs. The data argument to this function will be passed
-*   to the callback function when it is called.
+*   if an interrupt occurs.
 *
 *   @param function     The callback function.
-*   @param data         The data to pass to the callback function.
+*   @param user_data    The data to pass to the callback function.
 *   @return [RESULT_SUCCESS](@ref RESULT_SUCCESS) or 
 *       [RESULT_UNDEFINED](@ref RESULT_UNDEFINED).
 */

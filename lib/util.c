@@ -147,6 +147,7 @@ static const char* HAT_ERROR_MESSAGES[] =
     "There was a timeout while obtaining a resource lock.",
     "The device at the specified address is not the correct type.",
     "A needed resource was not available.",
+    "Could not communicate with the device.",
     "An unknown error occurred."
 };
 

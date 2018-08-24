@@ -127,14 +127,14 @@ static int _mcc152_i2c_write(uint8_t address, uint8_t command, uint8_t value)
     {
         //_release_lock(lock_fd);
         close(i2c_fd);
-        return RESULT_UNDEFINED;
+        return RESULT_COMMS_FAILURE;
     }
     
     // write the value
 	ret = _write_byte_data(i2c_fd, command, value);    
     if (ret == -1)
     {
-        ret = RESULT_UNDEFINED;
+        ret = RESULT_COMMS_FAILURE;
     }
     else
     {
@@ -188,7 +188,7 @@ static int _mcc152_i2c_read(uint8_t address, uint8_t command, uint8_t* value)
     {
         //_release_lock(lock_fd);
         close(i2c_fd);
-        return RESULT_UNDEFINED;
+        return RESULT_COMMS_FAILURE;
     }
     
     // If the command has not changed since the last transfer then just perform
@@ -211,7 +211,7 @@ static int _mcc152_i2c_read(uint8_t address, uint8_t command, uint8_t* value)
     
     if (ret == -1)
     {
-        ret = RESULT_UNDEFINED;
+        ret = RESULT_COMMS_FAILURE;
     }
     else
     {

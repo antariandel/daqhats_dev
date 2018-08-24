@@ -80,7 +80,7 @@ static int _mcc152_spi_transfer(uint8_t address, void* tx_data,
     {
         _release_lock(lock_fd);
         close(spi_fd);
-        return RESULT_UNDEFINED;
+        return RESULT_COMMS_FAILURE;
     }
     if (temp != spi_mode)
     {
@@ -89,7 +89,7 @@ static int _mcc152_spi_transfer(uint8_t address, void* tx_data,
         {
             _release_lock(lock_fd);
             close(spi_fd);
-            return RESULT_UNDEFINED;
+            return RESULT_COMMS_FAILURE;
         }
     }
 
@@ -105,7 +105,7 @@ static int _mcc152_spi_transfer(uint8_t address, void* tx_data,
 
     if ((ret = ioctl(spi_fd, SPI_IOC_MESSAGE(1), &tr)) < 1)
     {
-        ret = RESULT_UNDEFINED;
+        ret = RESULT_COMMS_FAILURE;
     }
     else
     {
