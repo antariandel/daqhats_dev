@@ -2,7 +2,8 @@
 Wraps the global methods from the MCC Hat library for use in Python.
 """
 from collections import namedtuple
-from ctypes import cdll, Structure, c_ubyte, c_ushort, c_char, c_int, POINTER
+from ctypes import cdll, Structure, c_ubyte, c_ushort, c_char, c_int, POINTER, \
+    CFUNCTYPE, cast, py_object, c_void_p, pointer
 from enum import IntEnum
 
 class HatIDs(IntEnum):
@@ -28,7 +29,7 @@ class OptionFlags(IntEnum):
     EXTTRIGGER = 0x0008      #: Use an external trigger source.
     CONTINUOUS = 0x0010      #: Run until explicitly stopped.
 
-# exception classes
+# exception class
 class HatError(Exception):
     """
     Exceptions raised for MCC HAT specific errors.
@@ -44,11 +45,23 @@ class HatError(Exception):
     def __str__(self):
         return "Addr {}: ".format(self.address) + self.value
 
+# HAT info structure class
 class _Info(Structure): # pylint: disable=too-few-public-methods
     _fields_ = [("address", c_ubyte),
                 ("id", c_ushort),
                 ("version", c_ushort),
                 ("product_name", c_char * 256)]
+
+# Callback function class
+class HatCallback(object):
+    def __init__(self, function):
+        self.function = function
+        self.cbFUNCTYPE = None
+        self.funclist = []
+        
+    def set_cbfunc(cbfunc):
+        self.cbFUNCTYPE = cbfunc
+        self.funclist.append(cbfunc)
 
 def _load_daqhats_library():
     """
@@ -171,6 +184,57 @@ def wait_for_interrupt(timeout):
     state = _libc.hat_wait_for_interrupt(timeout_ms)
     return state == 1
 
+def interrupt_callback_enable(callback, user_data):
+    """
+    Configure an interrupt callback function.
+
+    Set a function that will be called when a DAQ HAT interrupt occurs. The 
+    function must have a void return type and void * argument, such as:
+ 
+        void function(void* data)
+ 
+    The function will be called when the DAQ HAT interrupt signal becomes
+    active, and cannot be called again until the interrupt signal becomes
+    inactive. Active sources become inactive when manually cleared (such as
+    reading the digital I/O inputs or clearing the interrupt enable.) If not
+    latched, an active source also becomes inactive when the value returns to
+    the original value (the value at the source before the interrupt was
+    generated.)
+ 
+    There may only be one callback function at a time; if you call this
+    when a function is already set as the callback function then it will be
+    replaced with the new function and the old function will no longer be called
+    if an interrupt occurs. The data argument to this function will be passed
+    to the callback function when it is called.
+ 
+    @param function     The callback function.
+    @param data         The data to pass to the callback function.
+    @return [RESULT_SUCCESS](@ref RESULT_SUCCESS) or 
+        [RESULT_UNDEFINED](@ref RESULT_UNDEFINED).
+
+    Returns:
+        bool: The interrupt status.
+    """
+    _libc = _load_daqhats_library()
+    if _libc == 0:
+        return []
+
+    cbFUNCTYPE = CFUNCTYPE(None, c_void_p)
+    callback.set_cbfunc(cbFUNCTYPE(callback.function))
+    
+    _libc.hat_interrupt_callback_enable.argtypes = [cbFUNCTYPE, c_void_p]
+    _libc.hat_interrupt_callback_enable.restype = c_int
+    
+    c_user_data = cast(pointer(py_object(user_data)), c_void_p)
+    if (_libc.hat_interrupt_callback_enable(callback.cbFUNCTYPE, c_user_data) != 
+            0):
+        raise Exception("Could not enable callback function.")
+
+def get_python_object(user_data):
+    p = cast(user_data, POINTER(py_object))
+    print(p.contents.value)
+    return cast(user_data, POINTER(py_object)).contents.value
+    
 class Hat(object): # pylint: disable=too-few-public-methods
     """
     DAQ HAT base class.
@@ -188,6 +252,7 @@ class Hat(object): # pylint: disable=too-few-public-methods
     _RESULT_LOCK_TIMEOUT = -4
     _RESULT_INVALID_DEVICE = -5
     _RESULT_RESOURCE_UNAVAIL = -6
+    _RESULT_COMMS_FAILURE = -7
     _RESULT_UNDEFINED = -10
 
     def __init__(self, address=0):

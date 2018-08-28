@@ -19,6 +19,16 @@ class DIOConfigItem(IntEnum):
     OUTPUT_TYPE = 5     #: Configure output type
     INT_MASK = 6        #: Configure interrupt mask
 
+class mcc152_info(object):
+    NUM_DIO_CHANNELS=8
+    NUM_AO_CHANNELS=2
+    AO_MIN_CODE=0
+    AO_MAX_CODE=4095
+    AO_MIN_VOLTAGE=0.0
+    AO_MAX_VOLTAGE=(5.0 - (5.0/4096))
+    AO_MIN_RANGE=0.0
+    AO_MAX_RANGE=5.0
+
 class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
     """
     The class for an MCC 152 board.
@@ -40,6 +50,21 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
     _MIN_VOLTAGE = 0.0
     _MAX_VOLTAGE = (_MAX_RANGE * (_MAX_CODE / (_MAX_CODE + 1)))
 
+    _dev_info_type = namedtuple(
+        'MCC152DeviceInfo', [
+            'NUM_DIO_CHANNELS', 'NUM_AO_CHANNELS', 'AO_MIN_CODE',
+            'AO_MAX_CODE', 'AO_MIN_VOLTAGE', 'AO_MAX_VOLTAGE',
+            'AO_MIN_RANGE', 'AO_MAX_RANGE'])
+    _dev_info = _dev_info_type(
+            NUM_DIO_CHANNELS=8,
+            NUM_AO_CHANNELS=2,
+            AO_MIN_CODE=0,
+            AO_MAX_CODE=4095,
+            AO_MIN_VOLTAGE=0.0,
+            AO_MAX_VOLTAGE=(5.0 - (5.0/4096)),
+            AO_MIN_RANGE=0.0,
+            AO_MAX_RANGE=5.0)
+            
     def __init__(self, address=0): # pylint: disable=similarities
         """
         Initialize the class.
@@ -149,20 +174,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             * **AO_MAX_RANGE** (float): The maximum voltage of the output range
               (+5.0.)
         """
-        dev_info = namedtuple(
-            'MCC152DeviceInfo', [
-                'NUM_DIO_CHANNELS', 'NUM_AO_CHANNELS', 'AO_MIN_CODE',
-                'AO_MAX_CODE', 'AO_MIN_VOLTAGE', 'AO_MAX_VOLTAGE',
-                'AO_MIN_RANGE', 'AO_MAX_RANGE'])
-        return dev_info(
-            NUM_DIO_CHANNELS=8,
-            NUM_AO_CHANNELS=2,
-            AO_MIN_CODE=0,
-            AO_MAX_CODE=4095,
-            AO_MIN_VOLTAGE=0.0,
-            AO_MAX_VOLTAGE=(5.0 - (5.0/4096)),
-            AO_MIN_RANGE=0.0,
-            AO_MAX_RANGE=5.0)
+        return mcc152_info
 
     def serial(self):
         """
