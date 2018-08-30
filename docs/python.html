@@ -99,6 +99,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#haterror-class">HatError class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hatcallback-class">HatCallback class</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#mcc-118-class">MCC 118 class</a><ul>
@@ -190,8 +191,8 @@ of board.  The Python package is named <em>daqhats</em>.</p>
 <h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
 <colgroup>
-<col width="42%" />
-<col width="58%" />
+<col width="45%" />
+<col width="55%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>Method</td>
@@ -205,6 +206,12 @@ of board.  The Python package is named <em>daqhats</em>.</p>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#daqhats.wait_for_interrupt" title="daqhats.wait_for_interrupt"><code class="xref py py-func docutils literal notranslate"><span class="pre">wait_for_interrupt()</span></code></a></td>
 <td>Wait for a DAQ HAT  interrupt to occur.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#daqhats.interrupt_callback_enable" title="daqhats.interrupt_callback_enable"><code class="xref py py-func docutils literal notranslate"><span class="pre">interrupt_callback_enable()</span></code></a></td>
+<td>Enable an interrupt callback function.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#daqhats.interrupt_callback_disable" title="daqhats.interrupt_callback_disable"><code class="xref py py-func docutils literal notranslate"><span class="pre">interrupt_callback_disable()</span></code></a></td>
+<td>Disable interrupt callback function.</td>
 </tr>
 </tbody>
 </table>
@@ -276,6 +283,75 @@ the function will return 0.</p>
 inactive.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="daqhats.interrupt_callback_enable">
+<code class="descclassname">daqhats.</code><code class="descname">interrupt_callback_enable</code><span class="sig-paren">(</span><em>callback</em>, <em>user_data</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.interrupt_callback_enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable an interrupt callback function.</p>
+<p>Set a function that will be called when a DAQ HAT interrupt occurs.</p>
+<p>The function will be called when the DAQ HAT interrupt signal becomes
+active, and cannot be called again until the interrupt signal becomes
+inactive. Active sources become inactive when manually cleared (such as
+reading the digital I/O inputs or clearing the interrupt enable.) If not
+latched, an active source also becomes inactive when the value returns to
+the original value (the value at the source before the interrupt was
+generated.)</p>
+<p>There may only be one callback function at a time; if you call this
+when a function is already set as the callback function then it will be
+replaced with the new function and the old function will no longer be called
+if an interrupt occurs. The data argument to this function will be passed
+to the callback function when it is called.</p>
+<p>The callback function must be encapsulated in a <a class="reference internal" href="#daqhats.HatCallback" title="daqhats.HatCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">HatCallback</span></code></a>
+class. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_function</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># This is my callback function.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The interrupt occurred, and returned </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+    <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">callback</span> <span class="o">=</span> <span class="n">HatCallback</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
+<span class="n">interrupt_enable_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example <em>my_function()</em> will be called when the interrupt occurs,
+and the list <em>value</em> will be passed as the user_data. Inside the callback it
+will be received as <em>data</em>, but will still be the same object so any changes
+made will be present in the original <em>value</em>. Every time the interrupt
+occurs <em>value[0]</em> will be incremented and a higher number will be printed.</p>
+<p>An integer was not used for <em>value</em> because integers are immutable in Python
+so the original <em>value</em> would never change.</p>
+<p>The callback may be disabled with <a class="reference internal" href="#daqhats.interrupt_callback_disable" title="daqhats.interrupt_callback_disable"><code class="xref py py-func docutils literal notranslate"><span class="pre">interrupt_callback_disable()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>callback</strong> (<a class="reference internal" href="#daqhats.HatCallback" title="daqhats.HatCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">HatCallback</span></code></a>) – The callback function encapsulated
+in a <a class="reference internal" href="#daqhats.HatCallback" title="daqhats.HatCallback"><code class="xref py py-class docutils literal notranslate"><span class="pre">HatCallback</span></code></a> class.</li>
+<li><strong>user_data</strong> (<em>object</em>) – callback function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exception</span></code> – Internal error enabling the callback.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="daqhats.interrupt_callback_disable">
+<code class="descclassname">daqhats.</code><code class="descname">interrupt_callback_disable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.interrupt_callback_disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable interrupt callbacks.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Exception</span></code> – Internal error disabling the callback.</td>
 </tr>
 </tbody>
 </table>
@@ -396,7 +472,7 @@ descriptions.</p>
 <dl class="exception">
 <dt id="daqhats.HatError">
 <em class="property">exception </em><code class="descclassname">daqhats.</code><code class="descname">HatError</code><span class="sig-paren">(</span><em>address</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.HatError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exceptions raised for MCC HAT specific errors.</p>
+<dd><p>Exceptions raised for MCC DAQ HAT specific errors.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -406,6 +482,29 @@ descriptions.</p>
 <li><strong>value</strong> (<em>str</em>) – the exception description.</li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="hatcallback-class">
+<h3>HatCallback class<a class="headerlink" href="#hatcallback-class" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="daqhats.HatCallback">
+<em class="property">class </em><code class="descclassname">daqhats.</code><code class="descname">HatCallback</code><span class="sig-paren">(</span><em>function</em><span class="sig-paren">)</span><a class="headerlink" href="#daqhats.HatCallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>DAQ HAT interrupt callback function class.</p>
+<p>This class handles passing Python functions to the shared library as a
+callback then retrieving the passed user data as a Python object when
+the function is called from the library.</p>
+<p>The callback function should have a single argument (optional) that is a
+Python object the user provides to <a class="reference internal" href="#daqhats.interrupt_callback_enable" title="daqhats.interrupt_callback_enable"><code class="xref py py-func docutils literal notranslate"><span class="pre">interrupt_callback_enable()</span></code></a> that
+will be passed to the callback function whenever it is called.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>function</strong> (<em>function</em>) – the function to be called when an interrupt occurs.</td>
 </tr>
 </tbody>
 </table>
@@ -1141,8 +1240,8 @@ responds incorrectly.</td>
 <p class="rubric">Methods</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="41%" />
-<col width="59%" />
+<col width="37%" />
+<col width="63%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>Method</td>
@@ -1784,12 +1883,13 @@ or 1 to mask (disable) it.</p>
 interrupt occurs the user must determine the source, optionally act
 on the interrupt, then clear that source so that other interrupts
 may be detected. The current interrupt state may be read with
-<code class="xref py py-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code>. A user program may also wait for the
-interrupt to become active with <code class="xref py py-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code>.
-This allows the user to wait for a change on one or more inputs
-without constantly reading the inputs. The source of the interrupt may
-be determined by reading the interrupt status of each MCC 152 with
-<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_bit" title="daqhats.mcc152.dio_int_status_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_bit()</span></code></a>,
+<a class="reference internal" href="#daqhats.interrupt_state" title="daqhats.interrupt_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">interrupt_state()</span></code></a>. A user program may wait for the interrupt
+to become active with <a class="reference internal" href="#daqhats.wait_for_interrupt" title="daqhats.wait_for_interrupt"><code class="xref py py-func docutils literal notranslate"><span class="pre">wait_for_interrupt()</span></code></a>, or may register
+an interrupt callback function with
+<a class="reference internal" href="#daqhats.interrupt_callback_enable" title="daqhats.interrupt_callback_enable"><code class="xref py py-func docutils literal notranslate"><span class="pre">interrupt_callback_enable()</span></code></a>. This allows the user to wait for
+a change on one or more inputs without constantly reading the inputs.
+The source of the interrupt may be determined by reading the interrupt
+status of each MCC 152 with <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_bit" title="daqhats.mcc152.dio_int_status_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_bit()</span></code></a>,
 <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_port" title="daqhats.mcc152.dio_int_status_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_port()</span></code></a> or
 <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_tuple" title="daqhats.mcc152.dio_int_status_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_tuple()</span></code></a>, and all active interrupt
 sources must be cleared before the interrupt will become inactive. The
@@ -1829,7 +1929,7 @@ responds incorrectly.</li>
 digital I/O. They are written for all channels at once using an 8-bit
 value passed in <strong>value</strong>, where each bit corresponds to a channel (bit
 0 is channel 0, etc.) The item is selected with the <strong>item</strong> argument,
-which may be one of the <a class="reference internal" href="#daqhats.DIOConfigItem" title="daqhats.DIOConfigItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DIOConfigItem</span></code></a> values:</p>
+which may be one of the <a class="reference internal" href="#daqhats.DIOConfigItem" title="daqhats.DIOConfigItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">DIOConfigItem</span></code></a> values.</p>
 <ul>
 <li><p class="first"><a class="reference internal" href="#daqhats.DIOConfigItem.DIRECTION" title="daqhats.DIOConfigItem.DIRECTION"><code class="xref py py-const docutils literal notranslate"><span class="pre">DIOConfigItem.DIRECTION</span></code></a>: Set the digital I/O channel
 directions by passing 0 in a bit for output and 1 for input.</p>
@@ -1880,13 +1980,14 @@ it.</p>
 interrupt occurs the user must determine the source, optionally act
 on the interrupt, then clear that source so that other interrupts
 may be detected. The current interrupt state may be read with
-<code class="xref py py-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code>. A user program may also wait for the
-interrupt to become active with <code class="xref py py-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code>.
-This allows the user to wait for a change on one or more inputs
-without constantly reading the inputs. The source of the interrupt may
-be determined by reading the interrupt status of each MCC 152 with
-<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_bit" title="daqhats.mcc152.dio_int_status_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_bit()</span></code></a>,
-<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_port" title="daqhats.mcc152.dio_int_status_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_port()</span></code></a>, or
+<a class="reference internal" href="#daqhats.interrupt_state" title="daqhats.interrupt_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">interrupt_state()</span></code></a>. A user program may wait for the interrupt
+to become active with <a class="reference internal" href="#daqhats.wait_for_interrupt" title="daqhats.wait_for_interrupt"><code class="xref py py-func docutils literal notranslate"><span class="pre">wait_for_interrupt()</span></code></a>, or may register
+an interrupt callback function with
+<a class="reference internal" href="#daqhats.interrupt_callback_enable" title="daqhats.interrupt_callback_enable"><code class="xref py py-func docutils literal notranslate"><span class="pre">interrupt_callback_enable()</span></code></a>. This allows the user to wait for
+a change on one or more inputs without constantly reading the inputs.
+The source of the interrupt may be determined by reading the interrupt
+status of each MCC 152 with <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_bit" title="daqhats.mcc152.dio_int_status_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_bit()</span></code></a>,
+<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_port" title="daqhats.mcc152.dio_int_status_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_port()</span></code></a> or
 <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_tuple" title="daqhats.mcc152.dio_int_status_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_tuple()</span></code></a>, and all active interrupt
 sources must be cleared before the interrupt will become inactive. The
 interrupt is cleared by reading the input with
@@ -1976,13 +2077,14 @@ it.</p>
 interrupt occurs the user must determine the source, optionally act
 on the interrupt, then clear that source so that other interrupts
 may be detected. The current interrupt state may be read with
-<code class="xref py py-func docutils literal notranslate"><span class="pre">hat_interrupt_state()</span></code>. A user program may also wait for the
-interrupt to become active with <code class="xref py py-func docutils literal notranslate"><span class="pre">hat_wait_for_interrupt()</span></code>.
-This allows the user to wait for a change on one or more inputs
-without constantly reading the inputs. The source of the interrupt may
-be determined by reading the interrupt status of each MCC 152 with
-<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_bit" title="daqhats.mcc152.dio_int_status_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_bit()</span></code></a>,
-<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_port" title="daqhats.mcc152.dio_int_status_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_port()</span></code></a>, or
+<a class="reference internal" href="#daqhats.interrupt_state" title="daqhats.interrupt_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">interrupt_state()</span></code></a>. A user program may wait for the interrupt
+to become active with <a class="reference internal" href="#daqhats.wait_for_interrupt" title="daqhats.wait_for_interrupt"><code class="xref py py-func docutils literal notranslate"><span class="pre">wait_for_interrupt()</span></code></a>, or may register
+an interrupt callback function with
+<a class="reference internal" href="#daqhats.interrupt_callback_enable" title="daqhats.interrupt_callback_enable"><code class="xref py py-func docutils literal notranslate"><span class="pre">interrupt_callback_enable()</span></code></a>. This allows the user to wait for
+a change on one or more inputs without constantly reading the inputs.
+The source of the interrupt may be determined by reading the interrupt
+status of each MCC 152 with <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_bit" title="daqhats.mcc152.dio_int_status_read_bit"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_bit()</span></code></a>,
+<a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_port" title="daqhats.mcc152.dio_int_status_read_port"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_port()</span></code></a> or
 <a class="reference internal" href="#daqhats.mcc152.dio_int_status_read_tuple" title="daqhats.mcc152.dio_int_status_read_tuple"><code class="xref py py-func docutils literal notranslate"><span class="pre">dio_int_status_read_tuple()</span></code></a>, and all active interrupt
 sources must be cleared before the interrupt will become inactive. The
 interrupt is cleared by reading the input with
