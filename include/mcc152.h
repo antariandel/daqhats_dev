@@ -343,15 +343,16 @@ int mcc152_dio_int_status_read_port(uint8_t address, uint8_t* value);
 *       interrupt occurs the user must determine the source, optionally act on
 *       the interrupt, then clear that source so that other interrupts may be
 *       detected. The current interrupt state may be read with
-*       hat_interrupt_state(). A user program may also wait for the interrupt to
-*       become active with hat_wait_for_interrupt().  This allows the user to
-*       wait for a change on one or more inputs without constantly reading the
-*       inputs. The source of the interrupt may be determined by reading the
-*       interrupt status of each MCC 152 with mcc152_dio_int_status_read_bit()
-*       or mcc152_dio_int_status_read_port(), and all active interrupt sources
-*       must be cleared before the interrupt will become inactive. The interrupt
-*       is cleared by reading the input(s) with mcc152_dio_input_read_bit() or
-*       mcc152_dio_input_read_port().
+*       hat_interrupt_state(). A user program may wait for the interrupt to
+*       become active with hat_wait_for_interrupt(), or may register an
+*       interrrupt callback function with hat_interrupt_callback_enable(). This
+*       allows the user to wait for a change on one or more inputs without
+*       constantly reading the inputs. The source of the interrupt may be
+*       determined by reading the interrupt status of each MCC 152 with
+*       mcc152_dio_int_status_read_bit() or mcc152_dio_int_status_read_port(),
+*       and all active interrupt sources must be cleared before the interrupt
+*       will become inactive. The interrupt is cleared by reading the input(s)
+*       with mcc152_dio_input_read_bit() or mcc152_dio_input_read_port().
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
 *   @param channel  The digital I/O channel, 0 - 7.
@@ -417,15 +418,16 @@ int mcc152_dio_config_write_bit(uint8_t address, uint8_t channel, uint8_t item,
 *       interrupt occurs the user must determine the source, optionally act on
 *       the interrupt, then clear that source so that other interrupts may be
 *       detected. The current interrupt state may be read with
-*       hat_interrupt_state(). A user program may also wait for the interrupt to
-*       become active with hat_wait_for_interrupt().  This allows the user to
-*       wait for a change on one or more inputs without constantly reading the
-*       inputs. The source of the interrupt may be determined by reading the
-*       interrupt status of each MCC 152 with mcc152_dio_int_status_read_bit()
-*       or mcc152_dio_int_status_read_port(), and all active interrupt sources
-*       must be cleared before the interrupt will become inactive. The interrupt
-*       is cleared by reading the input(s) with mcc152_dio_input_read_bit() or
-*       mcc152_dio_input_read_port().
+*       hat_interrupt_state(). A user program may wait for the interrupt to
+*       become active with hat_wait_for_interrupt(), or may register an
+*       interrrupt callback function with hat_interrupt_callback_enable(). This
+*       allows the user to wait for a change on one or more inputs without
+*       constantly reading the inputs. The source of the interrupt may be
+*       determined by reading the interrupt status of each MCC 152 with
+*       mcc152_dio_int_status_read_bit() or mcc152_dio_int_status_read_port(),
+*       and all active interrupt sources must be cleared before the interrupt
+*       will become inactive. The interrupt is cleared by reading the input(s)
+*       with mcc152_dio_input_read_bit() or mcc152_dio_input_read_port().
 *
 *   @param address  The board address (0 - 7). Board must already be opened.
 *   @param item     The config item, one of [DIOConfigItem](@ref DIOConfigItem).
