@@ -19,16 +19,6 @@ class DIOConfigItem(IntEnum):
     OUTPUT_TYPE = 5     #: Configure output type
     INT_MASK = 6        #: Configure interrupt mask
 
-class mcc152_info(object):
-    NUM_DIO_CHANNELS=8
-    NUM_AO_CHANNELS=2
-    AO_MIN_CODE=0
-    AO_MAX_CODE=4095
-    AO_MIN_VOLTAGE=0.0
-    AO_MAX_VOLTAGE=(5.0 - (5.0/4096))
-    AO_MIN_RANGE=0.0
-    AO_MAX_RANGE=5.0
-
 class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
     """
     The class for an MCC 152 board.
@@ -56,15 +46,15 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             'AO_MAX_CODE', 'AO_MIN_VOLTAGE', 'AO_MAX_VOLTAGE',
             'AO_MIN_RANGE', 'AO_MAX_RANGE'])
     _dev_info = _dev_info_type(
-            NUM_DIO_CHANNELS=8,
-            NUM_AO_CHANNELS=2,
-            AO_MIN_CODE=0,
-            AO_MAX_CODE=4095,
-            AO_MIN_VOLTAGE=0.0,
-            AO_MAX_VOLTAGE=(5.0 - (5.0/4096)),
-            AO_MIN_RANGE=0.0,
-            AO_MAX_RANGE=5.0)
-            
+        NUM_DIO_CHANNELS=8,
+        NUM_AO_CHANNELS=2,
+        AO_MIN_CODE=0,
+        AO_MAX_CODE=4095,
+        AO_MIN_VOLTAGE=0.0,
+        AO_MAX_VOLTAGE=(5.0 - (5.0/4096)),
+        AO_MIN_RANGE=0.0,
+        AO_MAX_RANGE=5.0)
+
     def __init__(self, address=0): # pylint: disable=similarities
         """
         Initialize the class.
@@ -174,7 +164,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             * **AO_MAX_RANGE** (float): The maximum voltage of the output range
               (+5.0.)
         """
-        return mcc152_info
+        return mcc152._dev_info
 
     def serial(self):
         """
@@ -845,12 +835,13 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
           interrupt occurs the user must determine the source, optionally act
           on the interrupt, then clear that source so that other interrupts
           may be detected. The current interrupt state may be read with
-          :py:func:`hat_interrupt_state`. A user program may also wait for the
-          interrupt to become active with :py:func:`hat_wait_for_interrupt`.
-          This allows the user to wait for a change on one or more inputs
-          without constantly reading the inputs. The source of the interrupt may
-          be determined by reading the interrupt status of each MCC 152 with
-          :py:func:`dio_int_status_read_bit`,
+          :py:func:`interrupt_state`. A user program may wait for the interrupt
+          to become active with :py:func:`wait_for_interrupt`, or may register
+          an interrupt callback function with
+          :py:func:`interrupt_callback_enable`. This allows the user to wait for
+          a change on one or more inputs without constantly reading the inputs.
+          The source of the interrupt may be determined by reading the interrupt
+          status of each MCC 152 with :py:func:`dio_int_status_read_bit`,
           :py:func:`dio_int_status_read_port` or
           :py:func:`dio_int_status_read_tuple`, and all active interrupt
           sources must be cleared before the interrupt will become inactive. The
@@ -897,7 +888,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
         digital I/O. They are written for all channels at once using an 8-bit
         value passed in **value**, where each bit corresponds to a channel (bit
         0 is channel 0, etc.) The item is selected with the **item** argument,
-        which may be one of the :py:class:`DIOConfigItem` values:
+        which may be one of the :py:class:`DIOConfigItem` values.
 
         * :py:const:`DIOConfigItem.DIRECTION`: Set the digital I/O channel
           directions by passing 0 in a bit for output and 1 for input.
@@ -945,13 +936,14 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
           interrupt occurs the user must determine the source, optionally act
           on the interrupt, then clear that source so that other interrupts
           may be detected. The current interrupt state may be read with
-          :py:func:`hat_interrupt_state`. A user program may also wait for the
-          interrupt to become active with :py:func:`hat_wait_for_interrupt`.
-          This allows the user to wait for a change on one or more inputs
-          without constantly reading the inputs. The source of the interrupt may
-          be determined by reading the interrupt status of each MCC 152 with
-          :py:func:`dio_int_status_read_bit`,
-          :py:func:`dio_int_status_read_port`, or
+          :py:func:`interrupt_state`. A user program may wait for the interrupt
+          to become active with :py:func:`wait_for_interrupt`, or may register
+          an interrupt callback function with
+          :py:func:`interrupt_callback_enable`. This allows the user to wait for
+          a change on one or more inputs without constantly reading the inputs.
+          The source of the interrupt may be determined by reading the interrupt
+          status of each MCC 152 with :py:func:`dio_int_status_read_bit`,
+          :py:func:`dio_int_status_read_port` or
           :py:func:`dio_int_status_read_tuple`, and all active interrupt
           sources must be cleared before the interrupt will become inactive. The
           interrupt is cleared by reading the input with
@@ -1041,13 +1033,14 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
           interrupt occurs the user must determine the source, optionally act
           on the interrupt, then clear that source so that other interrupts
           may be detected. The current interrupt state may be read with
-          :py:func:`hat_interrupt_state`. A user program may also wait for the
-          interrupt to become active with :py:func:`hat_wait_for_interrupt`.
-          This allows the user to wait for a change on one or more inputs
-          without constantly reading the inputs. The source of the interrupt may
-          be determined by reading the interrupt status of each MCC 152 with
-          :py:func:`dio_int_status_read_bit`,
-          :py:func:`dio_int_status_read_port`, or
+          :py:func:`interrupt_state`. A user program may wait for the interrupt
+          to become active with :py:func:`wait_for_interrupt`, or may register
+          an interrupt callback function with
+          :py:func:`interrupt_callback_enable`. This allows the user to wait for
+          a change on one or more inputs without constantly reading the inputs.
+          The source of the interrupt may be determined by reading the interrupt
+          status of each MCC 152 with :py:func:`dio_int_status_read_bit`,
+          :py:func:`dio_int_status_read_port` or
           :py:func:`dio_int_status_read_tuple`, and all active interrupt
           sources must be cleared before the interrupt will become inactive. The
           interrupt is cleared by reading the input with

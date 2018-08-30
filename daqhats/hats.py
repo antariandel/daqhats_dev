@@ -32,7 +32,7 @@ class OptionFlags(IntEnum):
 # exception class
 class HatError(Exception):
     """
-    Exceptions raised for MCC HAT specific errors.
+    Exceptions raised for MCC DAQ HAT specific errors.
 
     Args:
         address (int): the address of the board that caused the exception.
@@ -54,14 +54,51 @@ class _Info(Structure): # pylint: disable=too-few-public-methods
 
 # Callback function class
 class HatCallback(object):
+    """
+    DAQ HAT interrupt callback function class.
+
+    This class handles passing Python functions to the shared library as a
+    callback then retrieving the passed user data as a Python object when
+    the function is called from the library.
+
+    The callback function should have a single argument (optional) that is a
+    Python object the user provides to :py:func:`interrupt_callback_enable` that
+    will be passed to the callback function whenever it is called.
+
+    Args:
+        function (function): the function to be called when an interrupt occurs.
+    """
     def __init__(self, function):
+        """
+        Store the function and create the CFUNCTYPE.
+        """
+        if not callable(function):
+            raise TypeError("Argument 1 must be a function or method.")
         self.function = function
-        self.cbFUNCTYPE = None
-        self.funclist = []
-        
-    def set_cbfunc(cbfunc):
-        self.cbFUNCTYPE = cbfunc
-        self.funclist.append(cbfunc)
+        self.cbfunctype = CFUNCTYPE(None, c_void_p)
+        self.cbfunc = None
+
+    def get_callback_func(self):
+        """
+        Create a wrapper function without the self argument since that can't
+        get passed to the library function, and assign it to a variable to
+        avoid it getting garbage collected.
+        """
+        def func(user_data):
+            """
+            Function wrapper.
+            """
+            self.handle_callback(user_data)
+        self.cbfunc = self.cbfunctype(func)
+        return self.cbfunc
+
+    def handle_callback(self, user_data):
+        """
+        This is directly called from the interrupt thread. It converts the
+        void* back into a python object then calls the user's callback.
+        """
+        p_user_data = cast(user_data, POINTER(py_object)).contents.value
+        self.function(p_user_data)
 
 def _load_daqhats_library():
     """
@@ -186,13 +223,10 @@ def wait_for_interrupt(timeout):
 
 def interrupt_callback_enable(callback, user_data):
     """
-    Configure an interrupt callback function.
+    Enable an interrupt callback function.
 
-    Set a function that will be called when a DAQ HAT interrupt occurs. The 
-    function must have a void return type and void * argument, such as:
- 
-        void function(void* data)
- 
+    Set a function that will be called when a DAQ HAT interrupt occurs.
+
     The function will be called when the DAQ HAT interrupt signal becomes
     active, and cannot be called again until the interrupt signal becomes
     inactive. Active sources become inactive when manually cleared (such as
@@ -200,41 +234,82 @@ def interrupt_callback_enable(callback, user_data):
     latched, an active source also becomes inactive when the value returns to
     the original value (the value at the source before the interrupt was
     generated.)
- 
+
     There may only be one callback function at a time; if you call this
     when a function is already set as the callback function then it will be
     replaced with the new function and the old function will no longer be called
     if an interrupt occurs. The data argument to this function will be passed
     to the callback function when it is called.
- 
-    @param function     The callback function.
-    @param data         The data to pass to the callback function.
-    @return [RESULT_SUCCESS](@ref RESULT_SUCCESS) or 
-        [RESULT_UNDEFINED](@ref RESULT_UNDEFINED).
 
-    Returns:
-        bool: The interrupt status.
+    The callback function must be encapsulated in a :py:class:`HatCallback`
+    class. For example: ::
+
+        def my_function(data):
+            # This is my callback function.
+            print("The interrupt occurred, and returned {}.".format(data))
+            data[0] += 1
+
+        value = [0]
+        callback = HatCallback(my_function)
+        interrupt_enable_callback(callback, value)
+
+    In this example *my_function()* will be called when the interrupt occurs,
+    and the list *value* will be passed as the user_data. Inside the callback it
+    will be received as *data*, but will still be the same object so any changes
+    made will be present in the original *value*. Every time the interrupt
+    occurs *value[0]* will be incremented and a higher number will be printed.
+
+    An integer was not used for *value* because integers are immutable in Python
+    so the original *value* would never change.
+    
+    The callback may be disabled with :py:func:`interrupt_callback_disable`.
+
+    Args:
+        callback (:py:class:`HatCallback`): The callback function encapsulated
+            in a :py:class:`HatCallback` class.
+        user_data (object)      Optional Python object or data to pass to the
+            callback function.
+
+    Raises:
+        Exception: Internal error enabling the callback.
     """
     _libc = _load_daqhats_library()
     if _libc == 0:
         return []
 
-    cbFUNCTYPE = CFUNCTYPE(None, c_void_p)
-    callback.set_cbfunc(cbFUNCTYPE(callback.function))
-    
-    _libc.hat_interrupt_callback_enable.argtypes = [cbFUNCTYPE, c_void_p]
+    # callback must be an instance of HatCallback
+    if not isinstance(callback, HatCallback):
+        raise TypeError("Argument 1 must be an instance of HatCallback")
+
+    # function argtype is provided by callback class
+    _libc.hat_interrupt_callback_enable.argtypes = [callback.cbfunctype,
+                                                    c_void_p]
     _libc.hat_interrupt_callback_enable.restype = c_int
-    
+
+    # cast the python user_data object to a void*
     c_user_data = cast(pointer(py_object(user_data)), c_void_p)
-    if (_libc.hat_interrupt_callback_enable(callback.cbFUNCTYPE, c_user_data) != 
-            0):
+    # pass the callback class handler function and void * to the library
+    if (_libc.hat_interrupt_callback_enable(callback.get_callback_func(),
+                                            c_user_data) != 0):
         raise Exception("Could not enable callback function.")
 
-def get_python_object(user_data):
-    p = cast(user_data, POINTER(py_object))
-    print(p.contents.value)
-    return cast(user_data, POINTER(py_object)).contents.value
-    
+def interrupt_callback_disable():
+    """
+    Disable interrupt callbacks.
+
+    Raises:
+        Exception: Internal error disabling the callback.
+    """
+    _libc = _load_daqhats_library()
+    if _libc == 0:
+        return []
+
+    _libc.hat_interrupt_callback_disable.argtypes = []
+    _libc.hat_interrupt_callback_disable.restype = c_int
+
+    if _libc.hat_interrupt_callback_disable() != 0:
+        raise Exception("Could not disabled callback function.")
+
 class Hat(object): # pylint: disable=too-few-public-methods
     """
     DAQ HAT base class.
