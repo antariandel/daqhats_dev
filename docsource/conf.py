@@ -97,6 +97,12 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static', 'specs']
 
+html_context = {
+    'css_files': [
+        '_static/theme_overrides.css', # override wide tables in rtd theme
+        ],
+    }
+
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
 #
@@ -134,6 +140,7 @@ latex_elements = {
     # Additional stuff for the LaTeX preamble.
     # pdfpages to insert spec pdf, define font family
     'preamble': '\\usepackage{pdfpages}' '\\usepackage{helvet}',
+    
 
     # Latex figure (float) alignment
     #
