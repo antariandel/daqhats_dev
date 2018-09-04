@@ -2,10 +2,10 @@
 """
     MCC 152 Functions / Methods Demonstrated:
         mcc152.dio_reset
-        mcc152_dio_config_write_port
-        mcc152_dio_input_read_port
-        mcc152_dio_int_status_read_port
-        mcc152_info
+        mcc152.dio_config_write_port
+        mcc152.dio_input_read_port
+        mcc152.dio_int_status_read_port
+        mcc152.info
         interrupt_callback_enable
         interrupt_callback_disable
 
@@ -23,7 +23,8 @@ from daqhats_utils import select_hat_device
 from daqhats import mcc152, HatIDs, HatError, DIOConfigItem, \
     interrupt_callback_enable, HatCallback, interrupt_callback_disable
 
-# Use a global variable for HAT
+# Use a global variable for our board object so it is accessible from the 
+# interrupt callback.
 HAT = None
 
 def interrupt_callback(user_data):

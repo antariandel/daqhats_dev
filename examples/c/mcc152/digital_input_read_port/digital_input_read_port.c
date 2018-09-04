@@ -2,10 +2,10 @@
 
     MCC 152 Functions Demonstrated:
         mcc152_dio_input_read_port
-        mcc152_info
+        mcc152_dio_reset
 
     Purpose:
-        Read all digital inputs in a single calluntil terminated by the user.
+        Read all digital inputs in a single call until terminated by the user.
 
     Description:
         This example demonstrates using the digital I/O as inputs and reading

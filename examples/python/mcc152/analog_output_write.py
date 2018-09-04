@@ -84,6 +84,8 @@ def main():
             except (HatError, ValueError):
                 error = True
 
+    if error:
+        print("Error writing analog output.")
 
 if __name__ == '__main__':
     # This will only be run when the module is called directly.
