@@ -109,13 +109,17 @@
 <li class="toctree-l3"><a class="reference internal" href="#id1">Board components</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id2">Screw terminals</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id3">Address jumpers</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#power-jumper">Power jumper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dio-power-jumper">DIO Power jumper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id4">Status LED</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id5">Header connector</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#id6">Functional block diagram</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id7">Specifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Functional details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#mixing-3-3v-and-5v-digital-inputs">Mixing 3.3V and 5V digital inputs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Specifications</a></li>
 </ul>
 </li>
 </ul>
@@ -260,40 +264,45 @@ with the board. The LED may be blinked by the user.</p>
 </div>
 <div class="section" id="mcc-152">
 <h2>MCC 152<a class="headerlink" href="#mcc-152" title="Permalink to this headline">¶</a></h2>
-<p>The MCC 152 is 2-channel analog output / 8 digital I/O board with the following
-features:</p>
+<p>The MCC 152 is an analog output / digital I/O board with the following features:</p>
 <ul class="simple">
+<li>2 analog outputs<ul>
 <li>12-bit D/A converter</li>
-<li>0 - 5 V output</li>
-<li>5 V / 3.3 V selectable digital I/O</li>
+<li>0 - 5 V outputs</li>
+</ul>
+</li>
+<li>8 digital I/O<ul>
+<li>5 V / 3.3 V selectable</li>
 <li>Programmable pull-up/pull-down resistors</li>
-<li>2 5 mA sink per output</li>
 <li>Interrupt on input change</li>
 </ul>
-<a class="reference internal image-reference" href="_images/mcc152.jpg"><img alt="MCC 152 circuit board" class="align-center" src="_images/mcc152.jpg" style="width: 543.0px; height: 417.5px;" /></a>
+</li>
+</ul>
+<img alt="MCC 152 circuit board" class="align-center" src="_images/mcc152_low.jpg" />
 <div class="section" id="id1">
 <h3>Board components<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="id2">
 <h4>Screw terminals<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
-<li><strong>AO0</strong> to <strong>AO1</strong> (AOx): Analog output terminals.</li>
-<li><strong>DIO0</strong> to <strong>DIO7</strong> (DIOx): Digital input/output terminals.</li>
-<li><strong>AGND</strong> (GND): Common ground for the analog terminals.</li>
-<li><strong>DGND</strong> (GND): Common ground for the digital terminals.</li>
+<li><strong>Analog output 0</strong> to <strong>Analog output 1</strong> (AOx): Analog output terminals.</li>
+<li><strong>Digital I/O 0</strong> to <strong>Digital I/O 7</strong> (DIOx): Digital input/output terminals.</li>
+<li><strong>AGND</strong> (AGND): Common ground for the analog output terminals.</li>
+<li><strong>VIO</strong> (VIO): Digital I/O supply voltage (3.3V / 5V, depending on W3 position.)</li>
+<li><strong>DGND</strong> (DGND): Common ground for the digital I/O terminals.</li>
 </ul>
 </div>
 <div class="section" id="id3">
 <h4>Address jumpers<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
-<li><strong>A0</strong> to <strong>A2</strong>: Used to identify each HAT when multiple boards are
-connected. The first HAT connected to the Raspberry Pi must be at address 0
+<li><strong>A0</strong> to <strong>A2</strong>: Used to identify each DAQ HAT when multiple boards are
+connected. The first DAQ HAT connected to the Raspberry Pi must be at address 0
 (no jumper). Install jumpers on each additional connected board to set the
 desired address. Refer to the <a class="reference internal" href="hardware.html#multiple"><span class="std std-ref">Installing multiple boards</span></a> topic for more information about
 the recommended addressing method.</li>
 </ul>
 </div>
-<div class="section" id="power-jumper">
-<h4>Power jumper<a class="headerlink" href="#power-jumper" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="dio-power-jumper">
+<h4>DIO Power jumper<a class="headerlink" href="#dio-power-jumper" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
 <li><strong>5V</strong> and <strong>3.3V</strong>: Selects the DIO voltage.</li>
 </ul>
@@ -311,10 +320,23 @@ for more information about the header connector.</p>
 </div>
 <div class="section" id="id6">
 <h3>Functional block diagram<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
-<a class="reference internal image-reference" href="_images/mcc152-diag.jpg"><img alt="MCC 152 block diagram" class="align-center" src="_images/mcc152-diag.jpg" style="width: 623.0px; height: 370.65px;" /></a>
+<img alt="MCC 152 block diagram" class="align-center" src="_images/mcc152-diag_low.jpg" />
 </div>
 <div class="section" id="id7">
-<h3>Specifications<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h3>Functional details<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="mixing-3-3v-and-5v-digital-inputs">
+<h4>Mixing 3.3V and 5V digital inputs<a class="headerlink" href="#mixing-3-3v-and-5v-digital-inputs" title="Permalink to this headline">¶</a></h4>
+<p>The MCC 152 digital inputs are tolerant of 5V signals when the DIO is set to 3.3V
+operation with jumper W3.  However, current can flow into the MCC 152 from the 5V
+signal so the user must limit this current to avoid raising the voltage of the
+digital power supply rail (VIO) and possibly damaging components.  MCC recommends
+using a series resistor of 700 ohms or larger.</p>
+<p>Example:</p>
+<img alt="MCC 152 resistor example" class="align-center" src="_images/mcc152_resistor_example_low.png" />
+</div>
+</div>
+<div class="section" id="id8">
+<h3>Specifications<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference external" href="_static/esmcc152.pdf">MCC 152 Electrical Specifications</a></p>
 </div>
 </div>
