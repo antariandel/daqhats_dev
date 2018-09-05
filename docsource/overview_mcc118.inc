@@ -12,24 +12,21 @@ The MCC 118 is an 8-channel analog voltage input board with the following featur
 
 .. only:: html
 
-    .. image:: images/mcc118.jpg
+    .. image:: images/mcc118-web.jpg
         :align: center
         :alt: MCC 118 circuit board
-        :scale: 50%
 
 .. only:: latex
 
     .. image:: images/mcc118.jpg
         :align: center
         :alt: MCC 118 circuit board
-	
-
 
 Board components
 ----------------
 Screw terminals
 ^^^^^^^^^^^^^^^
-- **Ch 0 In** to **Ch 7 In** (CHx): Single-ended analog input terminals.
+- **CH 0 In** to **CH 7 In** (CHx): Single-ended analog input terminals.
 - **Clock** (CLK): Bidirectional terminal for scan clock input / output. Set the direction with software. 
   Set for input to clock the scans with an external clock signal, or output to use the internal scan clock.
 - **Trigger** (TRIG): External digital trigger input terminal. The trigger mode is software configurable for edge or level sensitive, 
@@ -55,18 +52,15 @@ Functional block diagram
 
 .. only:: html
 
-    .. image:: images/mcc118-diag.jpg
+    .. image:: images/mcc118-diag-web.jpg
 	:align: center
 	:alt: MCC 118 block diagram
-	:scale: 30%
 
 .. only:: latex
 
     .. image:: images/mcc118-diag.jpg
 	:align: center
 	:alt: MCC 118 block diagram
-	:scale: 90%
-
 
 Functional details
 ------------------
