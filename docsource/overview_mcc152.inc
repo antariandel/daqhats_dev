@@ -16,7 +16,7 @@ The MCC 152 is an analog output / digital I/O board with the following features:
 
 .. only:: html
 
-    .. image:: images/mcc152_low.jpg
+    .. image:: images/mcc152-web.jpg
         :align: center
         :alt: MCC 152 circuit board
 
@@ -63,7 +63,7 @@ Functional block diagram
 
 .. only:: html
 
-    .. image:: images/mcc152-diag_low.jpg
+    .. image:: images/mcc152-diag-web.jpg
 	:align: center
 	:alt: MCC 152 block diagram
 
@@ -89,13 +89,13 @@ Example:
 
 .. only:: html
 
-    .. image:: images/mcc152_resistor_example_low.png
+    .. image:: images/mcc152-resistor-example-web.png
 	:align: center
 	:alt: MCC 152 resistor example
 
 .. only:: latex
 
-    .. image:: images/mcc152_resistor_example.png
+    .. image:: images/mcc152-resistor-example.png
 	:align: center
 	:alt: MCC 152 block diagram
 

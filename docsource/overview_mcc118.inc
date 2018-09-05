@@ -78,10 +78,9 @@ The clock input / output (terminal CLK) is used to output the internal scan cloc
 
 .. only:: html
 
-    .. image:: images/mcc118-clock.png
+    .. image:: images/mcc118-clock-web.png
 	:align: center
 	:alt: MCC 118 clock mode
-	:scale: 40%
 
 .. only:: latex
 
