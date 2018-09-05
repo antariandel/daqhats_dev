@@ -32,8 +32,6 @@
 #define MAX_CHANNEL     1
 #define MAX_CODE        4095
 
-static const char* const spi_device = SPI_DEVICE_1; // the spidev device
-static const int spi_bus_num = LOCK_SPI_1;          // for obtain_lock()
 static const uint8_t spi_mode = SPI_MODE_1;         // use mode 1
                                                     // (CPOL=0, CPHA=1)
 static const uint8_t spi_bits = 8;                  // 8 bits per transfer
@@ -42,53 +40,52 @@ static const uint32_t spi_rate = 50000000;          // maximum SPI clock
 static const uint16_t spi_delay = 0;                // delay in us before
                                                     // removing CS
 
-static int spi_fd = -1;
+// a file descriptor for each SPI device to support mixing old and new boards
+static int spi_fd[2] = {-1, -1};
 
 /******************************************************************************
-  Perform a SPI transfer to the DAC
+  Perform a SPI transfer to the DAC.
  *****************************************************************************/
-static int _mcc152_spi_transfer(uint8_t address, void* tx_data,
+static int _mcc152_spi_transfer(uint8_t device, uint8_t address, void* tx_data,
     uint8_t data_count)
 {
     int lock_fd;
     uint8_t temp;
     int ret;
 
-    if (address >= MAX_NUMBER_HATS)                // check address failed
+    if ((device > 1) ||                     // invalid SPI device
+        (address >= MAX_NUMBER_HATS))       // check address failed
     {
         return RESULT_BAD_PARAMETER;
     }    
 
-    if (spi_fd == -1)
+    if (spi_fd[device] == -1)
     {
         return RESULT_RESOURCE_UNAVAIL;
     }
-#if 1
+
     // Obtain a lock
-    if ((lock_fd = _obtain_lock(spi_bus_num)) < 0)
+    if ((lock_fd = _obtain_lock()) < 0)
     {
         // could not get a lock within 5 seconds, report as a timeout
-        close(spi_fd);
         return RESULT_LOCK_TIMEOUT;
     }
-#endif
+
     _set_address(address);
     
     // check spi mode and change if necessary
-    ret = ioctl(spi_fd, SPI_IOC_RD_MODE, &temp);
+    ret = ioctl(spi_fd[device], SPI_IOC_RD_MODE, &temp);
     if (ret == -1)
     {
         _release_lock(lock_fd);
-        close(spi_fd);
         return RESULT_COMMS_FAILURE;
     }
     if (temp != spi_mode)
     {
-        ret = ioctl(spi_fd, SPI_IOC_WR_MODE, &spi_mode);
+        ret = ioctl(spi_fd[device], SPI_IOC_WR_MODE, &spi_mode);
         if (ret == -1)
         {
             _release_lock(lock_fd);
-            close(spi_fd);
             return RESULT_COMMS_FAILURE;
         }
     }
@@ -103,7 +100,7 @@ static int _mcc152_spi_transfer(uint8_t address, void* tx_data,
         .bits_per_word = spi_bits,
     };
 
-    if ((ret = ioctl(spi_fd, SPI_IOC_MESSAGE(1), &tr)) < 1)
+    if ((ret = ioctl(spi_fd[device], SPI_IOC_MESSAGE(1), &tr)) < 1)
     {
         ret = RESULT_COMMS_FAILURE;
     }
@@ -111,19 +108,24 @@ static int _mcc152_spi_transfer(uint8_t address, void* tx_data,
     {
         ret = RESULT_SUCCESS;
     }
-#if 1
+
     // clear the SPI lock
     _release_lock(lock_fd);
-#endif
+
     return ret;
 }
     
-int _mcc152_dac_write(uint8_t address, uint8_t channel, uint16_t code)
+/******************************************************************************
+  Write a single analog output channel.
+ *****************************************************************************/
+int _mcc152_dac_write(uint8_t device, uint8_t address, uint8_t channel,
+    uint16_t code)
 {
     uint8_t data[3];
     uint16_t value;
     
-    if ((address >= MAX_NUMBER_HATS) ||         // check address failed
+    if ((device > 1) ||                         // invalid SPI device
+        (address >= MAX_NUMBER_HATS) ||         // check address failed
         (channel > MAX_CHANNEL) ||              // bad channel
         (code > MAX_CODE))                      // bad DAC code
     {
@@ -142,16 +144,21 @@ int _mcc152_dac_write(uint8_t address, uint8_t channel, uint16_t code)
     data[1] = (uint8_t)(value >> 8);
     data[2] = (uint8_t)value;
     
-    return _mcc152_spi_transfer(address, data, 3);
+    return _mcc152_spi_transfer(device, address, data, 3);
 }
 
-int _mcc152_dac_write_both(uint8_t address, uint16_t code0, uint16_t code1)
+/******************************************************************************
+  Write both analog output channels with simultaneous update.
+ *****************************************************************************/
+int _mcc152_dac_write_both(uint8_t device, uint8_t address, uint16_t code0,
+    uint16_t code1)
 {
     uint8_t data[3];
     uint16_t value;
     int result;
     
-    if ((address >= MAX_NUMBER_HATS) ||             // check address failed
+    if ((device > 1) ||                             // invalid SPI device
+        (address >= MAX_NUMBER_HATS) ||             // check address failed
         (code0 > MAX_CODE) || (code1 > MAX_CODE))   // bad DAC code
     {
         return RESULT_BAD_PARAMETER;
@@ -161,7 +168,7 @@ int _mcc152_dac_write_both(uint8_t address, uint16_t code0, uint16_t code1)
     value = code0 << 4;
     data[1] = (uint8_t)(value >> 8);
     data[2] = (uint8_t)value;
-    result = _mcc152_spi_transfer(address, data, 3);
+    result = _mcc152_spi_transfer(device, address, data, 3);
     if (result != RESULT_SUCCESS)
     {
         return result;
@@ -171,22 +178,35 @@ int _mcc152_dac_write_both(uint8_t address, uint16_t code0, uint16_t code1)
     value = code1 << 4;
     data[1] = (uint8_t)(value >> 8);
     data[2] = (uint8_t)value;
-    return _mcc152_spi_transfer(address, data, 3);    
+    return _mcc152_spi_transfer(device, address, data, 3);    
 }
 
-int _mcc152_dac_init(uint8_t address)
+/******************************************************************************
+  Initialize the DAC and interface.
+ *****************************************************************************/
+int _mcc152_dac_init(uint8_t device, uint8_t address)
 {
     uint8_t data[3];
     
-    if (address >= MAX_NUMBER_HATS)                 // check address failed
+    if ((address >= MAX_NUMBER_HATS) ||     // check address failed
+        (device > 1))                       // invalid SPI device
     {
         return RESULT_BAD_PARAMETER;
     }    
 
-    if (spi_fd == -1)
+    if (spi_fd[device] == -1)
     {
-        spi_fd = open(spi_device, O_RDWR);
-        if (spi_fd < 0)
+        // SPI device has not been opened yet.
+        if (device == 0)
+        {
+            spi_fd[device] = open(SPI_DEVICE_0, O_RDWR);
+        }
+        else
+        {
+            spi_fd[device] = open(SPI_DEVICE_1, O_RDWR);
+        }
+        
+        if (spi_fd[device] < 0)
         {
             return RESULT_RESOURCE_UNAVAIL;
         }
@@ -197,7 +217,7 @@ int _mcc152_dac_init(uint8_t address)
     data[0] = DACCMD_REF_MODE;
     data[1] = 0;
     data[2] = 1;
-    int result = _mcc152_spi_transfer(address, data, 3);
+    int result = _mcc152_spi_transfer(device, address, data, 3);
     
     return result;
 }

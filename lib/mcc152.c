@@ -70,8 +70,10 @@ struct mcc152FactoryData
 // Local data for each open MCC 152 board.
 struct mcc152Device
 {
-    uint16_t handle_count;        // the number of handles open to this device
+    uint16_t handle_count;      // the number of handles open to this device
     struct mcc152FactoryData factory_data;   // Factory data
+    uint8_t spi_device;         // which SPI device for the DAC (rev 1 boards
+                                // used SPI 1, newer boards use SPI 0)
 };
 /// \endcond
 
@@ -244,9 +246,17 @@ int mcc152_open(uint8_t address)
         
         // initialize the struct elements
         dev->handle_count = 1;
+        dev->spi_device = 0;
         
         if (custom_size > 0) 
         {
+            // if the EEPROM is initialized then use the version to determine
+            // which SPI device is used for the DAC
+            if (info.version == 1)
+            {
+                dev->spi_device = 1;
+            }
+
             // convert the JSON custom data to parameters
             cJSON* root = cJSON_Parse(custom_data);
             if (!_parse_factory_data(root, &dev->factory_data))
@@ -265,7 +275,8 @@ int mcc152_open(uint8_t address)
         }
 
         // initialize the DAC
-        if ((result = _mcc152_dac_init(address)) != RESULT_SUCCESS)
+        if ((result = _mcc152_dac_init(dev->spi_device, address)) != 
+            RESULT_SUCCESS)
         {
             mcc152_close(address);
             return result;
@@ -391,7 +402,8 @@ int mcc152_a_out_write(uint8_t address, uint8_t channel, uint32_t options,
         code = (uint16_t)(value + 0.5);
     }
     
-    return _mcc152_dac_write(address, channel, code);
+    return _mcc152_dac_write(_devices[address]->spi_device, address, channel,
+        code);
 }
 
 /******************************************************************************
@@ -438,7 +450,8 @@ int mcc152_a_out_write_all(uint8_t address, uint32_t options, double* values)
         }
     }
     
-    return _mcc152_dac_write_both(address, codes[0], codes[1]);
+    return _mcc152_dac_write_both(_devices[address]->spi_device, address,
+        codes[0], codes[1]);
 }
 
 /******************************************************************************
@@ -456,7 +469,7 @@ int mcc152_dio_reset(uint8_t address)
     // write the register values
     
     // interrupt mask
-    ret = _mcc152_dio_reg_write(address, DIO_CMD_INT_MASK, DIO_CHANNEL_ALL,
+    ret = _mcc152_dio_reg_write(address, DIO_REG_INT_MASK, DIO_CHANNEL_ALL,
         0xFF, false);
     if (ret != RESULT_SUCCESS)
     {
@@ -464,7 +477,7 @@ int mcc152_dio_reset(uint8_t address)
     }
     
     // switch to inputs
-    ret = _mcc152_dio_reg_write(address, DIO_CMD_CONFIG, DIO_CHANNEL_ALL, 0xFF,
+    ret = _mcc152_dio_reg_write(address, DIO_REG_CONFIG, DIO_CHANNEL_ALL, 0xFF,
         false);
     if (ret != RESULT_SUCCESS)
     {
@@ -472,7 +485,7 @@ int mcc152_dio_reset(uint8_t address)
     }
     
     // pull-up setting
-    ret = _mcc152_dio_reg_write(address, DIO_CMD_PULL_SELECT, DIO_CHANNEL_ALL,
+    ret = _mcc152_dio_reg_write(address, DIO_REG_PULL_SELECT, DIO_CHANNEL_ALL,
         0xFF, false);
     if (ret != RESULT_SUCCESS)
     {
@@ -480,7 +493,7 @@ int mcc152_dio_reset(uint8_t address)
     }
     
     // pull-up enable
-    ret = _mcc152_dio_reg_write(address, DIO_CMD_PULL_ENABLE, DIO_CHANNEL_ALL,
+    ret = _mcc152_dio_reg_write(address, DIO_REG_PULL_ENABLE, DIO_CHANNEL_ALL,
         0xFF, false);
     if (ret != RESULT_SUCCESS)
     {
@@ -488,7 +501,7 @@ int mcc152_dio_reset(uint8_t address)
     }
     
     // input invert
-    ret = _mcc152_dio_reg_write(address, DIO_CMD_POLARITY, DIO_CHANNEL_ALL, 0,
+    ret = _mcc152_dio_reg_write(address, DIO_REG_POLARITY, DIO_CHANNEL_ALL, 0,
         false);
     if (ret != RESULT_SUCCESS)
     {
@@ -496,7 +509,7 @@ int mcc152_dio_reset(uint8_t address)
     }
 
     // input latch
-    ret = _mcc152_dio_reg_write(address, DIO_CMD_INPUT_LATCH, DIO_CHANNEL_ALL,
+    ret = _mcc152_dio_reg_write(address, DIO_REG_INPUT_LATCH, DIO_CHANNEL_ALL,
         0, false);
     if (ret != RESULT_SUCCESS)
     {
@@ -504,7 +517,7 @@ int mcc152_dio_reset(uint8_t address)
     }
     
     // output type
-    ret = _mcc152_dio_reg_write(address, DIO_CMD_OUTPUT_CONFIG, DIO_CHANNEL_ALL,
+    ret = _mcc152_dio_reg_write(address, DIO_REG_OUTPUT_CONFIG, DIO_CHANNEL_ALL,
         0, false);
     if (ret != RESULT_SUCCESS)
     {
@@ -512,7 +525,7 @@ int mcc152_dio_reset(uint8_t address)
     }
 
     // output latch
-    ret = _mcc152_dio_reg_write(address, DIO_CMD_OUTPUT_PORT, DIO_CHANNEL_ALL,
+    ret = _mcc152_dio_reg_write(address, DIO_REG_OUTPUT_PORT, DIO_CHANNEL_ALL,
         0, false);
     if (ret != RESULT_SUCCESS)
     {
@@ -533,7 +546,7 @@ int mcc152_dio_input_read_bit(uint8_t address, uint8_t channel, uint8_t* value)
         return RESULT_BAD_PARAMETER;
     }
     
-    return _mcc152_dio_reg_read(address, DIO_CMD_INPUT_PORT, channel, value);
+    return _mcc152_dio_reg_read(address, DIO_REG_INPUT_PORT, channel, value);
 }
 
 /******************************************************************************
@@ -546,7 +559,7 @@ int mcc152_dio_input_read_port(uint8_t address, uint8_t* values)
         return RESULT_BAD_PARAMETER;
     }
     
-    return _mcc152_dio_reg_read(address, DIO_CMD_INPUT_PORT, DIO_CHANNEL_ALL,
+    return _mcc152_dio_reg_read(address, DIO_REG_INPUT_PORT, DIO_CHANNEL_ALL,
         values);
 }
 
@@ -560,7 +573,7 @@ int mcc152_dio_output_write_bit(uint8_t address, uint8_t channel, uint8_t value)
         return RESULT_BAD_PARAMETER;
     }
     
-    return _mcc152_dio_reg_write(address, DIO_CMD_OUTPUT_PORT, channel, value,
+    return _mcc152_dio_reg_write(address, DIO_REG_OUTPUT_PORT, channel, value,
         true);
 }
 
@@ -569,7 +582,7 @@ int mcc152_dio_output_write_bit(uint8_t address, uint8_t channel, uint8_t value)
  *****************************************************************************/
 int mcc152_dio_output_write_port(uint8_t address, uint8_t values)
 {
-    return _mcc152_dio_reg_write(address, DIO_CMD_OUTPUT_PORT, DIO_CHANNEL_ALL,
+    return _mcc152_dio_reg_write(address, DIO_REG_OUTPUT_PORT, DIO_CHANNEL_ALL,
         values, true);
 }
 
@@ -585,7 +598,7 @@ int mcc152_dio_output_read_bit(uint8_t address, uint8_t channel, uint8_t* value)
         return RESULT_BAD_PARAMETER;
     }
     
-    return _mcc152_dio_reg_read(address, DIO_CMD_OUTPUT_PORT, channel, value);
+    return _mcc152_dio_reg_read(address, DIO_REG_OUTPUT_PORT, channel, value);
 }
 
 /******************************************************************************
@@ -598,7 +611,7 @@ int mcc152_dio_output_read_port(uint8_t address, uint8_t* values)
         return RESULT_BAD_PARAMETER;
     }
     
-    return _mcc152_dio_reg_read(address, DIO_CMD_OUTPUT_PORT, DIO_CHANNEL_ALL,
+    return _mcc152_dio_reg_read(address, DIO_REG_OUTPUT_PORT, DIO_CHANNEL_ALL,
         values);
 }
 
@@ -614,7 +627,7 @@ int mcc152_dio_int_status_read_bit(uint8_t address, uint8_t channel,
         return RESULT_BAD_PARAMETER;
     }
 
-    return _mcc152_dio_reg_read(address, DIO_CMD_INT_STATUS, channel,
+    return _mcc152_dio_reg_read(address, DIO_REG_INT_STATUS, channel,
         value);
 }
 
@@ -628,7 +641,7 @@ int mcc152_dio_int_status_read_port(uint8_t address, uint8_t* value)
         return RESULT_BAD_PARAMETER;
     }
 
-    return _mcc152_dio_reg_read(address, DIO_CMD_INT_STATUS, DIO_CHANNEL_ALL,
+    return _mcc152_dio_reg_read(address, DIO_REG_INT_STATUS, DIO_CHANNEL_ALL,
         value);
 }
 
@@ -648,23 +661,23 @@ int mcc152_dio_config_write_bit(uint8_t address, uint8_t channel, uint8_t item,
     switch (item)
     {
     case DIO_DIRECTION:
-        reg = DIO_CMD_CONFIG;
+        reg = DIO_REG_CONFIG;
         cache = true;
         break;
     case DIO_PULL_CONFIG:
-        reg = DIO_CMD_PULL_SELECT;
+        reg = DIO_REG_PULL_SELECT;
         break;
     case DIO_PULL_ENABLE:
-        reg = DIO_CMD_PULL_ENABLE;
+        reg = DIO_REG_PULL_ENABLE;
         break;
     case DIO_INPUT_INVERT:
-        reg = DIO_CMD_POLARITY;
+        reg = DIO_REG_POLARITY;
         break;
     case DIO_INPUT_LATCH:
-        reg = DIO_CMD_INPUT_LATCH;
+        reg = DIO_REG_INPUT_LATCH;
         break;
     case DIO_OUTPUT_TYPE:
-        reg = DIO_CMD_OUTPUT_CONFIG;
+        reg = DIO_REG_OUTPUT_CONFIG;
         chan = DIO_CHANNEL_ALL;
         // force to 0 or 1
         if (value > 1)
@@ -673,7 +686,7 @@ int mcc152_dio_config_write_bit(uint8_t address, uint8_t channel, uint8_t item,
         }
         break;
     case DIO_INT_MASK:
-        reg = DIO_CMD_INT_MASK;
+        reg = DIO_REG_INT_MASK;
         break;
     default:
         return RESULT_BAD_PARAMETER;
@@ -692,22 +705,22 @@ int mcc152_dio_config_write_port(uint8_t address, uint8_t item, uint8_t value)
     switch (item)
     {
     case DIO_DIRECTION:
-        reg = DIO_CMD_CONFIG;
+        reg = DIO_REG_CONFIG;
         break;
     case DIO_PULL_CONFIG:
-        reg = DIO_CMD_PULL_SELECT;
+        reg = DIO_REG_PULL_SELECT;
         break;
     case DIO_PULL_ENABLE:
-        reg = DIO_CMD_PULL_ENABLE;
+        reg = DIO_REG_PULL_ENABLE;
         break;
     case DIO_INPUT_INVERT:
-        reg = DIO_CMD_POLARITY;
+        reg = DIO_REG_POLARITY;
         break;
     case DIO_INPUT_LATCH:
-        reg = DIO_CMD_INPUT_LATCH;
+        reg = DIO_REG_INPUT_LATCH;
         break;
     case DIO_OUTPUT_TYPE:
-        reg = DIO_CMD_OUTPUT_CONFIG;
+        reg = DIO_REG_OUTPUT_CONFIG;
         // force to 0 or 1
         if (value > 1)
         {
@@ -715,7 +728,7 @@ int mcc152_dio_config_write_port(uint8_t address, uint8_t item, uint8_t value)
         }
         break;
     case DIO_INT_MASK:
-        reg = DIO_CMD_INT_MASK;
+        reg = DIO_REG_INT_MASK;
         break;
     default:
         return RESULT_BAD_PARAMETER;
@@ -743,26 +756,26 @@ int mcc152_dio_config_read_bit(uint8_t address, uint8_t channel, uint8_t item,
     switch (item)
     {
     case DIO_DIRECTION:
-        reg = DIO_CMD_CONFIG;
+        reg = DIO_REG_CONFIG;
         break;
     case DIO_PULL_CONFIG:
-        reg = DIO_CMD_PULL_SELECT;
+        reg = DIO_REG_PULL_SELECT;
         break;
     case DIO_PULL_ENABLE:
-        reg = DIO_CMD_PULL_ENABLE;
+        reg = DIO_REG_PULL_ENABLE;
         break;
     case DIO_INPUT_INVERT:
-        reg = DIO_CMD_POLARITY;
+        reg = DIO_REG_POLARITY;
         break;
     case DIO_INPUT_LATCH:
-        reg = DIO_CMD_INPUT_LATCH;
+        reg = DIO_REG_INPUT_LATCH;
         break;
     case DIO_OUTPUT_TYPE:
-        reg = DIO_CMD_OUTPUT_CONFIG;
+        reg = DIO_REG_OUTPUT_CONFIG;
         chan = DIO_CHANNEL_ALL;
         break;
     case DIO_INT_MASK:
-        reg = DIO_CMD_INT_MASK;
+        reg = DIO_REG_INT_MASK;
         break;
     default:
         return RESULT_BAD_PARAMETER;
@@ -788,25 +801,25 @@ int mcc152_dio_config_read_port(uint8_t address, uint8_t item, uint8_t* value)
     switch (item)
     {
     case DIO_DIRECTION:
-        reg = DIO_CMD_CONFIG;
+        reg = DIO_REG_CONFIG;
         break;
     case DIO_PULL_CONFIG:
-        reg = DIO_CMD_PULL_SELECT;
+        reg = DIO_REG_PULL_SELECT;
         break;
     case DIO_PULL_ENABLE:
-        reg = DIO_CMD_PULL_ENABLE;
+        reg = DIO_REG_PULL_ENABLE;
         break;
     case DIO_INPUT_INVERT:
-        reg = DIO_CMD_POLARITY;
+        reg = DIO_REG_POLARITY;
         break;
     case DIO_INPUT_LATCH:
-        reg = DIO_CMD_INPUT_LATCH;
+        reg = DIO_REG_INPUT_LATCH;
         break;
     case DIO_OUTPUT_TYPE:
-        reg = DIO_CMD_OUTPUT_CONFIG;
+        reg = DIO_REG_OUTPUT_CONFIG;
         break;
     case DIO_INT_MASK:
-        reg = DIO_CMD_INT_MASK;
+        reg = DIO_REG_INT_MASK;
         break;
     default:
         return RESULT_BAD_PARAMETER;

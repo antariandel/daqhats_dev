@@ -45,6 +45,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             'NUM_DIO_CHANNELS', 'NUM_AO_CHANNELS', 'AO_MIN_CODE',
             'AO_MAX_CODE', 'AO_MIN_VOLTAGE', 'AO_MAX_VOLTAGE',
             'AO_MIN_RANGE', 'AO_MAX_RANGE'])
+
     _dev_info = _dev_info_type(
         NUM_DIO_CHANNELS=8,
         NUM_AO_CHANNELS=2,

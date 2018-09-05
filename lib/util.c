@@ -96,43 +96,8 @@ struct _VendorInfo
     char* pstr;
 };
 
-#ifdef SEMAPHORES
-
-// semaphores for inter process synchronization
-static const char* const SPI_SEMAPHORES[] =
-{
-    "/mcc_spi_semaphore_0",
-    "/mcc_spi_semaphore_1",
-};
-
-static const char* const I2C_SEMAPHORE = "/mcc_i2c_semaphore";
-
-#else
-
-// lock file for synchronization
-static const char* const SPI_LOCKFILES[] =
-{
-    "/tmp/.mcc_spi_lockfile_0",
-    "/tmp/.mcc_spi_lockfile_1"
-};
-
-static const char* const I2C_LOCKFILE = "/tmp/.mcc_i2c_lockfile";
-
-#endif
-
-/*
-static const char* const BOARD_LOCKFILES[] =
-{
-    "/tmp/.mcc_hat_lockfile_0",
-    "/tmp/.mcc_hat_lockfile_1",
-    "/tmp/.mcc_hat_lockfile_2",
-    "/tmp/.mcc_hat_lockfile_3",
-    "/tmp/.mcc_hat_lockfile_4",
-    "/tmp/.mcc_hat_lockfile_5",
-    "/tmp/.mcc_hat_lockfile_6",
-    "/tmp/.mcc_hat_lockfile_7",
-};
-*/
+// lock files for synchronization
+static const char* const SPI_LOCKFILE = "/tmp/.mcc_spi_lockfile";
 
 static const char* const HAT_SETTINGS_DIR = "/etc/mcc/hats";
 static const char* const SYS_HAT_DIR = "/proc/device-tree/hat";
@@ -154,13 +119,7 @@ static const char* HAT_ERROR_MESSAGES[] =
 // *****************************************************************************
 // Variables
 static bool _address_initialized = false;
-#ifdef SEMAPHORES
-//static int shm_handle;
-static sem_t* spi_semaphores[2];
-static sem_t* i2c_semaphore;
-#else
-static int lockfiles[3];
-#endif
+static int lockfile;
 
 // *****************************************************************************
 // Local Functions
@@ -180,96 +139,15 @@ void _address_init(void)
 }
 
 
-void _semaphore_init(void)
+void _lock_init(void)
 {
-#ifdef SEMAPHORES
-    int index;
-    
-    for (index = 0; index < 2; index++)
-    {
-        spi_semaphores[index] = sem_open(SPI_SEMAPHORES[index],
-                O_CREAT | O_RDWR, 
-                S_IRUSR     |   // user permission: read/write
-                S_IWUSR     |
-                S_IRGRP     |   // group permission: read/write
-                S_IWGRP     |
-                S_IROTH     |   // other permission: read/write
-                S_IWOTH,
-                1);
-    }
-
-    i2c_semaphore = sem_open(I2C_SEMAPHORE,
-            O_CREAT | O_RDWR, 
-            S_IRUSR     |   // user permission: read/write
-            S_IWUSR     |
-            S_IRGRP     |   // group permission: read/write
-            S_IWGRP     |
-            S_IROTH     |   // other permission: read/write
-            S_IWOTH,
-            1);
-/*
-    // check if it is already open - that means semaphore has been initialized
-    shm_handle = shm_open("/mcc_spi_sem",
-            O_RDWR, 
-            S_IRUSR     |   // user permission: read/write
-            S_IWUSR     |
-            S_IRGRP     |   // group permission: read/write
-            S_IWGRP     |
-            S_IROTH     |   // other permission: read/write
-            S_IWOTH);
-    if (shm_handle == -1)
-    {
-        // does not exist yet
-        shm_handle = shm_open("/mcc_spi_sem",
-                O_CREAT | O_RDWR, 
-                S_IRUSR     |   // user permission: read/write
-                S_IWUSR     |
-                S_IRGRP     |   // group permission: read/write
-                S_IWGRP     |
-                S_IROTH     |   // other permission: read/write
-                S_IWOTH);
-        ftruncate(shm_handle, sizeof(sem_t));
-        spi_semaphore = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE,
-            MAP_SHARED, shm_handle, 0);
-        sem_init(spi_semaphore, 1, 1);
-    }
-    else
-    {
-        // exists
-        spi_semaphore = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE,
-            MAP_SHARED, shm_handle, 0);
-    }
-*/    
-#else
     mode_t mask;
     
     // set umask so we can set permission to 0666; otherwise, if run as root it
     // will leave lockfiles that normal users cannot open
     mask = umask(0111);
 
-    lockfiles[0] = open(SPI_LOCKFILES[0],
-        O_CREAT     |   // create file if it does not exist
-        O_WRONLY    |   // open for write access only
-        O_CLOEXEC,      // close on execute
-        S_IRUSR     |   // user permission: read/write
-        S_IWUSR     |
-        S_IRGRP     |   // group permission: read/write
-        S_IWGRP     |
-        S_IROTH     |   // other permission: read/write
-        S_IWOTH);
-
-    lockfiles[1] = open(SPI_LOCKFILES[1],
-        O_CREAT     |   // create file if it does not exist
-        O_WRONLY    |   // open for write access only
-        O_CLOEXEC,      // close on execute
-        S_IRUSR     |   // user permission: read/write
-        S_IWUSR     |
-        S_IRGRP     |   // group permission: read/write
-        S_IWGRP     |
-        S_IROTH     |   // other permission: read/write
-        S_IWOTH);
-
-    lockfiles[2] = open(I2C_LOCKFILE,
+    lockfile = open(SPI_LOCKFILE,
         O_CREAT     |   // create file if it does not exist
         O_WRONLY    |   // open for write access only
         O_CLOEXEC,      // close on execute
@@ -282,27 +160,11 @@ void _semaphore_init(void)
 
     // revert umask
     umask(mask);
-#endif
 }
 
-void _semaphore_fini(void)
+void _lock_fini(void)
 {
-#ifdef SEMAPHORES
-    int index;
-    
-    for (index = 0; index < 2; index++)
-    {
-        sem_close(spi_semaphores[index]);
-    }
-    
-    sem_close(i2c_semaphore);
-    //sem_destroy(spi_semaphore);
-    //shm_unlink("/mcc_spi_sem");
-#else
-    close(lockfiles[0]);
-    close(lockfiles[1]);
-    close(lockfiles[2]);
-#endif    
+    close(lockfile);
 }
 
 // *****************************************************************************
@@ -314,13 +176,13 @@ void __attribute__ ((constructor)) init(void)
     // initialization
     _address_init();
     
-    _semaphore_init();
+    _lock_init();
 }
 
 void __attribute__ ((destructor)) fini(void)
 {
     // cleanup
-    _semaphore_fini();
+    _lock_fini();
 }
 
 
@@ -382,229 +244,37 @@ uint32_t _difftime_ms(struct timespec* start, struct timespec* end)
 // file handle is automatically released.
 
 /******************************************************************************
-  Use lock files to control access to the SPI busses by multiple processes.
+  Use lock files to control access to the SPI bus by multiple processes.
 
   Return: int, file descriptor (RESULT_TIMEOUT for time out obtaining lock)
  *****************************************************************************/
-int _obtain_spi_lock(enum SpiBus spi_bus)
+int _obtain_lock(void)
 {
-#ifdef SEMAPHORES
-    struct timespec timeout;
-    int index;
-    
-    if (spi_bus == SPI_BUS_0)
-    {
-        index = 0;
-    }
-    else if (spi_bus == SPI_BUS_1)
-    {
-        index = 1;
-    }
-    else
-    {
-        return RESULT_BAD_PARAMETER;
-    }
-    
-    // Time out after 5 seconds
-    timeout.tv_sec = 5;
-    timeout.tv_nsec = 0;
-    if (sem_timedwait(spi_semaphores[index], &timeout) != 0)
-    {
-        // could not get a lock within 5 seconds, report as a timeout
-        return RESULT_TIMEOUT;
-    }
-
-    return index;
-
-#else
-    bool locked;
-    struct timespec start_time;
-    struct timespec current_time;
-    int lock_fd;
-    char* filename;
-    mode_t mask;
-
-    if (spi_bus == SPI_BUS_0)
-    {
-        filename = (char*)SPI_LOCKFILES[0];
-    }
-    else if (spi_bus == SPI_BUS_1)
-    {
-        filename = (char*)SPI_LOCKFILES[1];
-    }
-    else
-    {
-        return RESULT_BAD_PARAMETER;
-    }
-
-    // Block until lock obtained, but allow context switching with usleep().
-    // Time out after 5 seconds
-    locked = false;
-    clock_gettime(CLOCK_MONOTONIC, &start_time);
-    // set umask so we can set permission to 0666; otherwise, if run as root it
-    // will leave lockfiles that normal users cannot open
-    mask = umask(0111);
-    do
-    {
-        lock_fd = open(filename,
-            O_CREAT     |   // create file if it does not exist
-            O_WRONLY    |   // open for write access only
-            O_CLOEXEC,      // close on execute
-            S_IRUSR     |   // user permission: read/write
-            S_IWUSR     |
-            S_IRGRP     |   // group permission: read/write
-            S_IWGRP     |
-            S_IROTH     |   // other permission: read/write
-            S_IWOTH);
-
-        if (lock_fd != -1)
-        {
-            // the file was opened, now lock it so no other process can open it
-            //if (lockf(lock_fd, F_TLOCK, 0) == 0)
-            if (flock(lock_fd, LOCK_EX | LOCK_NB) == 0)
-            {
-                locked = true;
-            }
-            else
-            {
-                // could not get a lock, so wait and retry
-                close(lock_fd);
-                usleep(10);
-                clock_gettime(CLOCK_MONOTONIC, &current_time);
-            }
-        }
-        else
-        {
-            // could not open the lock file, so wait and retry
-            usleep(10);
-            clock_gettime(CLOCK_MONOTONIC, &current_time);
-        }
-    } while (!locked &&
-        (_difftime_us(&start_time, &current_time) < LOCK_RETRY_TIME));
-
-    // revert umask
-    umask(mask);
-
-    if (!locked)
-    {
-        // could not get a lock within 5 seconds, report as a timeout
-        return RESULT_TIMEOUT;
-    }
-
-    return lock_fd;
-#endif
-}
-
-int _obtain_lock(enum LockIndex index)
-{
-#ifdef SEMAPHORES
-    struct timespec timeout;
-    int result;
-    
-    // Time out after 5 seconds
-    timeout.tv_sec = 5;
-    timeout.tv_nsec = 0;
-
-    switch (index)
-    {
-    case LOCK_SPI_0:
-        result = sem_timedwait(spi_semaphores[0], &timeout);
-        break;
-    case LOCK_SPI_1:
-        result = sem_timedwait(spi_semaphores[1], &timeout);
-        break;
-    case LOCK_I2C:
-        result = sem_timedwait(i2c_semaphore, &timeout);
-        break;
-    default:
-        return RESULT_BAD_PARAMETER;
-    }
-    
-    if (result != 0)
-    {
-        // could not get a lock within 5 seconds, report as a timeout
-        return RESULT_TIMEOUT;
-    }
-
-    return index;
-
-#else
     bool locked;
     struct timespec start_time;
     struct timespec current_time;
     int test;
-    //int lock_fd;
-    //char* filename;
-    //mode_t mask;
 
-#if 0
-    switch (index)
-    {
-    case LOCK_SPI_0:
-        filename = (char*)SPI_LOCKFILES[0];
-        break;
-    case LOCK_SPI_1:
-        filename = (char*)SPI_LOCKFILES[1];
-        break;
-    case LOCK_I2C:
-        filename = (char*)I2C_LOCKFILE;
-        break;
-    default:
-        return RESULT_BAD_PARAMETER;
-    }
-#endif
     // Block until lock obtained, but allow context switching with usleep().
     // Time out after 5 seconds
     locked = false;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
-    // set umask so we can set permission to 0666; otherwise, if run as root it
-    // will leave lockfiles that normal users cannot open
-    //mask = umask(0111);
+
     do
     {
-#if 0    
-        lock_fd = open(filename,
-            O_CREAT     |   // create file if it does not exist
-            O_WRONLY    |   // open for write access only
-            O_CLOEXEC,      // close on execute
-            S_IRUSR     |   // user permission: read/write
-            S_IWUSR     |
-            S_IRGRP     |   // group permission: read/write
-            S_IWGRP     |
-            S_IROTH     |   // other permission: read/write
-            S_IWOTH);
-
-        if (lock_fd != -1)
-#endif        
+        // the file was opened, now lock it so no other process can open it
+        if ((test = flock(lockfile, LOCK_EX | LOCK_NB)) == 0)
         {
-            // the file was opened, now lock it so no other process can open it
-            //if (lockf(lock_fd, F_TLOCK, 0) == 0)
-            if ((test = flock(lockfiles[index], LOCK_EX | LOCK_NB)) == 0)
-            {
-                locked = true;
-            }
-            else
-            {
-                // could not get a lock, so wait and retry
-                //close(lock_fd);
-                usleep(10);
-                clock_gettime(CLOCK_MONOTONIC, &current_time);
-            }
+            locked = true;
         }
-#if 0        
         else
         {
-            // could not open the lock file, so wait and retry
+            // could not get a lock, so wait and retry
             usleep(10);
             clock_gettime(CLOCK_MONOTONIC, &current_time);
         }
-#endif        
     } while (!locked &&
         (_difftime_us(&start_time, &current_time) < LOCK_RETRY_TIME));
-
-    //printf("L: %d %d\n", index, test);
-    // revert umask
-    //umask(mask);
 
     if (!locked)
     {
@@ -612,114 +282,16 @@ int _obtain_lock(enum LockIndex index)
         return RESULT_TIMEOUT;
     }
 
-    return lockfiles[index];
-#endif
+    return lockfile;
 }
 
-/******************************************************************************
-  Use lock files to control access to the HAT boards by multiple processes.
-
-  Return: int, file descriptor (RESULT_TIMEOUT for time out obtaining lock)
- *****************************************************************************/
- /*
-int _obtain_board_lock(uint8_t address)
-{
-    bool locked;
-    int lock_fd;
-    struct timespec start_time;
-    struct timespec current_time;
-    char* filename;
-    mode_t mask;
-
-    if (address >= MAX_NUMBER_HATS)
-    {
-        return RESULT_BAD_PARAMETER;
-    }
-
-    filename = (char*)BOARD_LOCKFILES[address];
-
-    // Block until lock obtained, but allow context switching with usleep().
-    // Time out after 5 seconds
-    locked = false;
-    clock_gettime(CLOCK_MONOTONIC, &start_time);
-    // set umask so we can set permission to 0666; otherwise, if run as root it
-    // will leave lockfiles that normal users cannot open
-    mask = umask(0111);
-    do
-    {
-        lock_fd = open(filename,
-            O_CREAT     |   // create file if it does not exist
-            O_WRONLY    |   // open for write access only
-            O_CLOEXEC,      // close on execute
-            S_IRUSR     |   // user permission: read/write
-            S_IWUSR     |
-            S_IRGRP     |   // group permission: read/write
-            S_IWGRP     |
-            S_IROTH     |   // other permission: read/write
-            S_IWOTH);
-
-        if (lock_fd != -1)
-        {
-            // the file was opened, now lock it so no other process can open it
-            if (flock(lock_fd, LOCK_EX | LOCK_NB) == 0)
-            {
-                locked = true;
-            }
-            else
-            {
-                // could not get a lock, so wait and retry
-                close(lock_fd);
-                usleep(10);
-                clock_gettime(CLOCK_MONOTONIC, &current_time);
-            }
-        }
-        else
-        {
-            // could not open the lock file, so wait and retry
-            usleep(10);
-            clock_gettime(CLOCK_MONOTONIC, &current_time);
-        }
-    } while (!locked &&
-        (_difftime_us(&start_time, &current_time) < LOCK_RETRY_TIME));
-
-    // revert umask
-    umask(mask);
-
-    if (!locked)
-    {
-        // could not get a lock within 5 seconds, report as a timeout
-        return RESULT_TIMEOUT;
-    }
-
-    return lock_fd;
-}
-*/
 
 /******************************************************************************
   Release a previously obtained lock.
  *****************************************************************************/
 void _release_lock(int lock_fd)
 {
-#ifdef SEMAPHORES
-    switch (lock_fd)
-    {
-    case LOCK_SPI_0:
-        sem_post(spi_semaphores[0]);
-        break;
-    case LOCK_SPI_1:
-        sem_post(spi_semaphores[1]);
-        break;
-    case LOCK_I2C:
-        sem_post(i2c_semaphore);
-        break;
-    default:
-        break;
-    }
-#else
     flock(lock_fd, LOCK_UN);
-    //printf("R: %d", lock_fd);
-    //close(lock_fd);
-#endif
 }
 
 
