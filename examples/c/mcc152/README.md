@@ -11,21 +11,21 @@ channel.
 
 - **analog_output_write_all**: gets user values and both analog output channels.
 
-- **digital_input_read_port**: reads all of the digital inputs in a single 
-call and displays the values.
-
-- **digital_input_read_bit**: reads all of the digital inputs individually 
-and displays the values.
-
 - **digital_input_interrupt**: enables interrupts on all of the inputs, sets 
 up a callback function, then waits for inputs to change and displays the 
 changes.
 
-- **digital_output_write_port**: sets all of the digital I/O to outputs, then
- gets user values and updates all outputs in a single call.
+- **digital_input_read_bit**: reads all of the digital inputs individually 
+and displays the values.
+
+- **digital_input_read_port**: reads all of the digital inputs in a single 
+call and displays the values.
 
 - **digital_output_write_bit**: sets all of the digital I/O to outputs, then 
 gets a channel and value from the user and updates the specified output.
+
+- **digital_output_write_port**: sets all of the digital I/O to outputs, then
+ gets user values and updates all outputs in a single call.
 
 ## Running an Example
 To run an example, open a terminal window in the folder where the example is 
