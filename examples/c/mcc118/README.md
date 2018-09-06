@@ -5,12 +5,12 @@ The C and C++ examples demonstrate various classes and functions to
 familiarize yourself with the daqhats library and MCC 118 DAQ HAT board. All
 examples can be customized to suit your needs.
 
->Additional information about each example is in the README file where the 
-example is located (the default path is /daqhats/examples/c/mcc118/).
+>Additional information about each example is in the README file in the 
+folder where the example is located.
 
 ## Example Programs
 
-###Console-Based
+### Console-Based
 - **continuous_scan**: continuously acquires blocks of analog input data from 
 specified channels until the scan is stopped.
 
