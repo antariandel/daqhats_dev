@@ -23,7 +23,8 @@ channels.
 
 - **multi_hat_synchronous_scan**: acquires synchronous data from up to 
 eight MCC 118 HATs using external clock and trigger options. Refer to the 
-README in the multi_hat_synchronous_scan example folder for more information.
+README file in the multi_hat_synchronous_scan example folder for more 
+information.
 
 - **single_value_read**: reads and displays a single data value for each 
 selected channel on each iteration of a software timed loop.
