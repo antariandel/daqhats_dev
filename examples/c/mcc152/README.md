@@ -5,6 +5,9 @@ The console-based examples demonstrate various classes and functions to
 familiarize yourself with the daqhats library and MCC 152 DAQ HAT board.
 All examples are ready-to-run and can be customized to suit your needs.
 
+>Additional information about each example is in the README file in the 
+folder where the example is located.
+
 ## Example Programs
 - **analog_output_write**: gets a user value and updates an analog output 
 channel.

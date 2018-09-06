@@ -1,9 +1,9 @@
 # C/C++ Examples
 
 ## About
-The C and C++ examples demonstrate various classes and functions to 
-familiarize yourself with the daqhats library and MCC 118 DAQ HAT board. All
-examples can be customized to suit your needs.
+The C/C++ examples demonstrate various classes and functions to familiarize 
+yourself with the daqhats library and MCC 118 DAQ HAT board. All examples can
+be customized to suit your needs.
 
 >Additional information about each example is in the README file in the 
 folder where the example is located.
@@ -23,7 +23,7 @@ channels.
 
 - **multi_hat_synchronous_scan**: acquires synchronous data from up to 
 eight MCC 118 HATs using external clock and trigger options. Refer to the 
-README in the data_logger example folder for more information.
+README in the multi-hat_synchronous_scan example folder for more information.
 
 - **single_value_read**: reads and displays a single data value for each 
 selected channel on each iteration of a software timed loop.
