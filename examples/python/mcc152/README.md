@@ -9,7 +9,8 @@ All examples are ready-to-run and can be customized to suit your needs.
 - **analog_output_write**: gets a user value and updates an analog output 
 channel.
 
-- **analog_output_write_all**: gets user values and both analog output channels.
+- **analog_output_write_all**: gets user values and updates both analog output
+channels.
 
 - **digital_input_interrupt**: enables interrupts on all of the inputs, sets 
 up a callback function, then waits for inputs to change and displays the 
