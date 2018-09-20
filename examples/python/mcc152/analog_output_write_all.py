@@ -12,6 +12,7 @@
         simultaneously.
 """
 from __future__ import print_function
+from sys import version_info
 from daqhats_utils import select_hat_device
 from daqhats import mcc152, OptionFlags, HatIDs, HatError
 
@@ -31,7 +32,13 @@ def get_channel_value(channel):
             "Channel must be in range 0 - {}.".format(NUM_CHANNELS - 1))
 
     while True:
-        str_v = raw_input("   Channel {}: ".format(channel))
+        message = "   Channel {}: ".format(channel)
+
+        if version_info.major > 2:
+            str_v = input(message)
+        else:
+            str_v = raw_input(message)
+
         try:
             value = float(str_v)
         except ValueError:
