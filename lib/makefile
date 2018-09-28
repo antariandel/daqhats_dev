@@ -3,7 +3,7 @@ MINOR = 1
 SUB   = 0
 NAME = daqhats
 VERSION = $(MAJOR).$(MINOR).$(SUB)
-INSTALL_DIR = $VIRTUAL_ENV/lib
+INSTALL_DIR = $(VIRTUAL_ENV)/lib
 BUILD_DIR = ./build
 
 CC = gcc 
