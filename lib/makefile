@@ -35,6 +35,7 @@ install:
 	@cd ../include; make install; cd ../lib
 	@install -D $(BUILD_DIR)/$(TARGET_LIB) $(INSTALL_DIR)
 	@ln -frs $(INSTALL_DIR)/$(TARGET_LIB) $(INSTALL_DIR)/lib$(NAME).so
+	@ln -frs $(INSTALL_DIR)/$(TARGET_LIB) $(INSTALL_DIR)/lib$(NAME).so.$(MAJOR)
 
 uninstall:
 	@rm -rf $(INSTALL_DIR)/lib$(NAME).so*

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root, i.e 'sudo ./uninstall.sh'" 1>&2
+if [ "$(id -u)" == "0" ]; then
+   echo "This script must NOT be run as root. It's for uninstalling from a Python virtualenv." 1>&2
    exit 1
 fi
 
@@ -21,11 +21,6 @@ echo
 echo "Removing tools"
 echo
 make -C tools uninstall
-echo
-
-# Remove EEPROM images
-echo "Removing EEPROM images"
-rm -rf /etc/mcc/hats
 echo
 
 # Remove the Python packages
