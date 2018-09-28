@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root, i.e 'sudo ./install.sh'" 1>&2
+if [ "$(id -u)" == "0" ]; then
+   echo "This script must NOT be run as root. It's for installing within a Python virtualenv." 1>&2
    exit 1
 fi
 
@@ -20,13 +20,6 @@ echo
 make -C tools all
 make -C tools install
 make -C tools clean
-
-echo
-
-# Read HAT EEPROMs to /etc/mcc/hats
-echo "Reading DAQ HAT EEPROMs"
-echo
-daqhats_read_eeproms
 
 echo
 
