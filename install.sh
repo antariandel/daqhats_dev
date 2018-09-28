@@ -23,13 +23,6 @@ make -C tools clean
 
 echo
 
-# Build examples
-echo "Building examples"
-echo
-make -C examples/c all
-
-echo
-
 # Read HAT EEPROMs to /etc/mcc/hats
 echo "Reading DAQ HAT EEPROMs"
 echo
