@@ -1,10 +1,10 @@
 CC = gcc
-INCLUDE_DIR = /usr/local/include
+INCLUDE_DIR = $(VIRTUAL_ENV)/include/daqhats
 LIB_DIR = ../lib
 CFLAGS = -I$(INCLUDE_DIR) -I$(LIB_DIR) -g
-OFLAGS = -ldaqhats 
+OFLAGS = $(VIRTUAL_ENV)/lib/libdaqhats.so 
 DEPS = $(INCLUDE_DIR)/mcc118.h $(INCLUDE_DIR)/daqhats.h $(LIB_DIR)/mcc118_update.h
-INSTALL_DIR = /usr/local/bin
+INSTALL_DIR = $(VIRTUAL_ENV)/bin
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
