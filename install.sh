@@ -54,15 +54,4 @@ fi
 
 echo
 
-# Check for I2C device enabled
-if [ $(raspi-config nonint get_i2c) -eq 1 ]; then
-   echo "Some MCC DAQ HATs require the I2C interface to be enabled."
-   echo -n "Would you like to enable the I2C interface now? [y/n] "
-   read input
-   if [ "$input" == "y" ]; then
-      raspi-config nonint do_i2c 0
-   fi
-   echo
-fi
-
 echo "Install complete"
