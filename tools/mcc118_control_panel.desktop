@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Name=MCC 118 Control Panel
+Exec=python3 /home/pi/mcc/daqhats_dev/tools/mcc118_control_panel.py
+Type=Application
+Terminal=false
+Icon=/home/pi/mcc/daqhats_dev/tools/icon.png

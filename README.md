@@ -78,6 +78,10 @@ then repeat steps 5 - 7.
 You can now run the example programs under ~/daqhats/examples and create your own 
 programs. Refer to the [Examples](#examples) section below for more information.
 
+There are simple control panel programs for each device type in ~/daqhats/tools. These 
+may only be used when running the graphical version of Raspbian, and they provide easy 
+access to the main features of each device type.
+
 #### List the installed boards
 You can use the tool **daqhats_list_boards** to display a list of the detected 
 MCC DAQ HATs.  This list is generated from the EEPROM images, so it will not be 
