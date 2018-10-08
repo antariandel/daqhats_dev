@@ -85,7 +85,7 @@ def main():
     This function is executed automatically when the module is run directly.
     """
 
-    print("nMCC 152 digital output write example.")
+    print("MCC 152 digital output write example.")
     print("Sets all digital I/O channels to output then gets channel and")
     print("value input from the user and updates the output.")
     print("   Methods demonstrated:")
