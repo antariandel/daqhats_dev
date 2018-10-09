@@ -58,6 +58,10 @@ You may display a list of the detected boards at any time with::
 
     daqhats_list_boards
 
+There are simple control panel programs for each device type in the tools directory.
+These may only be used under the graphical version of Raspbian, and provide easy
+access to the main features of each device type.
+
 Creating a C program
 ********************
 
