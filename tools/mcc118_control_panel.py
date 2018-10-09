@@ -80,7 +80,6 @@ class ControlApp:
 
             self.bottom_frame.grid_rowconfigure(index, weight=1)
             
-        self.bottom_frame.grid_columnconfigure(0, weight=1)
         self.bottom_frame.grid_columnconfigure(1, weight=1)
         self.bottom_frame.grid_columnconfigure(2, weight=1)
 
