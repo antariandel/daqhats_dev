@@ -11,7 +11,6 @@
 from daqhats import hat_list, mcc118, HatIDs, HatError
 from tkinter import *
 from tkinter import messagebox
-#import tkMessageBox
 import tkinter.font
 
 class ControlApp:
@@ -60,23 +59,30 @@ class ControlApp:
         self.device_lister.grid(row=0, column=1)
         self.open_button.grid(row=0, column=2)
 
+        self.checkboxes = []
+        self.check_values = []
         self.channel_labels = []
         self.voltages = []
         for index in range(mcc118.info().NUM_AI_CHANNELS):
+            # Checkboxes
+            self.check_values.append(IntVar())
+            self.checkboxes.append(Checkbutton(self.bottom_frame, variable=self.check_values[index], command=lambda index=index:self.pressedCheck(index)))
+            self.checkboxes[index].grid(row=index, column=0)
+            self.checkboxes[index].select()
             # Labels
             self.channel_labels.append(Label(self.bottom_frame, text="Ch {}".format(index), font=self.BOLD_FONT))
-            self.channel_labels[index].grid(row=index, column=0)
+            self.channel_labels[index].grid(row=index, column=1)
             self.channel_labels[index].grid_configure(sticky="W")
-            
-            self.voltages.append(Label(self.bottom_frame, text="", font=self.BOLD_FONT))
-            self.voltages[index].grid(row=index, column=1)
+            # Voltages
+            self.voltages.append(Label(self.bottom_frame, text="0.000", font=self.BOLD_FONT))
+            self.voltages[index].grid(row=index, column=2)
             self.voltages[index].grid_configure(sticky="E")
 
             self.bottom_frame.grid_rowconfigure(index, weight=1)
             
-        #self.bottom_frame.grid_rowconfigure(0, weight=1)
         self.bottom_frame.grid_columnconfigure(0, weight=1)
         self.bottom_frame.grid_columnconfigure(1, weight=1)
+        self.bottom_frame.grid_columnconfigure(2, weight=1)
 
         self.bottom_frame.bind("<Configure>", self.resizeText)
 
@@ -87,13 +93,15 @@ class ControlApp:
         
     def resizeText(self, event):
         new_size = -max(12, int(event.height / 12))
-        #label_height = (event.height - 18)/8 - 4
-        #font_height = self.BOLD_FONT.metrics("linespace")
-        #ratio = label_height/font_height
-        #new_size = self.BOLD_FONT.cget("size")
-        #new_size *= ratio
         self.BOLD_FONT.configure(size=new_size)
         
+    def pressedCheck(self, index):
+        if self.check_values[index].get() == 0:
+            self.channel_labels[index].config(state=DISABLED)
+            self.voltages[index].config(state=DISABLED)
+        else:
+            self.channel_labels[index].config(state=NORMAL)
+            self.voltages[index].config(state=NORMAL)
         
     def disableControls(self):
         # Enable the address selector
@@ -128,8 +136,9 @@ class ControlApp:
     def updateInputs(self):
         if self.device_open:
             for channel in range(mcc118.info().NUM_AI_CHANNELS):
-                value = self.board.a_in_read(channel)
-                self.voltages[channel].config(text="{:.3f}".format(value))
+                if self.check_values[channel].get() == 1:
+                    value = self.board.a_in_read(channel)
+                    self.voltages[channel].config(text="{:.3f}".format(value))
                     
             # schedule another update in 200 ms
             self.master.after(200, self.updateInputs)
