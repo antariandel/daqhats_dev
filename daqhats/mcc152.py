@@ -218,7 +218,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
             raise ValueError("Invalid channel {0}. Must be 0-{1}.".
                              format(channel, self._AOUT_NUM_CHANNELS-1))
 
-        if (options & OptionFlags.NOSCALEDATA) == 0:
+        if (options & OptionFlags.NOSCALEDATA) != 0:
             if value < self._MIN_CODE:
                 value = self._MIN_CODE
             elif value > self._MAX_CODE:
@@ -268,7 +268,7 @@ class mcc152(Hat): # pylint: disable=invalid-name,too-many-public-methods
                 format(self._AOUT_NUM_CHANNELS))
 
         for value in values:
-            if (options & OptionFlags.NOSCALEDATA) == 0:
+            if (options & OptionFlags.NOSCALEDATA) != 0:
                 if value < self._MIN_CODE:
                     value = self._MIN_CODE
                 elif value > self._MAX_CODE:
